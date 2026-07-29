@@ -1,0 +1,79 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #f5f0e8;
+  --foreground: #26312d;
+  --brand-primary: #173f35;
+  --brand-primary-dark: #102f28;
+  --accent-terracotta: #b85c3f;
+  --accent-terracotta-dark: #984832;
+  --accent-gold: #c49a55;
+  --surface-card: #fbf8f2;
+  --border-soft: #ded5c8;
+  --text-secondary: #68736d;
+  --font-playfair: "Playfair Display";
+  --font-manrope: "Manrope";
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at top left, rgba(184, 92, 63, 0.11), transparent 32rem),
+    var(--background);
+  color: var(--foreground);
+  font-family: var(--font-manrope), Arial, sans-serif;
+}
+
+::selection {
+  background: var(--accent-terracotta);
+  color: #ffffff;
+}
+
+.container-shell {
+  width: min(1180px, calc(100% - 40px));
+  margin-inline: auto;
+}
+
+.section-space {
+  padding: 112px 0;
+}
+
+.hairline {
+  border-color: rgba(38, 49, 45, 0.12);
+}
+
+.image-placeholder {
+  background:
+    linear-gradient(135deg, rgba(251, 248, 242, 0.98), rgba(245, 240, 232, 0.96)),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(196, 154, 85, 0.14),
+      rgba(196, 154, 85, 0.14) 1px,
+      transparent 1px,
+      transparent 16px
+    );
+}
+
+@media (max-width: 768px) {
+  .container-shell {
+    width: min(1180px, calc(100% - 28px));
+  }
+
+  .section-space {
+    padding: 76px 0;
+  }
+}
