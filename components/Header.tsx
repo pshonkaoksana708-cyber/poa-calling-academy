@@ -1,15 +1,23 @@
+import Image from "next/image";
 import { navigation } from "@/data/site";
 
 export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b hairline bg-porcelain/88 backdrop-blur-xl">
       <div className="container-shell flex h-20 min-w-0 items-center justify-between gap-4 md:gap-8">
-        <a className="min-w-0 max-w-[220px] font-serif text-sm leading-[1.1] text-ink [hyphens:auto] [overflow-wrap:anywhere] [word-break:normal] sm:max-w-[260px] sm:text-base lg:max-w-[340px] lg:text-xl" href="#">
-          POA CALLING
+        <a className="shrink-0" href="/">
+          <Image
+            alt="Академия профессионального развития"
+            className="h-[46px] w-auto md:h-[54px] lg:h-[60px]"
+            height={1400}
+            priority
+            src="/images/logo/poa-calling-logo.svg"
+            width={1200}
+          />
         </a>
         <nav className="hidden items-center gap-8 text-sm font-medium text-ink/72 lg:flex">
           {navigation.map((item) => (
-            <a className="transition hover:text-ink" href={item.href} key={item.href}>
+            <a className="premium-nav-link" href={item.href} key={item.href}>
               {item.label}
             </a>
           ))}

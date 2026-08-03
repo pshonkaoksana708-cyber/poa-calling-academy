@@ -1,8 +1,8 @@
 export const navigation = [
-  { label: "Подход", href: "#approach" },
+  { label: "Профессии", href: "#catalog" },
   { label: "Программы", href: "#catalog" },
-  { label: "Обучение", href: "#process" },
-  { label: "Об авторе", href: "#author" },
+  { label: "Как проходит обучение", href: "#process" },
+  { label: "Отзывы", href: "#certificate" },
   { label: "Вопросы", href: "#faq" },
 ];
 
