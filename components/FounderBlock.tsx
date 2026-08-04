@@ -1,6 +1,4 @@
-import { EditorialImage } from "@/components/EditorialImage";
 import { SectionHeading } from "@/components/SectionHeading";
-import { siteImages } from "@/data/images";
 
 export function FounderBlock() {
   const principles = [
@@ -14,31 +12,28 @@ export function FounderBlock() {
     <section className="section-space" id="author">
       <div className="container-shell grid items-center gap-14 lg:grid-cols-[0.92fr_1fr]">
         <div className="grid gap-5">
-          <EditorialImage
-            alt="Автор образовательных программ"
-            className="md:min-h-[520px]"
-            label="Фотография автора образовательных программ"
-            src={siteImages.founderAbout}
-          />
+          <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] border border-mist bg-ivory shadow-soft md:min-h-[520px]">
+            <img
+              src="/images/author/author-01.png"
+              alt="Автор"
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            />
+          </div>
           <div className="grid gap-5 sm:grid-cols-2">
-            <EditorialImage
-              alt="Портрет автора образовательных программ"
-              aspect="wide"
-              className="shadow-none"
-              icon="users"
-              label="Дополнительный портрет автора"
-              sizes="(min-width: 1024px) 24vw, 50vw"
-              src={siteImages.founderPortrait}
-            />
-            <EditorialImage
-              alt="Рабочий процесс автора образовательных программ"
-              aspect="wide"
-              className="shadow-none"
-              icon="spark"
-              label="Рабочий процесс автора"
-              sizes="(min-width: 1024px) 24vw, 50vw"
-              src={siteImages.founderDetail}
-            />
+            <div className="relative aspect-[16/10] overflow-hidden rounded-[2rem] border border-mist bg-ivory">
+              <img
+                src="/images/author/author-01.png"
+                alt="Автор"
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              />
+            </div>
+            <div className="relative aspect-[16/10] overflow-hidden rounded-[2rem] border border-mist bg-ivory">
+              <img
+                src="/images/author/author-01.png"
+                alt="Автор"
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              />
+            </div>
           </div>
         </div>
         <div>

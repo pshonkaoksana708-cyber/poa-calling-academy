@@ -1,6 +1,3 @@
-import { EditorialImage } from "@/components/EditorialImage";
-import { siteImages } from "@/data/images";
-
 export function Hero() {
   return (
     <section className="overflow-hidden pb-16 pt-10 md:pb-[4.5rem] md:pt-12 lg:min-h-[calc(100svh-5rem)] lg:py-12 xl:py-14">
@@ -41,13 +38,13 @@ export function Hero() {
           </div>
         </div>
         <div className="hero-reveal hero-reveal-delay-2 min-w-0">
-          <EditorialImage
-            alt="Современная образовательная платформа"
-            className="rounded-[2.25rem] border-gold/20 shadow-[0_28px_90px_rgba(38,49,45,0.12)] md:min-h-[560px]"
-            label="Онлайн-программы для получения новой профессии."
-            priority
-            src={siteImages.hero}
-          />
+          <div className="relative aspect-[4/5] overflow-hidden rounded-[2.25rem] border border-gold/20 bg-ivory shadow-[0_28px_90px_rgba(38,49,45,0.12)] md:min-h-[560px]">
+            <img
+              src="/images/author/author-01.png"
+              alt="Автор"
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            />
+          </div>
         </div>
       </div>
     </section>

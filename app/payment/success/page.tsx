@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
-import { EditorialImage } from "@/components/EditorialImage";
 import {
   accessEmailTemplate,
   paymentSuccessCopy,
   supportEmail,
 } from "@/data/config/email";
-import { siteImages } from "@/data/images";
 
 export const metadata: Metadata = {
   title: "Оплата прошла успешно",
@@ -31,14 +29,13 @@ export default function PaymentSuccessPage() {
             {paymentSuccessCopy.note}
           </p>
 
-          <EditorialImage
-            alt="Финальный экран после оплаты"
-            aspect="wide"
-            className="mt-10 shadow-none"
-            icon="spark"
-            label="Финальный визуал после оплаты"
-            src={siteImages.founderPortrait}
-          />
+          <div className="relative mt-10 aspect-[16/10] overflow-hidden rounded-[2rem] border border-mist bg-ivory">
+            <img
+              src="/images/author/author-01.png"
+              alt="Автор"
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            />
+          </div>
 
           <div className="mt-10 rounded-3xl border border-gold/30 bg-porcelain p-6">
             <p className="text-sm font-bold uppercase tracking-[0.18em] text-gold">
