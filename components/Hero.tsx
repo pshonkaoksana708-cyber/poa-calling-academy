@@ -40,7 +40,7 @@ export function Hero() {
         <div className="hero-reveal hero-reveal-delay-2 min-w-0">
           <div className="relative aspect-[4/5] overflow-hidden rounded-[2.25rem] border border-gold/20 bg-ivory shadow-[0_28px_90px_rgba(38,49,45,0.12)] md:min-h-[560px]">
             <img
-              src="/images/author/author-01.png"
+              src="/images/author/author-01.webp"
               alt="Автор"
               style={{ width: "100%", height: "100%", objectFit: "cover" }}
             />

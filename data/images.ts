@@ -1,5 +1,5 @@
 export const siteImages = {
-  hero: "/images/author/author-01.png",
+  hero: "/images/author/author-01.webp",
   founderAbout: "/images/author/author-02.png",
   founderPortrait: "/images/author/author-03.png",
   founderDetail: "/images/author/author-10.png",

@@ -13,7 +13,7 @@ export function AuthorCard({
     <article className="grid gap-8 rounded-[2rem] border border-ink/10 bg-ivory p-6 shadow-soft md:p-8 lg:grid-cols-[320px_1fr] lg:items-center">
       <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] border border-mist bg-ivory">
         <img
-          src="/images/author/author-01.png"
+          src="/images/author/author-01.webp"
           alt="Автор"
           style={{ width: "100%", height: "100%", objectFit: "cover" }}
         />

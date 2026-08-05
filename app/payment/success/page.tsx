@@ -31,7 +31,7 @@ export default function PaymentSuccessPage() {
 
           <div className="relative mt-10 aspect-[16/10] overflow-hidden rounded-[2rem] border border-mist bg-ivory">
             <img
-              src="/images/author/author-01.png"
+              src="/images/author/author-01.webp"
               alt="Автор"
               style={{ width: "100%", height: "100%", objectFit: "cover" }}
             />
