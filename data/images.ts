@@ -1,8 +1,8 @@
 export const siteImages = {
   hero: "/images/author/author-01.webp",
-  founderAbout: "/images/author/author-02.webp",
-  founderPortrait: "/images/author/author-03.webp",
-  founderDetail: "/images/author/author-10.webp",
+  founderAbout: "/images/author/author-07.webp",
+  founderPortrait: "/images/author/author-08.webp",
+  founderDetail: "/images/author/author-13.webp",
   supplyProfession: "/images/supply/supply-06.jpg",
   supplyBasicLevel: "/images/supply/supply-basic.jpg",
   supplyPracticeLevel: "/images/supply/supply-practice.jpg",
