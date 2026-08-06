@@ -42,7 +42,12 @@ export function Hero() {
             <img
               src="/images/author/author-01.webp"
               alt="Автор"
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              width={1024}
+              height={1536}
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
+              style={{ display: "block", width: "100%", height: "100%", objectFit: "cover" }}
             />
           </div>
         </div>

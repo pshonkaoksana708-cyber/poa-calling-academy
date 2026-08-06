@@ -16,7 +16,11 @@ export function AuthorCard({
         <img
           src={imageSrc}
           alt="Автор"
-          style={{ width: "100%", height: "100%", objectFit: "cover" }}
+          width={1024}
+          height={1024}
+          loading="lazy"
+          decoding="async"
+          style={{ display: "block", width: "100%", height: "100%", objectFit: "cover" }}
         />
       </div>
       <div>

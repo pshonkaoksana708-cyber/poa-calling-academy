@@ -16,7 +16,11 @@ export function FounderBlock() {
             <img
               src="/images/author/author-02.webp"
               alt="Автор"
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              width={1122}
+              height={1402}
+              loading="lazy"
+              decoding="async"
+              style={{ display: "block", width: "100%", height: "100%", objectFit: "cover" }}
             />
           </div>
           <div className="grid gap-5 sm:grid-cols-2">
@@ -24,14 +28,22 @@ export function FounderBlock() {
               <img
                 src="/images/author/author-03.webp"
                 alt="Автор"
-                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                width={1200}
+                height={960}
+                loading="lazy"
+                decoding="async"
+                style={{ display: "block", width: "100%", height: "100%", objectFit: "cover" }}
               />
             </div>
             <div className="relative aspect-[16/10] overflow-hidden rounded-[2rem] border border-mist bg-ivory">
               <img
                 src="/images/author/author-06.webp"
                 alt="Автор"
-                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                width={1086}
+                height={1448}
+                loading="lazy"
+                decoding="async"
+                style={{ display: "block", width: "100%", height: "100%", objectFit: "cover" }}
               />
             </div>
           </div>

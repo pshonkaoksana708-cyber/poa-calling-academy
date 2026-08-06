@@ -33,7 +33,11 @@ export default function PaymentSuccessPage() {
             <img
               src="/images/author/author-15.webp"
               alt="Автор"
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              width={1024}
+              height={1536}
+              loading="lazy"
+              decoding="async"
+              style={{ display: "block", width: "100%", height: "100%", objectFit: "cover" }}
             />
           </div>
 
