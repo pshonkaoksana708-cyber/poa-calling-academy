@@ -26,7 +26,7 @@ const sections = [
   },
   {
     title: "5. Контакты",
-    text: "По вопросам использования сайта можно обратиться на email Академии: info@cpr.education.",
+    text: "По вопросам использования сайта можно обратиться на email Академии: oksana.pshonka@mail.ru.",
   },
 ];
 

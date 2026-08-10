@@ -1,4 +1,4 @@
-export const supportEmail = "info@cpr.education";
+export const supportEmail = "oksana.pshonka@mail.ru";
 
 export const accessLinkPlaceholder = "[ACCESS_LINK]";
 export const programTitlePlaceholder = "[Название программы]";

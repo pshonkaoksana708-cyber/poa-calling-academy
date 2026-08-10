@@ -35,9 +35,13 @@ export function LegalPage({ eyebrow, title, description, sections }: LegalPagePr
                 <h2 className="font-serif text-2xl text-ink md:text-3xl">
                   {section.title}
                 </h2>
-                <p className="mt-4 max-w-4xl text-base leading-8 text-ink/70">
-                  {section.text}
-                </p>
+                <div className="mt-4 max-w-4xl space-y-4 text-base leading-8 text-ink/70">
+                  {section.text.split("\n\n").map((paragraph) => (
+                    <p className="whitespace-pre-line" key={paragraph}>
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
               </article>
             ))}
           </div>
