@@ -15,7 +15,7 @@ function createPlaceholderProfession(input: {
       title: "Базовый уровень",
       label: "Старт профессии",
       duration: "Программа в разработке",
-      price: "Открытие скоро",
+      price: "Стоимость уточняется",
       level: "basic" as const,
       description:
         "Первый уровень будет содержать базовые понятия профессии, ключевые задачи и практические упражнения для входа в направление.",
@@ -62,7 +62,7 @@ function createPlaceholderProfession(input: {
       title: "Практический уровень",
       label: "Рабочие задачи",
       duration: "Программа в разработке",
-      price: "Открытие скоро",
+      price: "Стоимость уточняется",
       level: "practice" as const,
       description:
         "Практический уровень будет раскрывать рабочие процессы, инструменты и типовые ситуации профессии.",
@@ -89,7 +89,7 @@ function createPlaceholderProfession(input: {
       title: "Профессиональный уровень",
       label: "Уверенная роль",
       duration: "Программа в разработке",
-      price: "Открытие скоро",
+      price: "Стоимость уточняется",
       level: "pro" as const,
       description:
         "Профессиональный уровень будет посвящен более сложным задачам, аналитике, самостоятельным решениям и карьерному росту.",
@@ -161,7 +161,7 @@ function createPlaceholderProfession(input: {
         slug: "basic",
         title: "Basic Package",
         subtitle: "Базовый уровень профессии",
-        price: "Открытие скоро",
+        price: "Стоимость уточняется",
         includedLevelSlugs: ["basic"],
         includes: [
           "Доступ к базовому уровню",
@@ -175,7 +175,7 @@ function createPlaceholderProfession(input: {
         slug: "pro",
         title: "Pro Package",
         subtitle: "Базовый + практический уровень",
-        price: "Открытие скоро",
+        price: "Стоимость уточняется",
         includedLevelSlugs: ["basic", "practice"],
         includes: [
           "Доступ к двум уровням",
@@ -190,7 +190,7 @@ function createPlaceholderProfession(input: {
         slug: "full",
         title: "Full Package",
         subtitle: "Все 3 уровня профессии",
-        price: "Открытие скоро",
+        price: "Стоимость уточняется",
         includedLevelSlugs: ["basic", "practice", "pro"],
         includes: [
           "Полная траектория",

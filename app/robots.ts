@@ -14,6 +14,7 @@ export default function robots(): MetadataRoute.Robots {
         "/profession/",
         "/course/*/basic$",
         "/privacy",
+        "/personal-data-consent",
         "/offer",
         "/terms",
         "/verify",

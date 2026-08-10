@@ -11,6 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const publicRoutes = [
     "",
     "/privacy",
+    "/personal-data-consent",
     "/offer",
     "/terms",
     "/verify",

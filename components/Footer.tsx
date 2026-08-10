@@ -14,6 +14,7 @@ export function Footer() {
             <a href="mailto:oksana.pshonka@mail.ru">Контакты</a>
             <a href="/offer">Публичная оферта</a>
             <a href="/privacy">Политика обработки персональных данных</a>
+            <a href="/personal-data-consent">Согласие на обработку персональных данных</a>
             <a href="/terms">Пользовательское соглашение</a>
             <a href="#catalog">Программы</a>
             <a href="#faq">Вопросы</a>

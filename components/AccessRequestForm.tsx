@@ -64,16 +64,18 @@ export function AccessRequestForm() {
       label: `${profession.title} — ${packageTitles[item.slug] ?? item.title}`,
     })),
   );
-  const [accepted, setAccepted] = useState(false);
+  const [acceptedOfferAndPolicy, setAcceptedOfferAndPolicy] = useState(false);
+  const [acceptedPersonalData, setAcceptedPersonalData] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState(
     packageOptions[0]?.value ?? "",
   );
+  const canSubmit = acceptedOfferAndPolicy && acceptedPersonalData;
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (!accepted) {
+    if (!canSubmit) {
       return;
     }
 
@@ -169,27 +171,60 @@ export function AccessRequestForm() {
 
           <label
             className="mt-6 flex cursor-pointer gap-4 rounded-2xl border border-ink/12 bg-porcelain p-4 text-sm leading-6 text-ink"
-            htmlFor="personal-data-consent"
+            htmlFor="offer-and-policy-consent"
           >
             <input
-              checked={accepted}
+              checked={acceptedOfferAndPolicy}
               className="mt-1 h-5 w-5 shrink-0 accent-ink"
-              id="personal-data-consent"
+              id="offer-and-policy-consent"
               onChange={(event) => {
-                setAccepted(event.target.checked);
+                setAcceptedOfferAndPolicy(event.target.checked);
                 setSubmitted(false);
               }}
               required
               type="checkbox"
             />
             <span className="min-w-0">
-              Я согласен(на) на{" "}
-              <a className="font-semibold text-ink underline decoration-gold underline-offset-4" href="/privacy">
-                обработку персональных данных
+              Я принимаю условия{" "}
+              <a
+                className="font-semibold text-ink underline decoration-gold underline-offset-4"
+                href="/offer"
+              >
+                Публичной оферты
               </a>{" "}
-              и принимаю условия{" "}
-              <a className="font-semibold text-ink underline decoration-gold underline-offset-4" href="/offer">
-                публичной оферты
+              и ознакомлен(а) с{" "}
+              <a
+                className="font-semibold text-ink underline decoration-gold underline-offset-4"
+                href="/privacy"
+              >
+                Политикой обработки персональных данных
+              </a>
+              .
+            </span>
+          </label>
+
+          <label
+            className="mt-4 flex cursor-pointer gap-4 rounded-2xl border border-ink/12 bg-porcelain p-4 text-sm leading-6 text-ink"
+            htmlFor="personal-data-consent"
+          >
+            <input
+              checked={acceptedPersonalData}
+              className="mt-1 h-5 w-5 shrink-0 accent-ink"
+              id="personal-data-consent"
+              onChange={(event) => {
+                setAcceptedPersonalData(event.target.checked);
+                setSubmitted(false);
+              }}
+              required
+              type="checkbox"
+            />
+            <span className="min-w-0">
+              Я даю{" "}
+              <a
+                className="font-semibold text-ink underline decoration-gold underline-offset-4"
+                href="/personal-data-consent"
+              >
+                согласие на обработку персональных данных
               </a>
               .
             </span>
@@ -197,7 +232,7 @@ export function AccessRequestForm() {
 
           <button
             className="mt-6 w-full rounded-full bg-ink px-7 py-4 text-sm font-bold text-white transition hover:bg-evergreen active:scale-[0.99] disabled:cursor-not-allowed disabled:bg-ink/35 disabled:text-white/80"
-            disabled={!accepted}
+            disabled={!canSubmit}
             type="submit"
           >
             Перейти к оплате

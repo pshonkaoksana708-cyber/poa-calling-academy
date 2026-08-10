@@ -22,7 +22,7 @@ function createLevel(input: {
     title: input.title,
     label: input.label,
     duration: input.duration,
-    price: "Открытие скоро",
+    price: "Стоимость уточняется",
     level: input.slug,
     description: input.description,
     result: input.result,

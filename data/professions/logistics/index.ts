@@ -19,7 +19,7 @@ function createLevel(input: {
     title: input.title,
     label: input.label,
     duration: input.duration,
-    price: "Открытие скоро",
+    price: "Стоимость уточняется",
     level: input.slug,
     description: input.description,
     result: input.result,
@@ -167,7 +167,7 @@ export const logisticsProfession: Profession = {
       slug: "basic",
       title: "Базовый пакет",
       subtitle: "Базовый уровень профессии",
-      price: "Открытие скоро",
+      price: "Стоимость уточняется",
       includedLevelSlugs: ["basic"],
       includes: [
         "Доступ к базовому уровню",
@@ -182,7 +182,7 @@ export const logisticsProfession: Profession = {
       slug: "pro",
       title: "Практический пакет",
       subtitle: "Базовый + практический уровень",
-      price: "Открытие скоро",
+      price: "Стоимость уточняется",
       includedLevelSlugs: ["basic", "practice"],
       includes: [
         "Доступ к первым двум блокам",
@@ -198,7 +198,7 @@ export const logisticsProfession: Profession = {
       slug: "full",
       title: "Полная программа",
       subtitle: "Все 3 уровня профессии",
-      price: "Открытие скоро",
+      price: "Стоимость уточняется",
       includedLevelSlugs: ["basic", "practice", "pro"],
       includes: [
         "Доступ ко всем трем блокам",
