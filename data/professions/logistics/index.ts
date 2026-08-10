@@ -19,7 +19,12 @@ function createLevel(input: {
     title: input.title,
     label: input.label,
     duration: input.duration,
-    price: "Стоимость уточняется",
+    price:
+      input.slug === "basic"
+        ? "14 900 ₽"
+        : input.slug === "practice"
+          ? "24 900 ₽"
+          : "34 900 ₽",
     level: input.slug,
     description: input.description,
     result: input.result,
@@ -167,7 +172,7 @@ export const logisticsProfession: Profession = {
       slug: "basic",
       title: "Базовый пакет",
       subtitle: "Базовый уровень профессии",
-      price: "Стоимость уточняется",
+      price: "14 900 ₽",
       includedLevelSlugs: ["basic"],
       includes: [
         "Доступ к базовому уровню",
@@ -182,7 +187,7 @@ export const logisticsProfession: Profession = {
       slug: "pro",
       title: "Практический пакет",
       subtitle: "Базовый + практический уровень",
-      price: "Стоимость уточняется",
+      price: "24 900 ₽",
       includedLevelSlugs: ["basic", "practice"],
       includes: [
         "Доступ к первым двум блокам",
@@ -192,13 +197,12 @@ export const logisticsProfession: Profession = {
       result:
         "Переход от знакомства с профессией к практической работе с перевозками, участниками процесса и документами.",
       bestFor: "Тем, кто хочет перейти к прикладным задачам международной логистики.",
-      featured: true,
     },
     {
       slug: "full",
       title: "Полная программа",
       subtitle: "Все 3 уровня профессии",
-      price: "Стоимость уточняется",
+      price: "34 900 ₽",
       includedLevelSlugs: ["basic", "practice", "pro"],
       includes: [
         "Доступ ко всем трем блокам",
@@ -206,9 +210,11 @@ export const logisticsProfession: Profession = {
         "Контроль, аналитика, риски, оптимизация и управление логистическими процессами",
       ],
       result:
-        "Полная траектория до самостоятельной профессиональной роли специалиста по международной логистике.",
+        "Самый выгодный формат обучения. Полная траектория до самостоятельной профессиональной роли специалиста по международной логистике.",
       bestFor:
         "Тем, кто рассматривает международную логистику как новую профессию или серьезный карьерный переход.",
+      featured: true,
+      badge: "Рекомендуем",
     },
   ],
   accessRules: {

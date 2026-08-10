@@ -103,6 +103,7 @@ export type PurchasePackage = {
   result: string;
   bestFor: string;
   featured?: boolean;
+  badge?: string;
 };
 
 export type CareerStep = {

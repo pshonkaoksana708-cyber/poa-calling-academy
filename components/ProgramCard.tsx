@@ -13,6 +13,7 @@ type ProgramCardProps = {
   imageAlt?: string;
   imageObjectPosition?: string;
   featured?: boolean;
+  badge?: string;
   compact?: boolean;
   ctaLabel?: string;
   className?: string;
@@ -30,6 +31,7 @@ export function ProgramCard({
   imageAlt,
   imageObjectPosition,
   featured = false,
+  badge,
   compact = false,
   ctaLabel = "Выбрать пакет",
   className,
@@ -61,9 +63,16 @@ export function ProgramCard({
         />
       ) : null}
       <div className="min-w-0">
-        <p className={cn("min-w-0 text-xs font-bold uppercase tracking-[0.22em] [hyphens:auto] [overflow-wrap:anywhere] [word-break:normal]", featured ? "text-gold" : "text-evergreen")}>
-          {label}
-        </p>
+        <div className="flex min-w-0 flex-wrap items-center gap-3">
+          <p className={cn("min-w-0 text-xs font-bold uppercase tracking-[0.22em] [hyphens:auto] [overflow-wrap:anywhere] [word-break:normal]", featured ? "text-gold" : "text-evergreen")}>
+            {label}
+          </p>
+          {badge ? (
+            <span className={cn("rounded-full border px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.16em]", featured ? "border-gold/50 bg-gold/15 text-gold" : "border-gold/40 bg-gold/10 text-evergreen")}>
+              {badge}
+            </span>
+          ) : null}
+        </div>
         <h3 className={cn("max-w-full font-serif text-[1.375rem] leading-[1.12] [hyphens:auto] [overflow-wrap:anywhere] [word-break:normal] md:text-[1.625rem] xl:text-[1.875rem] xl:leading-[1.1]", compact ? "mt-4" : "mt-5")}>
           {title}
         </h3>

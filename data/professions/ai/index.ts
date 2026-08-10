@@ -22,7 +22,12 @@ function createLevel(input: {
     title: input.title,
     label: input.label,
     duration: input.duration,
-    price: "Стоимость уточняется",
+    price:
+      input.slug === "basic"
+        ? "14 900 ₽"
+        : input.slug === "practice"
+          ? "24 900 ₽"
+          : "34 900 ₽",
     level: input.slug,
     description: input.description,
     result: input.result,

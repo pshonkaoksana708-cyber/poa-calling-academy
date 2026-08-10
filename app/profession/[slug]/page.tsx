@@ -469,6 +469,7 @@ export default async function ProfessionPage({ params }: ProfessionPageProps) {
             {profession.packages.map((item) => (
               <div className="grid gap-4" key={item.slug}>
                 <ProgramCard
+                  badge={item.badge}
                   ctaLabel="Выбрать пакет"
                   description={item.bestFor}
                   featured={item.featured}
