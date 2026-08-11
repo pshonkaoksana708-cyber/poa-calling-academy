@@ -66,18 +66,59 @@ export function AccessRequestForm() {
   );
   const [acceptedPersonalData, setAcceptedPersonalData] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [paymentError, setPaymentError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState(
     packageOptions[0]?.value ?? "",
   );
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setSubmitted(false);
+    setPaymentError("");
 
     if (!acceptedPersonalData) {
       return;
     }
 
-    setSubmitted(true);
+    const formData = new FormData(event.currentTarget);
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch("/api/payment/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          package: selectedPackage,
+          name: formData.get("name"),
+          email: formData.get("email"),
+          phone: formData.get("phone"),
+        }),
+      });
+      const result = (await response.json()) as {
+        paymentUrl?: string;
+        error?: string;
+      };
+
+      if (!response.ok || !result.paymentUrl) {
+        throw new Error(
+          result.error ?? "Не удалось подготовить переход к оплате.",
+        );
+      }
+
+      window.location.href = result.paymentUrl;
+    } catch (error) {
+      setPaymentError(
+        error instanceof Error
+          ? error.message
+          : "Не удалось подготовить переход к оплате.",
+      );
+      setSubmitted(true);
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -121,7 +162,11 @@ export function AccessRequestForm() {
                 className="h-14 w-full min-w-0 rounded-2xl border border-ink/15 bg-white px-4 text-base font-normal text-ink outline-none transition hover:border-ink/30 focus:border-gold focus:ring-4 focus:ring-gold/15"
                 id="package"
                 name="package"
-                onChange={(event) => setSelectedPackage(event.target.value)}
+                onChange={(event) => {
+                  setPaymentError("");
+                  setSubmitted(false);
+                  setSelectedPackage(event.target.value);
+                }}
                 value={selectedPackage}
               >
                 {packageOptions.map((item) => (
@@ -203,17 +248,15 @@ export function AccessRequestForm() {
 
           <button
             className="mt-6 w-full rounded-full bg-ink px-7 py-4 text-sm font-bold text-white transition hover:bg-evergreen active:scale-[0.99] disabled:cursor-not-allowed disabled:bg-ink/35 disabled:text-white/80"
-            disabled={!acceptedPersonalData}
+            disabled={!acceptedPersonalData || isSubmitting}
             type="submit"
           >
-            Перейти к оплате
+            {isSubmitting ? "Подготавливаем оплату..." : "Перейти к оплате"}
           </button>
 
-          {submitted ? (
-            <p className="mt-4 rounded-2xl border border-evergreen/20 bg-evergreen/10 p-4 text-sm leading-6 text-evergreen">
-              Согласие принято. На следующем этапе будет оплата, а после
-              успешной оплаты система подготовит письмо с защищенной ссылкой на
-              материалы образовательной программы.
+          {submitted && paymentError ? (
+            <p className="mt-4 rounded-2xl border border-gold/30 bg-gold/10 p-4 text-sm leading-6 text-ink">
+              {paymentError}
             </p>
           ) : null}
         </form>

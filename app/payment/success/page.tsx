@@ -17,7 +17,7 @@ export default function PaymentSuccessPage() {
       <section className="container-shell">
         <div className="mx-auto max-w-4xl rounded-[2rem] border border-ink/10 bg-ivory p-6 shadow-soft md:p-12">
           <p className="mb-4 text-xs font-bold uppercase tracking-[0.26em] text-gold">
-            Payment complete
+            Оплата
           </p>
           <h1 className="font-serif text-4xl leading-tight text-ink md:text-6xl">
             {paymentSuccessCopy.title}
