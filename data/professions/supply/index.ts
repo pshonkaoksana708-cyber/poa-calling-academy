@@ -56,9 +56,9 @@ export const supplyProfession: Profession = {
   packages: [
     {
       slug: "basic",
-      title: "Базовый уровень",
+      title: "Базовый пакет",
       subtitle: "Базовый уровень профессии",
-      price: "от 29 900 ₽",
+      price: "14 900 ₽",
       includedLevelSlugs: ["basic"],
       includes: [
         "Доступ к базовому уровню",
@@ -74,7 +74,7 @@ export const supplyProfession: Profession = {
       slug: "pro",
       title: "Практический пакет",
       subtitle: "Базовый + практический уровень",
-      price: "от 49 900 ₽",
+      price: "24 900 ₽",
       includedLevelSlugs: ["basic", "practice"],
       includes: [
         "Доступ к базовому и практическому уровням",
@@ -85,13 +85,12 @@ export const supplyProfession: Profession = {
       result:
         "Помогает перейти от понимания профессии к уверенной работе с поставщиками и условиями закупки.",
       bestFor: "Тем, кто хочет быстрее перейти к практическим задачам и карьерному старту.",
-      featured: true,
     },
     {
       slug: "full",
       title: "Полная программа",
       subtitle: "Все 3 уровня профессии",
-      price: "от 69 900 ₽",
+      price: "34 900 ₽",
       includedLevelSlugs: ["basic", "practice", "pro"],
       includes: [
         "Доступ ко всем уровням профессии",
@@ -100,8 +99,10 @@ export const supplyProfession: Profession = {
         "Полная траектория до самостоятельного специалиста",
       ],
       result:
-        "Формирует целостную профессиональную подготовку: от входа в сферу до аналитики и оптимизации закупок.",
+        "Самый выгодный формат обучения. Формирует целостную профессиональную подготовку: от входа в сферу до аналитики и оптимизации закупок.",
       bestFor: "Тем, кто рассматривает снабжение как новую профессию или серьезный карьерный переход.",
+      featured: true,
+      badge: "Рекомендуем",
     },
   ],
   accessRules: {
