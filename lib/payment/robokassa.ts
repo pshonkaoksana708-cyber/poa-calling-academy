@@ -107,7 +107,17 @@ export function createShpSignatureSuffix(
   params: Record<string, string | number>,
 ) {
   return Object.entries(params)
-    .sort(([left], [right]) => left.localeCompare(right))
+    .sort(([left], [right]) => {
+      if (left < right) {
+        return -1;
+      }
+
+      if (left > right) {
+        return 1;
+      }
+
+      return 0;
+    })
     .map(([key, value]) => `:${key}=${value}`)
     .join("");
 }

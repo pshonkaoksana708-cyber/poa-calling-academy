@@ -79,6 +79,7 @@ export async function POST(request: Request) {
     customerPhone: (payload.phone ?? "").trim(),
   });
   const shpParams = {
+    Shp_email: customerEmail.toLowerCase(),
     Shp_package: resolvedPackage.purchasePackage.slug,
     Shp_profession: resolvedPackage.profession.slug,
   };

@@ -1,3 +1,4 @@
+import { sendAccessEmail } from "@/lib/payment/access-email";
 import {
   getPaymentOrder,
   isPaymentProcessed,
@@ -21,6 +22,20 @@ async function readRobokassaParams(request: Request) {
     return payload;
   }
 
+  if (
+    contentType.includes("application/x-www-form-urlencoded") ||
+    contentType.includes("multipart/form-data")
+  ) {
+    const formData = await request.formData();
+
+    return Object.fromEntries(
+      Array.from(formData.entries()).map(([key, value]) => [
+        key,
+        typeof value === "string" ? value : value.name,
+      ]),
+    );
+  }
+
   const body = await request.text();
   const searchParams = new URLSearchParams(body);
 
@@ -42,10 +57,12 @@ export async function POST(request: Request) {
   try {
     config = getRobokassaConfig();
   } catch {
+    console.error("[Robokassa] Missing required parameter: env configuration");
     return textResponse("payment system is not configured", 500);
   }
 
   const params = await readRobokassaParams(request);
+  console.info("[Robokassa] Result callback received");
   const outSum = params.OutSum;
   const invId = params.InvId;
   const signatureValue = params.SignatureValue;
@@ -54,8 +71,12 @@ export async function POST(request: Request) {
   );
 
   if (!outSum || !invId || !signatureValue) {
+    console.warn("[Robokassa] Missing required parameter");
     return textResponse("missing required payment params", 400);
   }
+
+  console.info(`[Robokassa] InvId: ${invId}`);
+  console.info(`[Robokassa] IsTest: ${config.isTest ? "true" : "false"}`);
 
   const expectedSignature = createResultSignature(
     outSum,
@@ -65,8 +86,11 @@ export async function POST(request: Request) {
   );
 
   if (!timingSafeSignatureEqual(signatureValue, expectedSignature)) {
+    console.warn("[Robokassa] Invalid signature");
     return textResponse("bad sign", 400);
   }
+
+  console.info("[Robokassa] Signature valid");
 
   const numericInvId = Number(invId);
   const order = Number.isFinite(numericInvId) ? getPaymentOrder(numericInvId) : null;
@@ -74,18 +98,22 @@ export async function POST(request: Request) {
     professionSlug: params.Shp_profession ?? "",
     packageSlug: params.Shp_package ?? "",
   });
+  const customerEmail = params.Shp_email?.trim().toLowerCase() ?? "";
 
-  if (!Number.isFinite(numericInvId) || !resolvedPackage) {
+  if (!Number.isFinite(numericInvId) || !resolvedPackage || !customerEmail) {
+    console.warn("[Robokassa] Missing required parameter");
     return textResponse("payment order params are invalid", 400);
   }
 
   const paidAmount = Number(outSum);
 
   if (!Number.isFinite(paidAmount) || paidAmount !== resolvedPackage.amount) {
+    console.warn("[Robokassa] Missing required parameter: bad amount");
     return textResponse("bad amount", 400);
   }
 
   if (order && order.amount !== resolvedPackage.amount) {
+    console.warn("[Robokassa] Missing required parameter: order amount mismatch");
     return textResponse("bad order amount", 400);
   }
 
@@ -94,6 +122,19 @@ export async function POST(request: Request) {
       markPaymentPaid(numericInvId);
     } else {
       markPaymentProcessed(numericInvId);
+    }
+
+    const emailResult = await sendAccessEmail({
+      invId,
+      email: customerEmail,
+      profession: resolvedPackage.profession,
+      purchasePackage: resolvedPackage.purchasePackage,
+    });
+
+    if (emailResult.sent) {
+      console.info("[Robokassa] Access email sent");
+    } else {
+      console.error(`[Robokassa] Email sending failed: ${emailResult.reason}`);
     }
   }
 
