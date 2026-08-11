@@ -75,18 +75,17 @@ export function resolvePaymentPackage(
 }
 
 export function getRobokassaConfig(): RobokassaConfig {
+  const readEnv = (key: string) => process.env[key]?.trim() ?? "";
   const isTest = ["1", "true", "yes"].includes(
-    (process.env.ROBOKASSA_IS_TEST ?? "").toLowerCase(),
+    readEnv("ROBOKASSA_IS_TEST").toLowerCase(),
   );
-  const merchantLogin = process.env.ROBOKASSA_MERCHANT_LOGIN ?? "poacalling";
+  const merchantLogin = readEnv("ROBOKASSA_MERCHANT_LOGIN");
   const password1 = isTest
-    ? (process.env.ROBOKASSA_TEST_PASSWORD_1 ??
-      process.env.ROBOKASSA_PASSWORD_1)
-    : process.env.ROBOKASSA_PASSWORD_1;
+    ? readEnv("ROBOKASSA_TEST_PASSWORD_1")
+    : readEnv("ROBOKASSA_PASSWORD_1");
   const password2 = isTest
-    ? (process.env.ROBOKASSA_TEST_PASSWORD_2 ??
-      process.env.ROBOKASSA_PASSWORD_2)
-    : process.env.ROBOKASSA_PASSWORD_2;
+    ? readEnv("ROBOKASSA_TEST_PASSWORD_2")
+    : readEnv("ROBOKASSA_PASSWORD_2");
 
   if (!merchantLogin || !password1 || !password2) {
     throw new Error("Robokassa environment variables are not configured");
