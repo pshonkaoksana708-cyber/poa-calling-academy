@@ -31,13 +31,13 @@ export default function PaymentSuccessPage() {
 
           <div className="relative mt-10 aspect-[16/10] overflow-hidden rounded-[2rem] border border-mist bg-ivory">
             <img
-              src="/images/author/author-15.webp"
+              src="/images/payment/author-14.png"
               alt="Автор"
               width={1024}
               height={1536}
               loading="lazy"
               decoding="async"
-              style={{ display: "block", width: "100%", height: "100%", objectFit: "cover" }}
+              style={{ display: "block", width: "100%", height: "100%", objectFit: "contain" }}
             />
           </div>
 

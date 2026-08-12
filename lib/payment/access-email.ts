@@ -56,12 +56,17 @@ function buildAccessLink(input: AccessEmailInput) {
 }
 
 function buildEmailText(input: AccessEmailInput, accessLink: string) {
+  void accessLink;
+
   return accessEmailTemplate.body
     .replace(
       "[Название программы]",
       `${input.profession.title} — ${input.purchasePackage.title}`,
     )
-    .replace("[ACCESS_LINK]", accessLink);
+    .replace(
+      "Откройте защищенную ссылку:\n[ACCESS_LINK]",
+      "Откройте образовательную программу по кликабельной кнопке в этом письме.",
+    );
 }
 
 function buildEmailHtml(input: AccessEmailInput, accessLink: string) {
@@ -72,7 +77,7 @@ function buildEmailHtml(input: AccessEmailInput, accessLink: string) {
     .map((line) => `<p>${line}</p>`)
     .join("");
 
-  return `<div style="font-family:Arial,sans-serif;line-height:1.6;color:#1f2a24">${text}<p><a href="${accessLink}">Открыть образовательную программу</a></p></div>`;
+  return `<div style="font-family:Arial,sans-serif;line-height:1.6;color:#1f2a24">${text}<p><a href="${accessLink}" style="display:inline-block;padding:14px 22px;border-radius:999px;background:#183d2f;color:#ffffff;text-decoration:none;font-weight:700">Открыть образовательную программу</a></p></div>`;
 }
 
 export async function sendAccessEmail(
