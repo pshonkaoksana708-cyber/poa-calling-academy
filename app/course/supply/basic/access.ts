@@ -37,6 +37,20 @@ export function getSupplyBasicAccessPlan(
   }
 }
 
+export function getSupplyAccessibleBlockCount(payload?: AccessTokenPayload) {
+  const accessPlan = getSupplyBasicAccessPlan(payload);
+
+  if (accessPlan === "basic") {
+    return 1;
+  }
+
+  if (accessPlan === "practice") {
+    return 2;
+  }
+
+  return 3;
+}
+
 export function appendToken(href: string, token?: string) {
   if (!token) {
     return href;

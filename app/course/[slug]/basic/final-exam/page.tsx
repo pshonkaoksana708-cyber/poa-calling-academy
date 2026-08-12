@@ -3,6 +3,7 @@ import { AssessmentTest } from "@/components/assessments/AssessmentTest";
 import { AssessmentUnavailable } from "@/components/assessments/AssessmentUnavailable";
 import { getFinalExamAssessment } from "@/data/assessments";
 import { getProfession } from "@/data/professions";
+import { getSupplyTokenAccess, PackageAccessDenied } from "@/app/course/supply-access-control";
 
 type FinalExamPageProps = {
   params: Promise<{
@@ -29,6 +30,14 @@ export default async function FinalExamPage({
 
   if (!profession) {
     notFound();
+  }
+
+  if (slug === "supply") {
+    const supplyAccess = getSupplyTokenAccess(token);
+
+    if (!supplyAccess.ok || supplyAccess.blockCount < 3) {
+      return <PackageAccessDenied token={token} />;
+    }
   }
 
   const assessment = getFinalExamAssessment(slug);

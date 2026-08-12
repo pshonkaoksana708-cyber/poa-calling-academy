@@ -3,6 +3,10 @@ import { AssessmentTest } from "@/components/assessments/AssessmentTest";
 import { AssessmentUnavailable } from "@/components/assessments/AssessmentUnavailable";
 import { getBlockTestAssessment } from "@/data/assessments";
 import { getProfession } from "@/data/professions";
+import {
+  getSupplyTokenAccess,
+  PackageAccessDenied,
+} from "@/app/course/supply-access-control";
 
 type BlockTestPageProps = {
   params: Promise<{
@@ -56,6 +60,14 @@ export default async function BlockTestPage({
 
   if (!profession || !blockNumber) {
     notFound();
+  }
+
+  if (slug === "supply") {
+    const supplyAccess = getSupplyTokenAccess(token);
+
+    if (!supplyAccess.ok || supplyAccess.blockCount < blockNumber) {
+      return <PackageAccessDenied token={token} />;
+    }
   }
 
   const assessment = getBlockTestAssessment(slug, blockNumber);

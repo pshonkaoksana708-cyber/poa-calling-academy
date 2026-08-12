@@ -9,6 +9,10 @@ import {
   getProfessionAssessments,
 } from "@/data/assessments";
 import { getProfession } from "@/data/professions";
+import {
+  getSupplyTokenAccess,
+  PackageAccessDenied,
+} from "@/app/course/supply-access-control";
 
 type AssessmentUtilityRouteProps = {
   routeSlug: string;
@@ -55,11 +59,17 @@ export async function renderAssessmentUtilityRoute({
   }
 
   const { token } = await searchParams;
+  const supplyAccess = slug === "supply" ? getSupplyTokenAccess(token) : null;
+
+  if (supplyAccess && !supplyAccess.ok) {
+    return <PackageAccessDenied token={token} />;
+  }
 
   if (routeSlug === "assessment") {
     return (
       <AssessmentOverview
         assessments={getProfessionAssessments(slug)}
+        maxBlockNumber={supplyAccess?.blockCount}
         professionTitle={profession.title}
         slug={slug}
         token={token}
@@ -69,6 +79,11 @@ export async function renderAssessmentUtilityRoute({
 
   if (blockTestMatch) {
     const blockNumber = Number(blockTestMatch[1]);
+
+    if (supplyAccess && supplyAccess.blockCount < blockNumber) {
+      return <PackageAccessDenied token={token} />;
+    }
+
     const assessment = getBlockTestAssessment(slug, blockNumber);
     const backHref = appendToken(`/course/${slug}/basic/assessment`, token);
     const nextHref =
@@ -103,6 +118,10 @@ export async function renderAssessmentUtilityRoute({
   }
 
   if (routeSlug === "final-project") {
+    if (supplyAccess && supplyAccess.blockCount < 3) {
+      return <PackageAccessDenied token={token} />;
+    }
+
     const assessment = getFinalProjectAssessment(slug);
     const backHref = appendToken(`/course/${slug}/basic/assessment`, token);
 
@@ -123,6 +142,10 @@ export async function renderAssessmentUtilityRoute({
 
   const assessment = getFinalExamAssessment(slug);
   const backHref = appendToken(`/course/${slug}/basic/assessment`, token);
+
+  if (supplyAccess && supplyAccess.blockCount < 3) {
+    return <PackageAccessDenied token={token} />;
+  }
 
   if (!assessment) {
     return (

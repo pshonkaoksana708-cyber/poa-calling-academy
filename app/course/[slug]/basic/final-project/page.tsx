@@ -3,6 +3,7 @@ import { AssessmentUnavailable } from "@/components/assessments/AssessmentUnavai
 import { FinalProjectPage } from "@/components/assessments/FinalProjectPage";
 import { getFinalProjectAssessment } from "@/data/assessments";
 import { getProfession } from "@/data/professions";
+import { getSupplyTokenAccess, PackageAccessDenied } from "@/app/course/supply-access-control";
 
 type FinalProjectRouteProps = {
   params: Promise<{
@@ -27,6 +28,14 @@ export default async function FinalProjectRoute({
 
   if (!profession) {
     notFound();
+  }
+
+  if (slug === "supply") {
+    const supplyAccess = getSupplyTokenAccess(token);
+
+    if (!supplyAccess.ok || supplyAccess.blockCount < 3) {
+      return <PackageAccessDenied token={token} />;
+    }
   }
 
   const assessment = getFinalProjectAssessment(slug);

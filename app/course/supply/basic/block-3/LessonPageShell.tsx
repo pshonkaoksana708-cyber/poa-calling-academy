@@ -55,11 +55,11 @@ function AccessDenied({ token }: { token?: string }) {
             Защищенный доступ
           </p>
           <h1 className="font-serif text-4xl leading-tight text-ink md:text-6xl">
-            Нет доступа к уроку
+            Этот уровень не входит в приобретённый пакет
           </h1>
           <p className="mt-6 max-w-3xl text-base leading-8 text-ink/70 md:text-lg">
-            Материалы урока доступны только по защищенной ссылке после оплаты
-            образовательной программы.
+            Блок 3 доступен только в профессиональном пакете. Материалы блоков
+            выше оплаченного пакета не раскрываются.
           </p>
           <p className="mt-4 max-w-3xl text-base leading-8 text-ink/70 md:text-lg">
             Если вы уже оплатили программу, откройте ссылку из письма, которое

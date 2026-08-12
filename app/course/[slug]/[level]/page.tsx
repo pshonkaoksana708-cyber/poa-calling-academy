@@ -15,6 +15,10 @@ import {
 import { accessDeliverySteps, supportEmail } from "@/data/config/email";
 import { getSupplyLevelImage } from "@/data/images";
 import { getAllowedAccessKeysForLevel, getProfessionLevel } from "@/data/professions";
+import {
+  getSupplyAccessibleBlockCount,
+  supplyBlock1AccessKeys,
+} from "@/app/course/supply/basic/access";
 import { validateAccessTokenForPrograms } from "@/lib/course-access";
 
 export const dynamic = "force-dynamic";
@@ -178,12 +182,21 @@ function CourseProgramOverviewPage({
   professionHref,
   professionTitle,
   token,
+  visiblePackageCount,
 }: {
   packages: CourseOverviewPackage[];
   professionHref: string;
   professionTitle: string;
   token?: string;
+  visiblePackageCount?: number;
 }) {
+  const visiblePackages =
+    visiblePackageCount === undefined
+      ? packages
+      : packages.slice(0, visiblePackageCount);
+  const visibleBlockCount = visiblePackageCount ?? 3;
+  const visibleLessonCount = visibleBlockCount * 10;
+
   return (
     <main className="min-h-screen bg-porcelain">
       <section className="pb-14 pt-12 md:pb-20 md:pt-16">
@@ -216,13 +229,13 @@ function CourseProgramOverviewPage({
                 <div className="rounded-2xl border border-ink/10 bg-porcelain p-4">
                   <dt className="text-sm text-ink/60">Всего в программе</dt>
                   <dd className="mt-1 font-serif text-3xl leading-tight text-ink">
-                    3 блока
+                    {visibleBlockCount} {visibleBlockCount === 1 ? "блок" : "блока"}
                   </dd>
                 </div>
                 <div className="rounded-2xl border border-ink/10 bg-porcelain p-4">
                   <dt className="text-sm text-ink/60">Уроки</dt>
                   <dd className="mt-1 font-serif text-3xl leading-tight text-ink">
-                    30 уроков
+                    {visibleLessonCount} уроков
                   </dd>
                 </div>
               </dl>
@@ -234,7 +247,7 @@ function CourseProgramOverviewPage({
       <section className="pb-20 md:pb-28">
         <div className="container-shell">
           <div className="grid gap-6 lg:grid-cols-3">
-            {packages.map((item, index) => (
+            {visiblePackages.map((item, index) => (
               <article
                 className="flex min-w-0 flex-col rounded-[2rem] border border-ink/10 bg-ivory p-6 shadow-soft md:p-8"
                 key={item.title}
@@ -319,12 +332,57 @@ export default async function CourseLevelPage({
   const levelImage = getSupplyLevelImage(level.slug);
 
   if (profession.slug === "supply" && level.slug === "basic") {
+    const supplyAccess = validateAccessTokenForPrograms(
+      token,
+      supplyBlock1AccessKeys,
+    );
+
+    if (token && !supplyAccess.ok) {
+      return (
+        <main className="min-h-screen bg-porcelain py-16 md:py-24">
+          <section className="container-shell">
+            <div className="rounded-3xl border border-ink/10 bg-ivory p-6 shadow-soft md:p-12">
+              <p className="mb-4 text-xs font-bold uppercase tracking-[0.26em] text-gold">
+                Защищенный доступ
+              </p>
+              <h1 className="font-serif text-4xl leading-tight text-ink md:text-6xl">
+                Нет доступа
+              </h1>
+              <p className="mt-6 max-w-3xl text-base leading-8 text-ink/70 md:text-lg">
+                Защищенная ссылка не подходит для этой образовательной
+                программы или срок ее действия истек.
+              </p>
+              <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+                <a
+                  className="rounded-full bg-ink px-7 py-4 text-center text-sm font-semibold text-white transition hover:bg-evergreen"
+                  href="/profession/supply"
+                >
+                  Вернуться к профессии
+                </a>
+                <a
+                  className="rounded-full border border-ink/15 px-7 py-4 text-center text-sm font-semibold text-ink transition hover:border-gold hover:text-evergreen"
+                  href={`mailto:${supportEmail}`}
+                >
+                  Связаться с нами
+                </a>
+              </div>
+            </div>
+          </section>
+        </main>
+      );
+    }
+
     return (
       <CourseProgramOverviewPage
         packages={supplyBasicPackages}
         professionHref="/profession/supply"
         professionTitle="Специалист по снабжению"
         token={token}
+        visiblePackageCount={
+          supplyAccess.ok
+            ? getSupplyAccessibleBlockCount(supplyAccess.payload)
+            : undefined
+        }
       />
     );
   }

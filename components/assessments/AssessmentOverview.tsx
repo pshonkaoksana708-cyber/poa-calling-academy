@@ -2,6 +2,7 @@ import type { Assessment } from "@/data/assessments/types";
 
 type AssessmentOverviewProps = {
   assessments: Assessment[];
+  maxBlockNumber?: number;
   professionTitle: string;
   slug: string;
   token?: string;
@@ -47,6 +48,7 @@ function StatusCard({
 
 export function AssessmentOverview({
   assessments,
+  maxBlockNumber,
   professionTitle,
   slug,
   token,
@@ -99,7 +101,17 @@ export function AssessmentOverview({
       ),
       title: "Финальный экзамен",
     },
-  ];
+  ].filter((card) => {
+    if (!maxBlockNumber) {
+      return true;
+    }
+
+    if (card.item?.type === "block-test") {
+      return (card.item.blockNumber ?? 0) <= maxBlockNumber;
+    }
+
+    return maxBlockNumber >= 3;
+  });
 
   return (
     <main className="min-h-screen bg-porcelain py-12 md:py-18">
