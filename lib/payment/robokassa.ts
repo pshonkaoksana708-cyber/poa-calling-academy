@@ -24,6 +24,19 @@ export type RobokassaConfig = {
   isTest: boolean;
 };
 
+export type RobokassaReceiptItem = {
+  name: string;
+  quantity: number;
+  sum: number;
+  payment_method: "full_payment";
+  payment_object: "service";
+  tax: "none";
+};
+
+export type RobokassaReceipt = {
+  items: RobokassaReceiptItem[];
+};
+
 export function parsePaymentSelection(value: string): PaymentSelection | null {
   const [professionSlug, packageSlug] = value.split(":");
 
@@ -128,9 +141,12 @@ export function createPaymentSignature(
   invId: number,
   password1: string,
   shpParams: Record<string, string | number> = {},
+  encodedReceipt?: string,
 ) {
+  const receiptPart = encodedReceipt ? `:${encodedReceipt}` : "";
+
   return md5Signature(
-    `${merchantLogin}:${outSum}:${invId}:${password1}${createShpSignatureSuffix(
+    `${merchantLogin}:${outSum}:${invId}${receiptPart}:${password1}${createShpSignatureSuffix(
       shpParams,
     )}`,
   );
@@ -166,6 +182,7 @@ export function buildRobokassaPaymentUrl(params: {
   email?: string;
   isTest: boolean;
   shpParams?: Record<string, string | number>;
+  encodedReceipt?: string;
 }) {
   const searchParams = new URLSearchParams({
     MerchantLogin: params.merchantLogin,
@@ -188,5 +205,14 @@ export function buildRobokassaPaymentUrl(params: {
     searchParams.set("IsTest", "1");
   }
 
-  return `${ROBOKASSA_PAYMENT_URL}?${searchParams.toString()}`;
+  const query = searchParams.toString();
+  const receiptQuery = params.encodedReceipt
+    ? `&Receipt=${params.encodedReceipt}`
+    : "";
+
+  return `${ROBOKASSA_PAYMENT_URL}?${query}${receiptQuery}`;
+}
+
+export function encodeRobokassaReceipt(receipt: RobokassaReceipt) {
+  return encodeURIComponent(JSON.stringify(receipt));
 }

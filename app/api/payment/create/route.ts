@@ -3,6 +3,7 @@ import { createPaymentOrder } from "@/lib/payment/orders";
 import {
   buildRobokassaPaymentUrl,
   createPaymentSignature,
+  encodeRobokassaReceipt,
   getRobokassaConfig,
   parsePaymentSelection,
   resolvePaymentPackage,
@@ -83,12 +84,29 @@ export async function POST(request: Request) {
     Shp_package: resolvedPackage.purchasePackage.slug,
     Shp_profession: resolvedPackage.profession.slug,
   };
+  const receipt = {
+    items: [
+      {
+        name: `${paymentOrder.professionTitle} — ${paymentOrder.packageTitle}`.slice(
+          0,
+          128,
+        ),
+        quantity: 1,
+        sum: paymentOrder.amount,
+        payment_method: "full_payment" as const,
+        payment_object: "service" as const,
+        tax: "none" as const,
+      },
+    ],
+  };
+  const encodedReceipt = encodeRobokassaReceipt(receipt);
   const signatureValue = createPaymentSignature(
     robokassaConfig.merchantLogin,
     paymentOrder.outSum,
     paymentOrder.invId,
     robokassaConfig.password1,
     shpParams,
+    encodedReceipt,
   );
   const paymentUrl = buildRobokassaPaymentUrl({
     merchantLogin: robokassaConfig.merchantLogin,
@@ -99,6 +117,7 @@ export async function POST(request: Request) {
     email: paymentOrder.customerEmail,
     isTest: robokassaConfig.isTest,
     shpParams,
+    encodedReceipt,
   });
 
   return NextResponse.json({
