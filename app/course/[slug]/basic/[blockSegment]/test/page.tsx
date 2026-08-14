@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { AssessmentTest } from "@/components/assessments/AssessmentTest";
 import { AssessmentUnavailable } from "@/components/assessments/AssessmentUnavailable";
@@ -7,6 +8,11 @@ import {
   getSupplyTokenAccess,
   PackageAccessDenied,
 } from "@/app/course/supply-access-control";
+import { noIndexRobots } from "@/lib/seo";
+
+export const metadata: Metadata = {
+  robots: noIndexRobots,
+};
 
 type BlockTestPageProps = {
   params: Promise<{

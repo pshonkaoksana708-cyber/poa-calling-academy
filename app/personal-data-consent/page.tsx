@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { LegalPage } from "@/components/LegalPage";
+import { publicSeo } from "@/lib/seo";
 
 export const metadata: Metadata = {
+  ...publicSeo("/personal-data-consent"),
   title: "Согласие на обработку персональных данных",
   description:
     "Согласие пользователя на обработку персональных данных при использовании сайта POA CALLING.",

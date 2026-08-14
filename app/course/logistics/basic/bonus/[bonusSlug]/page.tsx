@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { noIndexRobots } from "@/lib/seo";
 import { headers } from "next/headers";
 import { supportEmail } from "@/data/config/email";
 import {
@@ -33,6 +34,7 @@ export async function generateMetadata({
     description: lesson
       ? `Дополнительный материал образовательной программы «Специалист по международной логистике».`
       : undefined,
+    robots: noIndexRobots,
   };
 }
 

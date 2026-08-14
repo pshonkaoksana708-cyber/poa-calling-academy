@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { LegalPage } from "@/components/LegalPage";
+import { publicSeo } from "@/lib/seo";
 
 export const metadata: Metadata = {
+  ...publicSeo("/terms"),
   title: "Пользовательское соглашение",
   description:
     "Пользовательское соглашение сайта POA CALLING — Академии профессионального развития.",

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getCertificateById } from "@/data/certificates";
+import { noIndexRobots, publicSeo } from "@/lib/seo";
 
 type CertificatePageProps = {
   params: Promise<{
@@ -57,12 +58,14 @@ export async function generateMetadata({
   const certificate = getCertificateById(id);
 
   return {
+    ...publicSeo(`/certificate/${id}`),
     title: certificate
       ? `Сертификат ${certificate.id}`
       : "Сертификат не найден",
     description: certificate
       ? `Сертификат образовательной программы «${certificate.courseName}».`
       : "Просмотр сертификата Академии профессионального развития.",
+    ...(id.startsWith("DEMO-") ? { robots: noIndexRobots } : {}),
   };
 }
 

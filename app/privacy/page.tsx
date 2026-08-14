@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { LegalPage } from "@/components/LegalPage";
+import { publicSeo } from "@/lib/seo";
 
 export const metadata: Metadata = {
+  ...publicSeo("/privacy"),
   title: "Политика в отношении обработки персональных данных",
   description:
     "Политика в отношении обработки персональных данных пользователей сайта POA CALLING.",

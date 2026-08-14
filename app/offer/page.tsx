@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { LegalPage } from "@/components/LegalPage";
+import { publicSeo } from "@/lib/seo";
 
 export const metadata: Metadata = {
+  ...publicSeo("/offer"),
   title: {
     absolute: "Публичная оферта | POA CALLING",
   },

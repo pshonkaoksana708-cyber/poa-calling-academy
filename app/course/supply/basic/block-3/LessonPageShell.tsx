@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { noIndexRobots } from "@/lib/seo";
 import { headers } from "next/headers";
 import { supportEmail } from "@/data/config/email";
 import {
@@ -28,6 +29,7 @@ export function getSupplyBasicBlock3LessonMetadata(
     description: lesson
       ? `Урок ${lesson.lessonNumber} третьего блока базового уровня образовательной программы «Специалист по снабжению».`
       : undefined,
+    robots: noIndexRobots,
   };
 }
 

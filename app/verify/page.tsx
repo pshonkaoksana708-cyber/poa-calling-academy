@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import { publicSeo } from "@/lib/seo";
 import { CertificateVerifier } from "./CertificateVerifier";
 
 export const metadata: Metadata = {
+  ...publicSeo("/verify"),
   title: "Проверка сертификата",
   description:
     "Проверка подлинности сертификата Академии профессионального развития.",

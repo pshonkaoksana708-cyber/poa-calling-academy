@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { noIndexRobots } from "@/lib/seo";
 import { headers } from "next/headers";
 import { supportEmail } from "@/data/config/email";
 import {
@@ -30,6 +31,7 @@ export function getHrBlock1LessonMetadata(lessonNumber: number): Metadata {
     description: lesson
       ? `Урок ${lesson.lessonNumber} базового уровня образовательной программы «Специалист по кадрам и управлению персоналом».`
       : undefined,
+    robots: noIndexRobots,
   };
 }
 

@@ -14,6 +14,7 @@ import { CertificateSection } from "@/components/CertificateSection";
 import { accessDeliverySteps } from "@/data/config/email";
 import { getProfessionImage, getProfessionLevelImage } from "@/data/images";
 import { getProfession } from "@/data/professions";
+import { publicSeo } from "@/lib/seo";
 
 type ProfessionPageProps = {
   params: Promise<{
@@ -302,6 +303,7 @@ export async function generateMetadata({
   const profession = getProfession(slug);
 
   return {
+    ...(profession ? publicSeo(`/profession/${profession.slug}`) : {}),
     title: profession
       ? `${profession.title} | Профессия Академии`
       : "Профессия Академии",

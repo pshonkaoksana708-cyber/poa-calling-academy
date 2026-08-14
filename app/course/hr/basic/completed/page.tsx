@@ -1,6 +1,12 @@
+import type { Metadata } from "next";
 import { CertificateSection } from "@/components/CertificateSection";
+import { noIndexRobots } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  robots: noIndexRobots,
+};
 
 type CompletedPageProps = {
   searchParams: Promise<{

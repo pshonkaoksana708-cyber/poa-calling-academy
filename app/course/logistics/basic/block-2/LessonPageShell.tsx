@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { noIndexRobots } from "@/lib/seo";
 import { headers } from "next/headers";
 import { supportEmail } from "@/data/config/email";
 import {
@@ -30,6 +31,7 @@ export function getLogisticsBlock2LessonMetadata(lessonNumber: number): Metadata
     description: lesson
       ? `Урок ${lesson.lessonNumber} практического уровня образовательной программы «Специалист по международной логистике».`
       : undefined,
+    robots: noIndexRobots,
   };
 }
 

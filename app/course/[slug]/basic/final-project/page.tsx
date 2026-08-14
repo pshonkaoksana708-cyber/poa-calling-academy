@@ -1,9 +1,15 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { AssessmentUnavailable } from "@/components/assessments/AssessmentUnavailable";
 import { FinalProjectPage } from "@/components/assessments/FinalProjectPage";
 import { getFinalProjectAssessment } from "@/data/assessments";
 import { getProfession } from "@/data/professions";
 import { getSupplyTokenAccess, PackageAccessDenied } from "@/app/course/supply-access-control";
+import { noIndexRobots } from "@/lib/seo";
+
+export const metadata: Metadata = {
+  robots: noIndexRobots,
+};
 
 type FinalProjectRouteProps = {
   params: Promise<{

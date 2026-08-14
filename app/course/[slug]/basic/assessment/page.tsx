@@ -1,8 +1,14 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { AssessmentOverview } from "@/components/assessments/AssessmentOverview";
 import { getProfessionAssessments } from "@/data/assessments";
 import { getProfession } from "@/data/professions";
 import { getSupplyTokenAccess, PackageAccessDenied } from "@/app/course/supply-access-control";
+import { noIndexRobots } from "@/lib/seo";
+
+export const metadata: Metadata = {
+  robots: noIndexRobots,
+};
 
 type AssessmentPageProps = {
   params: Promise<{

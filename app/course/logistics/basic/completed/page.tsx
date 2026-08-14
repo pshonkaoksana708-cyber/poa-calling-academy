@@ -1,8 +1,14 @@
+import type { Metadata } from "next";
 import { CertificateAccess } from "@/components/CertificateAccess";
 import { logisticsBonusLessons } from "@/data/professions/logistics/bonus-lessons";
 import { appendToken } from "../access";
+import { noIndexRobots } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  robots: noIndexRobots,
+};
 
 type CompletedPageProps = {
   searchParams: Promise<{

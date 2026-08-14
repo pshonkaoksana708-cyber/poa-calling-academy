@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import { noIndexRobots } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Оплата не завершена",
   description:
     "Страница отмененной или неуспешной оплаты образовательной программы POA CALLING.",
+  robots: noIndexRobots,
 };
 
 export default function PaymentFailPage() {

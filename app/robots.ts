@@ -1,12 +1,7 @@
 import type { MetadataRoute } from "next";
-
-function getSiteUrl() {
-  return process.env.NEXT_PUBLIC_SITE_URL ?? process.env.SITE_URL;
-}
+import { absoluteUrl } from "@/lib/seo";
 
 export default function robots(): MetadataRoute.Robots {
-  const siteUrl = getSiteUrl();
-
   return {
     rules: {
       allow: [
@@ -32,6 +27,6 @@ export default function robots(): MetadataRoute.Robots {
       ],
       userAgent: "*",
     },
-    ...(siteUrl ? { sitemap: `${siteUrl}/sitemap.xml` } : {}),
+    sitemap: absoluteUrl("/sitemap.xml"),
   };
 }

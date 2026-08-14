@@ -20,6 +20,7 @@ import {
   supplyBlock1AccessKeys,
 } from "@/app/course/supply/basic/access";
 import { validateAccessTokenForPrograms } from "@/lib/course-access";
+import { publicSeo } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
@@ -293,6 +294,7 @@ export async function generateMetadata({
   const data = getProfessionLevel(slug, level);
 
   return {
+    ...(data ? publicSeo(`/course/${slug}/${level}`) : {}),
     title: data
       ? `${data.profession.title}: ${data.level.title}`
       : "Уровень образовательной программы",

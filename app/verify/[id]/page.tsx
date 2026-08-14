@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CertificateCard } from "@/components/CertificateCard";
 import { getCertificateById } from "@/data/certificates";
+import { publicSeo } from "@/lib/seo";
 
 type VerifyCertificateDetailsPageProps = {
   params: Promise<{
@@ -16,6 +17,7 @@ export async function generateMetadata({
   const certificate = getCertificateById(id);
 
   return {
+    ...publicSeo(`/verify/${id}`),
     title: certificate
       ? `Сертификат ${certificate.id}`
       : "Сертификат не найден",

@@ -4,11 +4,13 @@ import {
   paymentSuccessCopy,
   supportEmail,
 } from "@/data/config/email";
+import { noIndexRobots } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Оплата прошла успешно",
   description:
     "Страница подтверждения оплаты образовательной программы Академии профессионального развития.",
+  robots: noIndexRobots,
 };
 
 export default function PaymentSuccessPage() {

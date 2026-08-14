@@ -1,10 +1,12 @@
 import { notFound } from "next/navigation";
 
 import { renderAssessmentUtilityRoute } from "@/app/course/assessment-route-helpers";
+import { noIndexRobots } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
 export const metadata = {
+  robots: noIndexRobots,
   title: "Итоговый проект | Специалист по международной логистике",
 };
 

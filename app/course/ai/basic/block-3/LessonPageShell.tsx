@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { noIndexRobots } from "@/lib/seo";
 import { headers } from "next/headers";
 import { supportEmail } from "@/data/config/email";
 import {
@@ -26,6 +27,7 @@ export function getAiBlock3LessonMetadata(lessonNumber: number): Metadata {
     description: lesson
       ? `Урок ${lesson.lessonNumber} профессионального уровня образовательной программы «Специалист по искусственному интеллекту».`
       : undefined,
+    robots: noIndexRobots,
   };
 }
 
