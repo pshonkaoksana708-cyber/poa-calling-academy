@@ -3,6 +3,7 @@ import {
   absoluteUrl,
   defaultOpenGraphAlt,
   defaultOpenGraphImage,
+  homeSeo,
   siteUrl,
 } from "@/lib/seo";
 import "./globals.css";
@@ -13,15 +14,13 @@ export const metadata: Metadata = {
   },
   metadataBase: new URL(siteUrl),
   title: {
-    default: "POA CALLING — Академия профессионального развития",
+    default: homeSeo.title,
     template: "%s | POA CALLING",
   },
-  description:
-    "POA CALLING — Академия профессионального развития. Практические образовательные программы для получения новой профессии и развития профессиональных навыков.",
+  description: homeSeo.description,
   openGraph: {
-    title: "POA CALLING — Академия профессионального развития",
-    description:
-      "Практические образовательные программы для получения новой профессии и развития профессиональных навыков.",
+    title: homeSeo.title,
+    description: homeSeo.description,
     images: [
       {
         alt: defaultOpenGraphAlt,
@@ -35,7 +34,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
+    description: homeSeo.description,
     images: [defaultOpenGraphImage],
+    title: homeSeo.title,
   },
 };
 

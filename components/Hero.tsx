@@ -1,3 +1,5 @@
+import { homeSeo } from "@/lib/seo";
+
 export function Hero() {
   return (
     <section className="overflow-hidden pb-16 pt-10 md:pb-[4.5rem] md:pt-12 lg:min-h-[calc(100svh-5rem)] lg:py-12 xl:py-14">
@@ -8,7 +10,7 @@ export function Hero() {
               Современная образовательная платформа
             </p>
             <h1 className="max-w-[640px] font-serif text-[clamp(2.35rem,4.6vw,3.35rem)] leading-[1.05] text-ink [overflow-wrap:anywhere]">
-              Академия профессий
+              {homeSeo.h1}
             </h1>
             <p className="mt-7 max-w-[620px] text-base leading-7 text-ink/72">
               <span className="block text-lg font-semibold leading-7 text-ink md:text-xl md:leading-8">

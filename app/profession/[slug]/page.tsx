@@ -14,7 +14,7 @@ import { CertificateSection } from "@/components/CertificateSection";
 import { accessDeliverySteps } from "@/data/config/email";
 import { getProfessionImage, getProfessionLevelImage } from "@/data/images";
 import { getProfession } from "@/data/professions";
-import { publicSeo } from "@/lib/seo";
+import { getProfessionSeo, seoMetadata } from "@/lib/seo";
 
 type ProfessionPageProps = {
   params: Promise<{
@@ -301,13 +301,18 @@ export async function generateMetadata({
 }: ProfessionPageProps): Promise<Metadata> {
   const { slug } = await params;
   const profession = getProfession(slug);
+  const seo = profession ? getProfessionSeo(profession) : null;
 
   return {
-    ...(profession ? publicSeo(`/profession/${profession.slug}`) : {}),
-    title: profession
-      ? `${profession.title} | Профессия Академии`
-      : "Профессия Академии",
-    description: profession?.description,
+    ...(profession && seo
+      ? seoMetadata({
+          description: seo.description,
+          path: `/profession/${profession.slug}`,
+          title: seo.title,
+        })
+      : {
+          title: "Профессия Академии",
+        }),
   };
 }
 
@@ -319,6 +324,7 @@ export default async function ProfessionPage({ params }: ProfessionPageProps) {
     notFound();
   }
 
+  const seo = getProfessionSeo(profession);
   const levelSummary = profession.levels.map((level) => ({
     title: level.title,
     description: level.result,
@@ -356,7 +362,7 @@ export default async function ProfessionPage({ params }: ProfessionPageProps) {
                 Профессия / {profession.direction}
               </p>
               <h1 className="max-w-4xl font-serif text-4xl leading-tight text-ink [hyphens:auto] [overflow-wrap:anywhere] [word-break:normal] md:text-6xl">
-                {profession.title}
+                {seo.h1}
               </h1>
               <p className="mt-5 max-w-3xl text-base leading-8 text-ink/70 md:text-lg">
                 {profession.description}

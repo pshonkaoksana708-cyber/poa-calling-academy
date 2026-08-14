@@ -20,7 +20,7 @@ import {
   supplyBlock1AccessKeys,
 } from "@/app/course/supply/basic/access";
 import { validateAccessTokenForPrograms } from "@/lib/course-access";
-import { publicSeo } from "@/lib/seo";
+import { getLevelSeo, noIndexRobots, seoMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
@@ -179,12 +179,14 @@ function withToken(href: string, token?: string) {
 }
 
 function CourseProgramOverviewPage({
+  h1Title,
   packages,
   professionHref,
   professionTitle,
   token,
   visiblePackageCount,
 }: {
+  h1Title: string;
   packages: CourseOverviewPackage[];
   professionHref: string;
   professionTitle: string;
@@ -215,7 +217,7 @@ function CourseProgramOverviewPage({
                 {professionTitle}
               </p>
               <h1 className="max-w-4xl font-serif text-4xl leading-tight text-ink md:text-6xl">
-                Базовый уровень
+                {h1Title}
               </h1>
               <p className="mt-6 max-w-3xl text-base leading-8 text-ink/70 md:text-lg">
                 Уровни доступа устроены накопительно: базовый пакет открывает
@@ -292,13 +294,24 @@ export async function generateMetadata({
 }: CourseLevelPageProps): Promise<Metadata> {
   const { slug, level } = await params;
   const data = getProfessionLevel(slug, level);
+  const seo = data
+    ? getLevelSeo({
+        level: data.level,
+        profession: data.profession,
+      })
+    : null;
 
   return {
-    ...(data ? publicSeo(`/course/${slug}/${level}`) : {}),
-    title: data
-      ? `${data.profession.title}: ${data.level.title}`
-      : "Уровень образовательной программы",
-    description: data?.level.description,
+    ...(data && seo
+      ? seoMetadata({
+          description: seo.description,
+          path: `/course/${slug}/${level}`,
+          title: seo.title,
+        })
+      : {
+          title: "Уровень образовательной программы",
+        }),
+    ...(level === "basic" ? {} : { robots: noIndexRobots }),
   };
 }
 
@@ -315,6 +328,7 @@ export default async function CourseLevelPage({
   }
 
   const { profession, level } = data;
+  const seo = getLevelSeo({ level, profession });
   const allowedAccessKeys = getAllowedAccessKeysForLevel(profession.slug, level.slug);
   const access = validateAccessTokenForPrograms(token, allowedAccessKeys);
   const lessonCount = level.modules.reduce(
@@ -376,6 +390,7 @@ export default async function CourseLevelPage({
 
     return (
       <CourseProgramOverviewPage
+        h1Title={seo.h1}
         packages={supplyBasicPackages}
         professionHref="/profession/supply"
         professionTitle="Специалист по снабжению"
@@ -392,6 +407,7 @@ export default async function CourseLevelPage({
   if (profession.slug === "hr" && level.slug === "basic") {
     return (
       <CourseProgramOverviewPage
+        h1Title={seo.h1}
         packages={hrBasicPackages}
         professionHref="/profession/hr"
         professionTitle="Специалист по кадрам и управлению персоналом"
@@ -403,6 +419,7 @@ export default async function CourseLevelPage({
   if (profession.slug === "tourism" && level.slug === "basic") {
     return (
       <CourseProgramOverviewPage
+        h1Title={seo.h1}
         packages={tourismBasicPackages}
         professionHref="/profession/tourism"
         professionTitle="Специалист по туризму"
@@ -414,6 +431,7 @@ export default async function CourseLevelPage({
   if (profession.slug === "logistics" && level.slug === "basic") {
     return (
       <CourseProgramOverviewPage
+        h1Title={seo.h1}
         packages={logisticsBasicPackages}
         professionHref="/profession/logistics"
         professionTitle="Специалист по международной логистике"
@@ -425,6 +443,7 @@ export default async function CourseLevelPage({
   if (profession.slug === "ai" && level.slug === "basic") {
     return (
       <CourseProgramOverviewPage
+        h1Title={seo.h1}
         packages={aiBasicPackages}
         professionHref="/profession/ai"
         professionTitle="Специалист по искусственному интеллекту"
@@ -510,7 +529,7 @@ export default async function CourseLevelPage({
                 {profession.title} / {level.label}
               </p>
               <h1 className="max-w-4xl font-serif text-4xl leading-tight text-ink md:text-6xl">
-                {level.title}
+                {seo.h1}
               </h1>
               <p className="mt-6 max-w-3xl text-base leading-8 text-ink/70 md:text-lg">
                 {level.description}
