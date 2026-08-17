@@ -3,10 +3,13 @@ import {
   absoluteUrl,
   defaultOpenGraphAlt,
   defaultOpenGraphImage,
+  getSiteVerificationMetadata,
   homeSeo,
   siteUrl,
 } from "@/lib/seo";
 import "./globals.css";
+
+const verification = getSiteVerificationMetadata();
 
 export const metadata: Metadata = {
   alternates: {
@@ -38,6 +41,7 @@ export const metadata: Metadata = {
     images: [defaultOpenGraphImage],
     title: homeSeo.title,
   },
+  ...(verification ? { verification } : {}),
 };
 
 export default function RootLayout({

@@ -11,10 +11,16 @@ import {
   SkillsGrid,
 } from "@/components";
 import { CertificateSection } from "@/components/CertificateSection";
+import { JsonLd } from "@/components/JsonLd";
 import { accessDeliverySteps } from "@/data/config/email";
 import { getProfessionImage, getProfessionLevelImage } from "@/data/images";
 import { getProfession } from "@/data/professions";
-import { getProfessionSeo, seoMetadata } from "@/lib/seo";
+import {
+  breadcrumbListJsonLd,
+  courseJsonLd,
+  getProfessionSeo,
+  seoMetadata,
+} from "@/lib/seo";
 
 type ProfessionPageProps = {
   params: Promise<{
@@ -347,9 +353,28 @@ export default async function ProfessionPage({ params }: ProfessionPageProps) {
     skills: "Навыки",
     levels: "Уровни программы",
   };
+  const professionPath = `/profession/${profession.slug}`;
+  const structuredData = [
+    courseJsonLd({
+      description: seo.description,
+      name: profession.title,
+      path: professionPath,
+    }),
+    breadcrumbListJsonLd([
+      {
+        name: "Главная",
+        path: "/",
+      },
+      {
+        name: profession.title,
+        path: professionPath,
+      },
+    ]),
+  ];
 
   return (
     <main className="min-h-screen bg-porcelain">
+      <JsonLd data={structuredData} />
       <section className="pb-10 pt-10 md:pb-16 md:pt-14">
         <div className="container-shell">
           <a className="text-sm font-semibold text-ink/70 transition hover:text-ink" href="/">

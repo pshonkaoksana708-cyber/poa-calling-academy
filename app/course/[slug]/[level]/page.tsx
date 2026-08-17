@@ -12,6 +12,7 @@ import {
   Quote,
   ResultCard,
 } from "@/components";
+import { JsonLd } from "@/components/JsonLd";
 import { accessDeliverySteps, supportEmail } from "@/data/config/email";
 import { getSupplyLevelImage } from "@/data/images";
 import { getAllowedAccessKeysForLevel, getProfessionLevel } from "@/data/professions";
@@ -20,7 +21,13 @@ import {
   supplyBlock1AccessKeys,
 } from "@/app/course/supply/basic/access";
 import { validateAccessTokenForPrograms } from "@/lib/course-access";
-import { getLevelSeo, noIndexRobots, seoMetadata } from "@/lib/seo";
+import {
+  breadcrumbListJsonLd,
+  courseJsonLd,
+  getLevelSeo,
+  noIndexRobots,
+  seoMetadata,
+} from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
@@ -183,6 +190,7 @@ function CourseProgramOverviewPage({
   packages,
   professionHref,
   professionTitle,
+  structuredData,
   token,
   visiblePackageCount,
 }: {
@@ -190,6 +198,7 @@ function CourseProgramOverviewPage({
   packages: CourseOverviewPackage[];
   professionHref: string;
   professionTitle: string;
+  structuredData?: unknown[];
   token?: string;
   visiblePackageCount?: number;
 }) {
@@ -202,6 +211,7 @@ function CourseProgramOverviewPage({
 
   return (
     <main className="min-h-screen bg-porcelain">
+      {structuredData ? <JsonLd data={structuredData} /> : null}
       <section className="pb-14 pt-12 md:pb-20 md:pt-16">
         <div className="container-shell">
           <a
@@ -329,6 +339,31 @@ export default async function CourseLevelPage({
 
   const { profession, level } = data;
   const seo = getLevelSeo({ level, profession });
+  const coursePath = `/course/${profession.slug}/${level.slug}`;
+  const basicCourseStructuredData =
+    level.slug === "basic"
+      ? [
+          courseJsonLd({
+            description: seo.description,
+            name: seo.title,
+            path: coursePath,
+          }),
+          breadcrumbListJsonLd([
+            {
+              name: "Главная",
+              path: "/",
+            },
+            {
+              name: profession.title,
+              path: `/profession/${profession.slug}`,
+            },
+            {
+              name: seo.title,
+              path: coursePath,
+            },
+          ]),
+        ]
+      : undefined;
   const allowedAccessKeys = getAllowedAccessKeysForLevel(profession.slug, level.slug);
   const access = validateAccessTokenForPrograms(token, allowedAccessKeys);
   const lessonCount = level.modules.reduce(
@@ -394,6 +429,7 @@ export default async function CourseLevelPage({
         packages={supplyBasicPackages}
         professionHref="/profession/supply"
         professionTitle="Специалист по снабжению"
+        structuredData={basicCourseStructuredData}
         token={token}
         visiblePackageCount={
           supplyAccess.ok
@@ -411,6 +447,7 @@ export default async function CourseLevelPage({
         packages={hrBasicPackages}
         professionHref="/profession/hr"
         professionTitle="Специалист по кадрам и управлению персоналом"
+        structuredData={basicCourseStructuredData}
         token={token}
       />
     );
@@ -423,6 +460,7 @@ export default async function CourseLevelPage({
         packages={tourismBasicPackages}
         professionHref="/profession/tourism"
         professionTitle="Специалист по туризму"
+        structuredData={basicCourseStructuredData}
         token={token}
       />
     );
@@ -435,6 +473,7 @@ export default async function CourseLevelPage({
         packages={logisticsBasicPackages}
         professionHref="/profession/logistics"
         professionTitle="Специалист по международной логистике"
+        structuredData={basicCourseStructuredData}
         token={token}
       />
     );
@@ -447,6 +486,7 @@ export default async function CourseLevelPage({
         packages={aiBasicPackages}
         professionHref="/profession/ai"
         professionTitle="Специалист по искусственному интеллекту"
+        structuredData={basicCourseStructuredData}
         token={token}
       />
     );

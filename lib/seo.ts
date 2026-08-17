@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 
 export const siteUrl = "https://www.poacalling.com";
-export const defaultOpenGraphImage = "/images/hero/academy-og.jpg";
-export const defaultOpenGraphAlt =
+export const organizationName =
   "POA CALLING — Академия профессионального развития";
+export const defaultOpenGraphImage = "/images/hero/academy-og.jpg";
+export const defaultOpenGraphAlt = organizationName;
 
 export const noIndexRobots = {
   follow: false,
@@ -38,6 +39,86 @@ export function publicSeo(path: string): Metadata {
       card: "summary_large_image",
       images: [defaultOpenGraphImage],
     },
+  };
+}
+
+export function getSiteVerificationMetadata(): Metadata["verification"] | undefined {
+  const google = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION;
+  const yandex = process.env.NEXT_PUBLIC_YANDEX_VERIFICATION;
+
+  if (!google && !yandex) {
+    return undefined;
+  }
+
+  return {
+    ...(google ? { google } : {}),
+    ...(yandex ? { yandex } : {}),
+  };
+}
+
+export function organizationJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@id": `${siteUrl}/#organization`,
+    "@type": "Organization",
+    name: organizationName,
+    url: siteUrl,
+  };
+}
+
+export function websiteJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@id": `${siteUrl}/#website`,
+    "@type": "WebSite",
+    inLanguage: "ru-RU",
+    name: "POA CALLING",
+    publisher: {
+      "@id": `${siteUrl}/#organization`,
+    },
+    url: siteUrl,
+  };
+}
+
+export function courseJsonLd(input: {
+  description: string;
+  name: string;
+  path: string;
+}) {
+  const url = absoluteUrl(input.path);
+
+  return {
+    "@context": "https://schema.org",
+    "@id": `${url}#course`,
+    "@type": "Course",
+    description: input.description,
+    inLanguage: "ru-RU",
+    name: input.name,
+    provider: {
+      "@id": `${siteUrl}/#organization`,
+      "@type": "Organization",
+      name: organizationName,
+      url: siteUrl,
+    },
+    url,
+  };
+}
+
+export function breadcrumbListJsonLd(
+  items: Array<{
+    name: string;
+    path: string;
+  }>,
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      item: absoluteUrl(item.path),
+      name: item.name,
+      position: index + 1,
+    })),
   };
 }
 
