@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import { siteImages } from "@/data/images";
 import { professions } from "@/data/professions";
 
@@ -58,11 +58,15 @@ function AccessVisual() {
 }
 
 export function AccessRequestForm() {
-  const packageOptions = professions.flatMap((profession) =>
-    profession.packages.map((item) => ({
-      value: `${profession.slug}:${item.slug}`,
-      label: `${profession.title} — ${packageTitles[item.slug] ?? item.title}`,
-    })),
+  const packageOptions = useMemo(
+    () =>
+      professions.flatMap((profession) =>
+        profession.packages.map((item) => ({
+          value: `${profession.slug}:${item.slug}`,
+          label: `${profession.title} — ${packageTitles[item.slug] ?? item.title}`,
+        })),
+      ),
+    [],
   );
   const [acceptedPersonalData, setAcceptedPersonalData] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -71,6 +75,27 @@ export function AccessRequestForm() {
   const [selectedPackage, setSelectedPackage] = useState(
     packageOptions[0]?.value ?? "",
   );
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const profession = searchParams.get("profession");
+    const packageSlug = searchParams.get("package");
+
+    if (!profession || !packageSlug) {
+      return;
+    }
+
+    const packageValue = `${profession}:${packageSlug}`;
+    const optionExists = packageOptions.some(
+      (option) => option.value === packageValue,
+    );
+
+    if (optionExists) {
+      setSelectedPackage(packageValue);
+      setPaymentError("");
+      setSubmitted(false);
+    }
+  }, [packageOptions]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
