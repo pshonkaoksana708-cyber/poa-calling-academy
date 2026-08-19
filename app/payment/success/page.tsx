@@ -33,7 +33,7 @@ export default function PaymentSuccessPage() {
 
           <div className="relative mt-10 aspect-[16/10] overflow-hidden rounded-[2rem] border border-mist bg-ivory">
             <img
-              src="/images/payment/author-14.png"
+              src="/media/images/payment/author-14.png"
               alt="Автор"
               width={1024}
               height={1536}

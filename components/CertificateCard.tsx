@@ -20,7 +20,7 @@ export function CertificateCard({ certificate }: CertificateCardProps) {
             fill
             priority={false}
             sizes="(min-width: 1024px) 42vw, 100vw"
-            src="/images/certificates/certificate-template.png"
+            src="/media/images/certificates/certificate-template.png"
           />
         </div>
 

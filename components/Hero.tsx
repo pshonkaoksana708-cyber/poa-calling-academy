@@ -42,7 +42,7 @@ export function Hero() {
         <div className="hero-reveal hero-reveal-delay-2 min-w-0">
           <div className="relative aspect-[4/5] overflow-hidden rounded-[2.25rem] border border-gold/20 bg-ivory shadow-[0_28px_90px_rgba(38,49,45,0.12)] md:min-h-[560px]">
             <img
-              src="/images/author/author-01.webp"
+              src="/media/images/author/author-01.webp"
               alt="Автор"
               width={1024}
               height={1536}

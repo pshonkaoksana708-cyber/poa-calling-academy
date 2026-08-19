@@ -14,7 +14,7 @@ export function FounderBlock() {
         <div className="grid gap-5">
           <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] border border-mist bg-ivory shadow-soft md:min-h-[520px]">
             <img
-              src="/images/author/author-02.webp"
+              src="/media/images/author/author-02.webp"
               alt="Автор"
               width={1122}
               height={1402}
@@ -26,7 +26,7 @@ export function FounderBlock() {
           <div className="grid gap-5 sm:grid-cols-2">
             <div className="relative aspect-[16/10] overflow-hidden rounded-[2rem] border border-mist bg-ivory">
               <img
-                src="/images/author/author-03.webp"
+                src="/media/images/author/author-03.webp"
                 alt="Автор"
                 width={1200}
                 height={960}
@@ -37,7 +37,7 @@ export function FounderBlock() {
             </div>
             <div className="relative aspect-[16/10] overflow-hidden rounded-[2rem] border border-mist bg-ivory">
               <img
-                src="/images/author/author-06.webp"
+                src="/media/images/author/author-06.webp"
                 alt="Автор"
                 width={1086}
                 height={1448}

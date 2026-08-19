@@ -8,7 +8,7 @@ type AuthorCardProps = {
 export function AuthorCard({
   title = "Практические программы от эксперта с реальным профессиональным опытом",
   description,
-  imageSrc = "/images/author/author-10.webp",
+  imageSrc = "/media/images/author/author-10.webp",
 }: AuthorCardProps) {
   return (
     <article className="grid gap-8 rounded-[2rem] border border-ink/10 bg-ivory p-6 shadow-soft md:p-8 lg:grid-cols-[320px_1fr] lg:items-center">

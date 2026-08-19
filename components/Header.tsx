@@ -11,7 +11,7 @@ export function Header() {
             className="h-[46px] w-auto md:h-[54px] lg:h-[60px]"
             height={1400}
             priority
-            src="/images/logo/poa-calling-logo.svg"
+            src="/media/images/logo/poa-calling-logo.svg"
             width={1200}
           />
         </a>
