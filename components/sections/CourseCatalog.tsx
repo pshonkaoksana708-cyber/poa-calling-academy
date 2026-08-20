@@ -9,11 +9,11 @@ const homepageLevelTitles: Record<string, string> = {
 };
 
 const catalogImages: Record<string, string> = {
-  supply: "/media/images/supply/supply-02.jpg",
-  logistics: "/media/images/logistics/logistics-hero.jpg",
-  hr: "/media/images/team/team-02.jpg",
-  tourism: "/media/images/supply/supply-05.jpg",
-  ai: "/media/images/professions/professions-02.jpg",
+  supply: "/images/supply/supply-02.jpg",
+  logistics: "/images/logistics/logistics-hero.jpg",
+  hr: "/images/team/team-02.jpg",
+  tourism: "/images/supply/supply-05.jpg",
+  ai: "/images/professions/professions-02.jpg",
 };
 
 function getProfessionIcon(slug: string) {

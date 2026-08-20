@@ -96,7 +96,7 @@ export default async function CertificatePage({ params }: CertificatePageProps) 
                 fill
                 priority
                 sizes="(min-width: 1024px) 70vw, 100vw"
-                src="/media/images/certificates/certificate-template.png"
+                src="/images/certificates/certificate-template.png"
               />
             </div>
           </article>

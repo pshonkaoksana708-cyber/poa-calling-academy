@@ -19,7 +19,7 @@ export function CertificateSection() {
                 className="object-cover"
                 fill
                 sizes="(min-width: 1024px) 50vw, 100vw"
-                src="/media/images/certificates/certificate-template.png"
+                src="/images/certificates/certificate-template.png"
               />
             </div>
             <p className="mx-auto mt-5 max-w-2xl text-center text-sm leading-7 text-ink/68">
