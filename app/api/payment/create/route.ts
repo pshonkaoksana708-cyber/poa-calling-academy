@@ -18,13 +18,69 @@ type PaymentCreateRequest = {
   phone?: string;
 };
 
+const paymentRequestOrigins = new Set([
+  "https://www.poacalling.com",
+  "https://poacalling.com",
+  "https://poa-calling-academy.vercel.app",
+]);
+
+function isAllowedPaymentOrigin(origin: string) {
+  if (paymentRequestOrigins.has(origin)) {
+    return true;
+  }
+
+  return /^https?:\/\/(localhost|127\.0\.0\.1):\d+$/.test(origin);
+}
+
+function createCorsHeaders(request: Request) {
+  const origin = request.headers.get("origin") ?? "";
+  const headers = new Headers({
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+    Vary: "Origin",
+  });
+
+  if (origin && isAllowedPaymentOrigin(origin)) {
+    headers.set("Access-Control-Allow-Origin", origin);
+  }
+
+  return headers;
+}
+
+function jsonPaymentResponse(
+  request: Request,
+  body: Record<string, unknown>,
+  init?: ResponseInit,
+) {
+  const headers = createCorsHeaders(request);
+
+  if (init?.headers) {
+    new Headers(init.headers).forEach((value, key) => {
+      headers.set(key, value);
+    });
+  }
+
+  return NextResponse.json(body, {
+    ...init,
+    headers,
+  });
+}
+
+export function OPTIONS(request: Request) {
+  return new NextResponse(null, {
+    status: 204,
+    headers: createCorsHeaders(request),
+  });
+}
+
 export async function POST(request: Request) {
   let payload: PaymentCreateRequest;
 
   try {
     payload = (await request.json()) as PaymentCreateRequest;
   } catch {
-    return NextResponse.json(
+    return jsonPaymentResponse(
+      request,
       { error: "Некорректный запрос на оплату." },
       { status: 400 },
     );
@@ -33,7 +89,8 @@ export async function POST(request: Request) {
   const selection = parsePaymentSelection(payload.package ?? "");
 
   if (!selection) {
-    return NextResponse.json(
+    return jsonPaymentResponse(
+      request,
       { error: "Не выбран пакет образовательной программы." },
       { status: 400 },
     );
@@ -42,7 +99,8 @@ export async function POST(request: Request) {
   const resolvedPackage = resolvePaymentPackage(selection);
 
   if (!resolvedPackage) {
-    return NextResponse.json(
+    return jsonPaymentResponse(
+      request,
       { error: "Пакет образовательной программы не найден." },
       { status: 404 },
     );
@@ -51,7 +109,8 @@ export async function POST(request: Request) {
   const customerEmail = (payload.email ?? "").trim();
 
   if (!customerEmail) {
-    return NextResponse.json(
+    return jsonPaymentResponse(
+      request,
       { error: "Укажите email для получения доступа." },
       { status: 400 },
     );
@@ -62,7 +121,8 @@ export async function POST(request: Request) {
   try {
     robokassaConfig = getRobokassaConfig();
   } catch {
-    return NextResponse.json(
+    return jsonPaymentResponse(
+      request,
       { error: "Платежная система пока не настроена." },
       { status: 500 },
     );
@@ -120,7 +180,7 @@ export async function POST(request: Request) {
     encodedReceipt,
   });
 
-  return NextResponse.json({
+  return jsonPaymentResponse(request, {
     paymentUrl,
     invId: paymentOrder.invId,
   });
