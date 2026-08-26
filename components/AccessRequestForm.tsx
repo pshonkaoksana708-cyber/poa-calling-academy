@@ -11,16 +11,7 @@ const packageTitles: Record<string, string> = {
   full: "Профессиональный уровень",
 };
 
-function getPaymentCreateEndpoint() {
-  if (
-    typeof window !== "undefined" &&
-    window.location.hostname === "www.poacalling.com"
-  ) {
-    return "https://poa-calling-academy.vercel.app/api/payment/create";
-  }
-
-  return "/api/payment/create";
-}
+const paymentCreateEndpoint = "https://api.poacalling.com/api/payment/create";
 
 function AccessVisual() {
   const [imageFailed, setImageFailed] = useState(false);
@@ -121,7 +112,7 @@ export function AccessRequestForm() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(getPaymentCreateEndpoint(), {
+      const response = await fetch(paymentCreateEndpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

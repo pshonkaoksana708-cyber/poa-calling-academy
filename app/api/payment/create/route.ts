@@ -21,7 +21,6 @@ type PaymentCreateRequest = {
 const paymentRequestOrigins = new Set([
   "https://www.poacalling.com",
   "https://poacalling.com",
-  "https://poa-calling-academy.vercel.app",
 ]);
 
 function isAllowedPaymentOrigin(origin: string) {
