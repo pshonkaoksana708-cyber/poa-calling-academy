@@ -213,5 +213,5 @@ export function buildRobokassaPaymentUrl(params: {
 }
 
 export function encodeRobokassaReceipt(receipt: RobokassaReceipt) {
-  return encodeURIComponent(JSON.stringify(receipt));
+  return JSON.stringify(receipt);
 }
