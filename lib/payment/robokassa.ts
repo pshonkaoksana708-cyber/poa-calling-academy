@@ -205,13 +205,13 @@ export function buildRobokassaPaymentUrl(params: {
     searchParams.set("IsTest", "1");
   }
 
-  if (params.encodedReceipt) {
-    searchParams.set("Receipt", params.encodedReceipt);
-  }
+  const receiptPart = params.encodedReceipt
+    ? `&Receipt=${params.encodedReceipt}`
+    : "";
 
-  return `${ROBOKASSA_PAYMENT_URL}?${searchParams.toString()}`;
+  return `${ROBOKASSA_PAYMENT_URL}?${searchParams.toString()}${receiptPart}`;
 }
 
 export function encodeRobokassaReceipt(receipt: RobokassaReceipt) {
-  return JSON.stringify(receipt);
+  return encodeURIComponent(JSON.stringify(receipt));
 }
