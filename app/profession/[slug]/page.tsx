@@ -12,6 +12,7 @@ import {
 } from "@/components";
 import { CertificateSection } from "@/components/CertificateSection";
 import { JsonLd } from "@/components/JsonLd";
+import { YandexMetrikaGoal } from "@/components/YandexMetrika";
 import { accessDeliverySteps } from "@/data/config/email";
 import { getProfessionImage, getProfessionLevelImage } from "@/data/images";
 import { getProfession, professions } from "@/data/professions";
@@ -487,6 +488,10 @@ export default async function ProfessionPage({ params }: ProfessionPageProps) {
   return (
     <main className="min-h-screen bg-porcelain">
       <JsonLd data={structuredData} />
+      <YandexMetrikaGoal
+        goal="profession_select"
+        params={{ profession: profession.slug }}
+      />
       <section className="pb-10 pt-10 md:pb-16 md:pt-14">
         <div className="container-shell">
           <a className="text-sm font-semibold text-ink/70 transition hover:text-ink" href="/">

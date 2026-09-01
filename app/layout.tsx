@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { GoogleAnalytics } from "@/components/GoogleAnalytics";
+import { YandexMetrika } from "@/components/YandexMetrika";
 import {
   absoluteUrl,
   defaultOpenGraphAlt,
@@ -55,6 +56,7 @@ export default function RootLayout({
       <body>
         {children}
         <GoogleAnalytics />
+        <YandexMetrika />
       </body>
     </html>
   );

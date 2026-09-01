@@ -4,6 +4,7 @@ import Image from "next/image";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { siteImages } from "@/data/images";
 import { professions } from "@/data/professions";
+import { reachYandexGoal } from "@/components/YandexMetrika";
 
 const packageTitles: Record<string, string> = {
   basic: "Базовый уровень",
@@ -66,6 +67,9 @@ export function AccessRequestForm() {
         profession.packages.map((item) => ({
           value: `${profession.slug}:${item.slug}`,
           label: `${profession.title} — ${packageTitles[item.slug] ?? item.title}`,
+          package: item.slug,
+          price: item.price,
+          profession: profession.slug,
         })),
       ),
     [],
@@ -76,6 +80,9 @@ export function AccessRequestForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState(
     packageOptions[0]?.value ?? "",
+  );
+  const selectedPackageOption = packageOptions.find(
+    (option) => option.value === selectedPackage,
   );
 
   useEffect(() => {
@@ -110,6 +117,11 @@ export function AccessRequestForm() {
 
     const formData = new FormData(event.currentTarget);
     setIsSubmitting(true);
+    reachYandexGoal("payment_start", {
+      package: selectedPackageOption?.package,
+      price: selectedPackageOption?.price,
+      profession: selectedPackageOption?.profession,
+    });
 
     try {
       const response = await fetch(paymentCreateEndpoint, {
@@ -135,6 +147,11 @@ export function AccessRequestForm() {
         );
       }
 
+      reachYandexGoal("robokassa_redirect", {
+        package: selectedPackageOption?.package,
+        price: selectedPackageOption?.price,
+        profession: selectedPackageOption?.profession,
+      });
       window.location.href = result.paymentUrl;
     } catch (error) {
       setPaymentError(
@@ -190,6 +207,15 @@ export function AccessRequestForm() {
                 id="package"
                 name="package"
                 onChange={(event) => {
+                  const nextOption = packageOptions.find(
+                    (option) => option.value === event.target.value,
+                  );
+
+                  reachYandexGoal("package_select", {
+                    package: nextOption?.package,
+                    price: nextOption?.price,
+                    profession: nextOption?.profession,
+                  });
                   setPaymentError("");
                   setSubmitted(false);
                   setSelectedPackage(event.target.value);
