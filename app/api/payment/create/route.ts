@@ -21,6 +21,8 @@ type PaymentCreateRequest = {
 const paymentRequestOrigins = new Set([
   "https://www.poacalling.com",
   "https://poacalling.com",
+  "https://www.poacalling.ru",
+  "https://poacalling.ru",
 ]);
 
 function isAllowedPaymentOrigin(origin: string) {
