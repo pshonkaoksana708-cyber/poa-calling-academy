@@ -4,6 +4,7 @@ import {
   paymentSuccessCopy,
   supportEmail,
 } from "@/data/config/email";
+import { PaymentSuccessAnalytics } from "@/components/PaymentSuccessAnalytics";
 import { noIndexRobots } from "@/lib/seo";
 
 export const metadata: Metadata = {
@@ -13,9 +14,22 @@ export const metadata: Metadata = {
   robots: noIndexRobots,
 };
 
-export default function PaymentSuccessPage() {
+type PaymentSuccessPageProps = {
+  searchParams: Promise<{
+    InvId?: string;
+    invId?: string;
+  }>;
+};
+
+export default async function PaymentSuccessPage({
+  searchParams,
+}: PaymentSuccessPageProps) {
+  const params = await searchParams;
+  const invId = params.InvId ?? params.invId;
+
   return (
     <main className="min-h-screen bg-porcelain py-16 md:py-24">
+      <PaymentSuccessAnalytics invId={invId} />
       <section className="container-shell">
         <div className="mx-auto max-w-4xl rounded-[2rem] border border-ink/10 bg-ivory p-6 shadow-soft md:p-12">
           <p className="mb-4 text-xs font-bold uppercase tracking-[0.26em] text-gold">

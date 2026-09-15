@@ -2,6 +2,7 @@
 
 import Script from "next/script";
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 const fallbackMetrikaId = "112143640";
 const metrikaId =
@@ -55,7 +56,6 @@ export function YandexMetrikaGoal({
 function YandexMetrikaEvents() {
   useEffect(() => {
     const sentAccessFormOpen = { current: false };
-    const sentPaymentSuccess = { current: false };
 
     const sendAccessFormOpen = () => {
       if (sentAccessFormOpen.current) {
@@ -95,18 +95,6 @@ function YandexMetrikaEvents() {
       }
     };
 
-    const sendPaymentSuccess = () => {
-      if (
-        sentPaymentSuccess.current ||
-        window.location.pathname !== "/payment/success"
-      ) {
-        return;
-      }
-
-      sentPaymentSuccess.current = true;
-      reachYandexGoal("payment_success");
-    };
-
     const handleHashChange = () => {
       if (window.location.hash === "#access-form") {
         sendAccessFormOpen();
@@ -135,7 +123,6 @@ function YandexMetrikaEvents() {
     document.addEventListener("click", handleClick);
     window.addEventListener("hashchange", handleHashChange);
     handleHashChange();
-    sendPaymentSuccess();
 
     return () => {
       document.removeEventListener("click", handleClick);
@@ -143,6 +130,22 @@ function YandexMetrikaEvents() {
       observer?.disconnect();
     };
   }, []);
+
+  return null;
+}
+
+function YandexMetrikaPageView() {
+  const pathname = usePathname();
+
+  useEffect(() => {
+    const counterId = Number(metrikaId);
+
+    if (!Number.isFinite(counterId) || typeof window.ym !== "function") {
+      return;
+    }
+
+    window.ym(counterId, "hit", pathname);
+  }, [pathname]);
 
   return null;
 }
@@ -169,6 +172,7 @@ export function YandexMetrika() {
             })(window, document, 'script', 'https://mc.yandex.ru/metrika/tag.js', 'ym');
 
             ym(${metrikaId}, 'init', {
+              defer: true,
               webvisor: true,
               clickmap: true,
               trackLinks: true,
@@ -178,17 +182,8 @@ export function YandexMetrika() {
           `,
         }}
       />
-      <noscript>
-        <div>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            alt=""
-            src={`https://mc.yandex.ru/watch/${metrikaId}`}
-            style={{ left: "-9999px", position: "absolute" }}
-          />
-        </div>
-      </noscript>
       <YandexMetrikaEvents />
+      <YandexMetrikaPageView />
     </>
   );
 }

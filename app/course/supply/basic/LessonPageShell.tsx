@@ -13,6 +13,7 @@ import {
   supplyBlock1AccessKeys,
 } from "./access";
 import { LessonExperience } from "./LessonExperience";
+import { CourseUnlockNotice } from "@/components/CourseUnlockNotice";
 
 type LessonPageProps = {
   lessonNumber: number;
@@ -50,7 +51,7 @@ async function isLocalLessonPreview() {
   );
 }
 
-function AccessDenied({ token }: { token?: string }) {
+function AccessDenied({ token, unlockAt }: { token?: string; unlockAt?: number }) {
   return (
     <main className="min-h-screen bg-porcelain py-16 md:py-24">
       <section className="container-shell">
@@ -65,6 +66,7 @@ function AccessDenied({ token }: { token?: string }) {
             Материалы урока доступны только по защищенной ссылке после оплаты
             образовательной программы.
           </p>
+          <CourseUnlockNotice unlockAt={unlockAt} />
           <p className="mt-4 max-w-3xl text-base leading-8 text-ink/70 md:text-lg">
             Если вы уже оплатили программу, откройте ссылку из письма, которое
             пришло на ваш email.
@@ -95,7 +97,7 @@ export async function SupplyBasicLessonPage({
 }: LessonPageProps) {
   const lesson = supplyBasicLessonsByNumber[lessonNumber];
   const { token } = await searchParams;
-  const access = validateAccessTokenForPrograms(token, supplyBlock1AccessKeys);
+  const access = validateAccessTokenForPrograms(token, supplyBlock1AccessKeys, { requiredBlock: 1 });
   const localPreview = await isLocalLessonPreview();
 
   if (!lesson) {
@@ -103,7 +105,7 @@ export async function SupplyBasicLessonPage({
   }
 
   if (!access.ok && (!localPreview || token)) {
-    return <AccessDenied token={token} />;
+    return <AccessDenied token={token} unlockAt={access.unlockAt} />;
   }
 
   const accessPlan = access.ok

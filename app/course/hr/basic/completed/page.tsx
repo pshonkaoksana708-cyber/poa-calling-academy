@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { CertificateSection } from "@/components/CertificateSection";
+import { getCompletedCourseAccess, PackageAccessDenied } from "@/app/course/course-access-control";
 import { noIndexRobots } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
@@ -17,19 +18,19 @@ type CompletedPageProps = {
 
 const completionContent = {
   basic: {
-    eyebrow: "Базовый пакет",
-    title: "Базовый пакет завершён",
+    eyebrow: "Стартовый",
+    title: "Пакет «Стартовый» завершён",
     text:
-      "Вы прошли 1 блок и 10 уроков базового пакета программы «Специалист по кадрам и управлению персоналом».",
+      "Вы прошли 1 блок и 10 уроков пакета «Стартовый» программы «Специалист по кадрам и управлению персоналом».",
   },
   practice: {
-    eyebrow: "Практический пакет",
-    title: "Практический пакет завершён",
+    eyebrow: "Практический",
+    title: "Пакет «Практический» завершён",
     text:
-      "Вы прошли 2 блока и 20 уроков практического пакета программы «Специалист по кадрам и управлению персоналом».",
+      "Вы прошли 2 блока и 20 уроков пакета «Практический» программы «Специалист по кадрам и управлению персоналом».",
   },
   professional: {
-    eyebrow: "Профессиональный уровень",
+    eyebrow: "Профессиональный",
     title: "Программа завершена",
     text:
       "Вы завершили 3 блока и 30 уроков программы «Специалист по кадрам и управлению персоналом». Вам доступны 3 блока тестирования, итоговый профессиональный проект, финальный экзамен и электронный сертификат.",
@@ -58,7 +59,14 @@ function getCompletionContent(packageSlug?: string) {
 }
 
 export default async function HrCompletedPage({ searchParams }: CompletedPageProps) {
-  const { package: packageSlug } = await searchParams;
+  const { token } = await searchParams;
+  const access = getCompletedCourseAccess("hr", token);
+
+  if (!access.ok) {
+    return <PackageAccessDenied professionSlug="hr" token={token} validation={access.validation} />;
+  }
+
+  const packageSlug = access.packageSlug;
   const content = getCompletionContent(packageSlug);
 
   return (

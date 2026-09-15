@@ -1,4 +1,5 @@
-import type { AccessTokenPayload } from "@/lib/course-access";
+import type { ValidAccessTokenPayload } from "@/lib/course-access";
+import { getAccessibleBlockCount } from "@/lib/course-access";
 
 export type SupplyBasicAccessPlan = "basic" | "practice" | "professional";
 
@@ -21,7 +22,7 @@ export const supplyBlock2AccessKeys = [
 export const supplyBlock3AccessKeys = ["supply/pro", "supply/package/full"];
 
 export function getSupplyBasicAccessPlan(
-  payload?: AccessTokenPayload,
+  payload?: ValidAccessTokenPayload,
 ): SupplyBasicAccessPlan {
   switch (payload?.programSlug) {
     case "supply/basic":
@@ -37,18 +38,8 @@ export function getSupplyBasicAccessPlan(
   }
 }
 
-export function getSupplyAccessibleBlockCount(payload?: AccessTokenPayload) {
-  const accessPlan = getSupplyBasicAccessPlan(payload);
-
-  if (accessPlan === "basic") {
-    return 1;
-  }
-
-  if (accessPlan === "practice") {
-    return 2;
-  }
-
-  return 3;
+export function getSupplyAccessibleBlockCount(payload?: ValidAccessTokenPayload) {
+  return getAccessibleBlockCount(payload);
 }
 
 export function appendToken(href: string, token?: string) {

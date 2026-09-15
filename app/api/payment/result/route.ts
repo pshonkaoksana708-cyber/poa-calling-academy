@@ -1,13 +1,9 @@
-import { sendAccessEmail } from "@/lib/payment/access-email";
-import {
-  getPaymentOrder,
-  isPaymentProcessed,
-  markPaymentPaid,
-  markPaymentProcessed,
-} from "@/lib/payment/orders";
+import { sendAccessEmailWithRetry } from "@/lib/payment/access-email";
 import {
   createResultSignature,
   getRobokassaConfig,
+  getRobokassaOperationState,
+  isAcceptedRobokassaAmount,
   resolvePaymentPackage,
   timingSafeSignatureEqual,
 } from "@/lib/payment/robokassa";
@@ -93,7 +89,6 @@ export async function POST(request: Request) {
   console.info("[Robokassa] Signature valid");
 
   const numericInvId = Number(invId);
-  const order = Number.isFinite(numericInvId) ? getPaymentOrder(numericInvId) : null;
   const resolvedPackage = resolvePaymentPackage({
     professionSlug: params.Shp_profession ?? "",
     packageSlug: params.Shp_package ?? "",
@@ -107,35 +102,76 @@ export async function POST(request: Request) {
 
   const paidAmount = Number(outSum);
 
-  if (!Number.isFinite(paidAmount) || paidAmount !== resolvedPackage.amount) {
+  if (
+    !isAcceptedRobokassaAmount({
+      currentAmount: resolvedPackage.amount,
+      packageSlug: resolvedPackage.purchasePackage.slug,
+      paidAmount,
+      priceVersion: params.Shp_price_version,
+      professionSlug: resolvedPackage.profession.slug,
+    })
+  ) {
     console.warn("[Robokassa] Missing required parameter: bad amount");
     return textResponse("bad amount", 400);
   }
 
-  if (order && order.amount !== resolvedPackage.amount) {
-    console.warn("[Robokassa] Missing required parameter: order amount mismatch");
-    return textResponse("bad order amount", 400);
-  }
+  let paidAt: string | undefined = params.Shp_created_at;
 
-  if (!isPaymentProcessed(numericInvId)) {
-    if (order) {
-      markPaymentPaid(numericInvId);
-    } else {
-      markPaymentProcessed(numericInvId);
+  if (!config.isTest || process.env.ROBOKASSA_OP_STATE_URL?.trim()) {
+    let operationState;
+
+    try {
+      operationState = await getRobokassaOperationState(config, numericInvId);
+    } catch (error) {
+      console.error(
+        `[Robokassa] Status verification failed: ${
+          error instanceof Error ? error.message : "unknown status error"
+        }`,
+      );
+      return textResponse("temporary payment status failure", 503);
     }
 
-    const emailResult = await sendAccessEmail({
+    if (!operationState.confirmed) {
+      return textResponse("payment is not confirmed", 409);
+    }
+
+    if (operationState.outSum !== paidAmount) {
+      console.warn("[Robokassa] Operation status amount mismatch");
+      return textResponse("bad operation amount", 400);
+    }
+
+    paidAt = operationState.stateDate;
+  }
+
+  if (!paidAt || !Number.isFinite(new Date(paidAt).getTime())) {
+    const legacyTimestamp = Math.floor(numericInvId / 1000) * 1000;
+    paidAt = Number.isFinite(new Date(legacyTimestamp).getTime())
+      ? new Date(legacyTimestamp).toISOString()
+      : new Date().toISOString();
+  }
+
+  try {
+    const emailResult = await sendAccessEmailWithRetry({
       invId,
       email: customerEmail,
+      paidAt,
       profession: resolvedPackage.profession,
       purchasePackage: resolvedPackage.purchasePackage,
     });
 
-    if (emailResult.sent) {
-      console.info("[Robokassa] Access email sent");
-    } else {
+    if (!emailResult.sent) {
       console.error(`[Robokassa] Email sending failed: ${emailResult.reason}`);
+      return textResponse("temporary email delivery failure", 503);
     }
+
+    console.info("[Robokassa] Access email sent");
+  } catch (error) {
+    console.error(
+      `[Robokassa] Email sending failed: ${
+        error instanceof Error ? error.message : "unknown provider error"
+      }`,
+    );
+    return textResponse("temporary email delivery failure", 503);
   }
 
   return textResponse(`OK${invId}`);

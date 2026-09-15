@@ -56,8 +56,8 @@ export const supplyProfession: Profession = {
   packages: [
     {
       slug: "basic",
-      title: "Базовый пакет",
-      subtitle: "Базовый уровень профессии",
+      title: "Стартовый",
+      subtitle: "1 блок профессии",
       price: "14 900 ₽",
       includedLevelSlugs: ["basic"],
       includes: [
@@ -72,8 +72,8 @@ export const supplyProfession: Profession = {
     },
     {
       slug: "pro",
-      title: "Практический пакет",
-      subtitle: "Базовый + практический уровень",
+      title: "Практический",
+      subtitle: "2 блока профессии",
       price: "24 900 ₽",
       includedLevelSlugs: ["basic", "practice"],
       includes: [
@@ -88,8 +88,8 @@ export const supplyProfession: Profession = {
     },
     {
       slug: "full",
-      title: "Полная программа",
-      subtitle: "Все 3 уровня профессии",
+      title: "Профессиональный",
+      subtitle: "3 блока профессии",
       price: "34 900 ₽",
       includedLevelSlugs: ["basic", "practice", "pro"],
       includes: [
@@ -107,7 +107,7 @@ export const supplyProfession: Profession = {
   ],
   accessRules: {
     tokenScope: "package",
-    tokenTtlDays: 14,
+    tokenTtlDays: 90,
     delivery: "email",
     requiresPayment: true,
   },

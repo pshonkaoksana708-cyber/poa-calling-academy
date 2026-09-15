@@ -4,7 +4,10 @@ import { AssessmentTest } from "@/components/assessments/AssessmentTest";
 import { AssessmentUnavailable } from "@/components/assessments/AssessmentUnavailable";
 import { getFinalExamAssessment } from "@/data/assessments";
 import { getProfession } from "@/data/professions";
-import { getSupplyTokenAccess, PackageAccessDenied } from "@/app/course/supply-access-control";
+import {
+  PackageAccessDenied,
+  validateCourseBlockAccess,
+} from "@/app/course/course-access-control";
 import { noIndexRobots } from "@/lib/seo";
 
 export const metadata: Metadata = {
@@ -38,12 +41,16 @@ export default async function FinalExamPage({
     notFound();
   }
 
-  if (slug === "supply") {
-    const supplyAccess = getSupplyTokenAccess(token);
+  const access = validateCourseBlockAccess(slug, token, 3);
 
-    if (!supplyAccess.ok || supplyAccess.blockCount < 3) {
-      return <PackageAccessDenied token={token} />;
-    }
+  if (!access.ok) {
+    return (
+      <PackageAccessDenied
+        professionSlug={slug}
+        token={token}
+        validation={access}
+      />
+    );
   }
 
   const assessment = getFinalExamAssessment(slug);

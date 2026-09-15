@@ -1,4 +1,4 @@
-import type { AccessTokenPayload } from "@/lib/course-access";
+import type { ValidAccessTokenPayload } from "@/lib/course-access";
 
 export type HrAccessPlan = "basic" | "practice" | "professional";
 
@@ -20,7 +20,7 @@ export const hrBlock2AccessKeys = [
 
 export const hrBlock3AccessKeys = ["hr/pro", "hr/package/full"];
 
-export function getHrAccessPlan(payload?: AccessTokenPayload): HrAccessPlan {
+export function getHrAccessPlan(payload?: ValidAccessTokenPayload): HrAccessPlan {
   switch (payload?.programSlug) {
     case "hr/basic":
     case "hr/package/basic":

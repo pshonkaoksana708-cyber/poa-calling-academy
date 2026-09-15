@@ -1,4 +1,5 @@
-import type { AccessTokenPayload } from "@/lib/course-access";
+import type { ValidAccessTokenPayload } from "@/lib/course-access";
+export { getLogisticsAccessToken } from "@/lib/course-access-session";
 
 export type LogisticsAccessPlan = "basic" | "practice" | "professional";
 
@@ -20,7 +21,7 @@ export const logisticsBlock2AccessKeys = [
 
 export const logisticsBlock3AccessKeys = ["logistics/pro", "logistics/package/full"];
 
-export function getLogisticsAccessPlan(payload?: AccessTokenPayload): LogisticsAccessPlan {
+export function getLogisticsAccessPlan(payload?: ValidAccessTokenPayload): LogisticsAccessPlan {
   switch (payload?.programSlug) {
     case "logistics/basic":
     case "logistics/package/basic":
@@ -36,11 +37,6 @@ export function getLogisticsAccessPlan(payload?: AccessTokenPayload): LogisticsA
 }
 
 export function appendToken(href: string, token?: string) {
-  if (!token) {
-    return href;
-  }
-
-  const separator = href.includes("?") ? "&" : "?";
-
-  return `${href}${separator}token=${encodeURIComponent(token)}`;
+  void token;
+  return href;
 }

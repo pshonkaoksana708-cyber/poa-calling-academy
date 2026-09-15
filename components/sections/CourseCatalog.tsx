@@ -3,9 +3,9 @@ import { EditorialImage } from "@/components/EditorialImage";
 import { SectionHeading } from "@/components/SectionHeading";
 
 const homepageLevelTitles: Record<string, string> = {
-  basic: "Базовый уровень",
-  practice: "Практический уровень",
-  pro: "Профессиональный уровень",
+  basic: "Стартовый",
+  practice: "Практический",
+  pro: "Профессиональный",
 };
 
 const catalogImages: Record<string, string> = {

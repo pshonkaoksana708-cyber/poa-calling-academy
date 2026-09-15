@@ -4,8 +4,10 @@ import type { Profession, PurchasePackage } from "@/data/professions/types";
 import { createAccessToken } from "@/lib/course-access";
 
 export type AccessEmailInput = {
+  accessToken?: string;
   invId: string;
   email: string;
+  paidAt: string;
   profession: Profession;
   purchasePackage: PurchasePackage;
 };
@@ -17,7 +19,21 @@ type AccessEmailResult =
   | {
       sent: false;
       reason: string;
+      retryable: boolean;
     };
+
+function getAccessEmailToken(input: AccessEmailInput) {
+  return createAccessToken({
+    email: input.email,
+    paidAt: input.paidAt,
+    programSlug: getPackageAccessKey(
+      input.profession.slug,
+      input.purchasePackage.slug,
+    ),
+    purchaseId: input.invId,
+    tokenId: `robokassa:${input.invId}`,
+  });
+}
 
 function getPublicSiteUrl() {
   return (
@@ -43,11 +59,14 @@ function buildAccessLink(input: AccessEmailInput) {
     input.profession.slug,
     input.purchasePackage.slug,
   );
-  const token = createAccessToken({
-    email: input.email,
-    programSlug: accessKey,
-    purchaseId: input.invId,
-  });
+  const token =
+    input.accessToken ??
+    createAccessToken({
+      email: input.email,
+      paidAt: input.paidAt,
+      programSlug: accessKey,
+      purchaseId: input.invId,
+    });
   const siteUrl = getPublicSiteUrl();
 
   return `${siteUrl}/course/${input.profession.slug}/basic?token=${encodeURIComponent(
@@ -80,7 +99,7 @@ function buildEmailHtml(input: AccessEmailInput, accessLink: string) {
   return `<div style="font-family:Arial,sans-serif;line-height:1.6;color:#1f2a24">${text}<p><a href="${accessLink}" style="display:inline-block;padding:14px 22px;border-radius:999px;background:#183d2f;color:#ffffff;text-decoration:none;font-weight:700">Открыть образовательную программу</a></p></div>`;
 }
 
-export async function sendAccessEmail(
+async function sendAccessEmail(
   input: AccessEmailInput,
 ): Promise<AccessEmailResult> {
   const resendConfig = getResendConfig();
@@ -89,15 +108,22 @@ export async function sendAccessEmail(
     return {
       sent: false,
       reason: "Email provider env is not configured",
+      retryable: false,
     };
   }
 
   const accessLink = buildAccessLink(input);
-  const response = await fetch("https://api.resend.com/emails", {
+  const resendApiUrl =
+    process.env.NODE_ENV !== "production" && process.env.RESEND_API_URL?.trim()
+      ? process.env.RESEND_API_URL.trim()
+      : "https://api.resend.com/emails";
+  const response = await fetch(resendApiUrl, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${resendConfig.apiKey}`,
       "Content-Type": "application/json",
+      "Idempotency-Key": `course-access-${input.invId}`,
+      "User-Agent": "POA-Calling/1.0",
     },
     body: JSON.stringify({
       from: resendConfig.from,
@@ -112,8 +138,48 @@ export async function sendAccessEmail(
     return {
       sent: false,
       reason: `Email provider responded with HTTP ${response.status}`,
+      retryable:
+        response.status === 408 ||
+        response.status === 409 ||
+        response.status === 425 ||
+        response.status === 429 ||
+        response.status >= 500,
     };
   }
 
   return { sent: true };
+}
+
+export async function sendAccessEmailWithRetry(input: AccessEmailInput) {
+  const retryDelays = [0, 250, 1000];
+  const accessToken = getAccessEmailToken(input);
+  const retryInput = { ...input, accessToken };
+  let lastResult: AccessEmailResult = {
+    sent: false,
+    reason: "Email delivery did not start",
+    retryable: true,
+  };
+
+  for (const delay of retryDelays) {
+    if (delay > 0) {
+      await new Promise((resolve) => setTimeout(resolve, delay));
+    }
+
+    try {
+      lastResult = await sendAccessEmail(retryInput);
+    } catch (error) {
+      lastResult = {
+        sent: false,
+        reason:
+          error instanceof Error ? error.message : "Unknown email provider error",
+        retryable: true,
+      };
+    }
+
+    if (lastResult.sent || !lastResult.retryable) {
+      return lastResult;
+    }
+  }
+
+  return lastResult;
 }

@@ -13,14 +13,22 @@ import {
   ResultCard,
 } from "@/components";
 import { JsonLd } from "@/components/JsonLd";
+import { CourseUnlockNotice } from "@/components/CourseUnlockNotice";
 import { accessDeliverySteps, supportEmail } from "@/data/config/email";
 import { getSupplyLevelImage } from "@/data/images";
 import { getAllowedAccessKeysForLevel, getProfessionLevel } from "@/data/professions";
 import {
-  getSupplyAccessibleBlockCount,
   supplyBlock1AccessKeys,
 } from "@/app/course/supply/basic/access";
-import { validateAccessTokenForPrograms } from "@/lib/course-access";
+import {
+  getCourseTokenAccess,
+  PackageAccessDenied,
+} from "@/app/course/course-access-control";
+import {
+  getEntitledBlockCount,
+  validateAccessTokenForPrograms,
+} from "@/lib/course-access";
+import { getLogisticsAccessToken } from "@/lib/course-access-session";
 import {
   breadcrumbListJsonLd,
   courseJsonLd,
@@ -47,24 +55,25 @@ const accessReasonText = {
   invalid_signature: "Token не прошел проверку подлинности.",
   expired: "Срок действия ссылки доступа истек.",
   wrong_program: "Token выпущен для другого уровня профессии.",
+  not_yet_available: "Дата открытия этого блока ещё не наступила.",
 };
 
 const supplyBasicPackages = [
   {
-    title: "Базовый уровень",
+    title: "Стартовый",
     stats: "1 блок / 10 уроков",
     description: "Блок 1. Основы профессии специалиста по снабжению.",
     href: "/course/supply/basic/lesson-1",
   },
   {
-    title: "Практический уровень",
+    title: "Практический",
     stats: "2 блока / 20 уроков",
     description:
       "Блок 1. Основы профессии специалиста по снабжению. Блок 2. Управление закупками и поставщиками.",
     href: "/course/supply/basic/lesson-1",
   },
   {
-    title: "Профессиональный уровень",
+    title: "Профессиональный",
     stats: "3 блока / 30 уроков",
     description:
       "Блок 1. Основы профессии специалиста по снабжению. Блок 2. Управление закупками и поставщиками. Блок 3. Контроль, аналитика и эффективность.",
@@ -74,20 +83,20 @@ const supplyBasicPackages = [
 
 const hrBasicPackages = [
   {
-    title: "Базовый уровень",
+    title: "Стартовый",
     stats: "1 блок / 10 уроков",
     description: "Блок 1. Начальный уровень: основы профессии и первые задачи.",
     href: "/course/hr/basic/lesson-1",
   },
   {
-    title: "Практический уровень",
+    title: "Практический",
     stats: "2 блока / 20 уроков",
     description:
       "Блок 1. Начальный уровень. Блок 2. Практический уровень: интервью, оценка кандидатов, HR-аналитика и коммуникация.",
     href: "/course/hr/basic/lesson-1",
   },
   {
-    title: "Профессиональный уровень",
+    title: "Профессиональный",
     stats: "3 блока / 30 уроков",
     description:
       "Блок 1. Начальный уровень. Блок 2. Практический уровень. Блок 3. Профессиональный уровень: адаптация, развитие, культура и HR-стратегия.",
@@ -97,21 +106,21 @@ const hrBasicPackages = [
 
 const tourismBasicPackages = [
   {
-    title: "Базовый уровень",
+    title: "Стартовый",
     stats: "1 блок / 10 уроков",
     description:
       "Блок 1. Базовый уровень: основы профессии, туристическая отрасль, направления, продукты, размещение, документы и логистика.",
     href: "/course/tourism/basic/lesson-1",
   },
   {
-    title: "Практический уровень",
+    title: "Практический",
     stats: "2 блока / 20 уроков",
     description:
       "Блок 1. Базовый уровень. Блок 2. Практический уровень: консультация клиента, подбор направления, работа с туроператорами и подготовка предложения.",
     href: "/course/tourism/basic/lesson-1",
   },
   {
-    title: "Профессиональный уровень",
+    title: "Профессиональный",
     stats: "3 блока / 30 уроков",
     description:
       "Блок 1. Базовый уровень. Блок 2. Практический уровень. Блок 3. Профессиональный уровень: индивидуальные маршруты, переговоры, сложные ситуации, сервис и продвижение.",
@@ -121,45 +130,45 @@ const tourismBasicPackages = [
 
 const logisticsBasicPackages = [
   {
-    title: "Базовый уровень",
-    stats: "1 блок / 10 уроков",
+    title: "Стартовый",
+    stats: "1 блок / 10 уроков / тест",
     description:
-      "Блок 1. Основы международной логистики: участники перевозки, маршруты, документы, сроки и контроль процесса.",
+      "10 уроков об участниках перевозки, маршрутах, документах, сроках и контроле процесса, затем итоговый тест по Блоку 1.",
     href: "/course/logistics/basic/lesson-1",
   },
   {
-    title: "Практический уровень",
-    stats: "2 блока / 20 уроков",
+    title: "Практический",
+    stats: "2 блока / 20 уроков / практика",
     description:
-      "Блок 1. Основы международной логистики. Блок 2. Практика перевозок, документов, коммуникации и контроля сроков.",
+      "20 уроков в двух блоках, соответствующие итоговые тесты и практические задания по перевозкам, документам, коммуникации и срокам.",
     href: "/course/logistics/basic/lesson-1",
   },
   {
-    title: "Профессиональный уровень",
-    stats: "3 блока / 30 уроков",
+    title: "Профессиональный",
+    stats: "3 блока / 30 уроков / аттестация",
     description:
-      "Блок 1. Основы международной логистики. Блок 2. Практика перевозок и документов. Блок 3. Контроль, аналитика и управление процессами.",
+      "30 уроков, 3 теста по 15 вопросов, выпускной проект, экзамен на 45 вопросов, 2 бонусных урока и сертификат после успешной аттестации.",
     href: "/course/logistics/basic/lesson-1",
   },
 ];
 
 const aiBasicPackages = [
   {
-    title: "Базовый уровень",
+    title: "Стартовый",
     stats: "1 блок / 10 уроков",
     description:
       "Блок 1. Фундамент AI и профессиональная работа с нейросетями.",
     href: "/course/ai/basic/lesson-1",
   },
   {
-    title: "Практический уровень",
+    title: "Практический",
     stats: "2 блока / 20 уроков",
     description:
       "Блок 1. Фундамент AI и профессиональная работа с нейросетями. Блок 2. Практическое применение AI в профессиях и бизнесе.",
     href: "/course/ai/basic/lesson-1",
   },
   {
-    title: "Профессиональный уровень",
+    title: "Профессиональный",
     stats: "3 блока / 30 уроков",
     description:
       "Блок 1. Фундамент AI. Блок 2. Практическое применение AI. Блок 3. Профессия AI-специалиста и внедрение AI.",
@@ -192,6 +201,7 @@ function CourseProgramOverviewPage({
   professionTitle,
   structuredData,
   token,
+  activePackageIndex,
   visiblePackageCount,
 }: {
   h1Title: string;
@@ -200,13 +210,19 @@ function CourseProgramOverviewPage({
   professionTitle: string;
   structuredData?: unknown[];
   token?: string;
+  activePackageIndex?: number;
   visiblePackageCount?: number;
 }) {
   const visiblePackages =
-    visiblePackageCount === undefined
-      ? packages
-      : packages.slice(0, visiblePackageCount);
-  const visibleBlockCount = visiblePackageCount ?? 3;
+    activePackageIndex === undefined
+      ? visiblePackageCount === undefined
+        ? packages
+        : packages.slice(0, visiblePackageCount)
+      : packages.slice(activePackageIndex, activePackageIndex + 1);
+  const visibleBlockCount =
+    activePackageIndex === undefined
+      ? (visiblePackageCount ?? 3)
+      : activePackageIndex + 1;
   const visibleLessonCount = visibleBlockCount * 10;
 
   return (
@@ -230,9 +246,10 @@ function CourseProgramOverviewPage({
                 {h1Title}
               </h1>
               <p className="mt-6 max-w-3xl text-base leading-8 text-ink/70 md:text-lg">
-                Уровни доступа устроены накопительно: базовый пакет открывает
-                первый блок, практический пакет включает первые два блока, а
-                профессиональный пакет открывает всю траекторию из трех блоков.
+                Пакеты устроены накопительно: «Стартовый» включает первый
+                блок, «Практический» — первые два блока, а «Профессиональный» —
+                всю траекторию из трёх блоков. Блоки открываются поэтапно после
+                подтверждённой оплаты.
               </p>
             </div>
 
@@ -259,7 +276,11 @@ function CourseProgramOverviewPage({
 
       <section className="pb-20 md:pb-28">
         <div className="container-shell">
-          <div className="grid gap-6 lg:grid-cols-3">
+          <div
+            className={`grid gap-6 ${
+              activePackageIndex === undefined ? "lg:grid-cols-3" : "lg:grid-cols-1"
+            }`}
+          >
             {visiblePackages.map((item, index) => (
               <article
                 className="flex min-w-0 flex-col rounded-[2rem] border border-ink/10 bg-ivory p-6 shadow-soft md:p-8"
@@ -267,14 +288,16 @@ function CourseProgramOverviewPage({
               >
                 <div className="flex items-center justify-between gap-4">
                   <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full border border-gold/40 bg-gold/10 font-serif text-2xl text-ink">
-                    {index + 1}
+                    {(activePackageIndex ?? index) + 1}
                   </span>
                   <span className="rounded-full border border-ink/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-ink/58">
                     {item.stats}
                   </span>
                 </div>
                 <p className="mt-8 text-xs font-bold uppercase tracking-[0.24em] text-gold">
-                  Уровень доступа
+                  {activePackageIndex === undefined
+                    ? "Уровень доступа"
+                    : "Ваш приобретённый пакет"}
                 </p>
                 <h2 className="mt-4 font-serif text-3xl leading-tight text-ink [hyphens:auto] [overflow-wrap:anywhere]">
                   {item.title}
@@ -330,7 +353,11 @@ export default async function CourseLevelPage({
   searchParams,
 }: CourseLevelPageProps) {
   const { slug: professionSlug, level: levelSlug } = await params;
-  const { token } = await searchParams;
+  const { token: queryToken } = await searchParams;
+  const token =
+    professionSlug === "logistics"
+      ? await getLogisticsAccessToken(queryToken)
+      : queryToken;
   const data = getProfessionLevel(professionSlug, levelSlug);
 
   if (!data) {
@@ -365,7 +392,11 @@ export default async function CourseLevelPage({
         ]
       : undefined;
   const allowedAccessKeys = getAllowedAccessKeysForLevel(profession.slug, level.slug);
-  const access = validateAccessTokenForPrograms(token, allowedAccessKeys);
+  const requiredBlock =
+    level.slug === "basic" ? 1 : level.slug === "practice" ? 2 : 3;
+  const access = validateAccessTokenForPrograms(token, allowedAccessKeys, {
+    requiredBlock,
+  });
   const lessonCount = level.modules.reduce(
     (total, module) => total + module.lessons.length,
     0,
@@ -433,7 +464,7 @@ export default async function CourseLevelPage({
         token={token}
         visiblePackageCount={
           supplyAccess.ok
-            ? getSupplyAccessibleBlockCount(supplyAccess.payload)
+            ? getEntitledBlockCount(supplyAccess.payload)
             : undefined
         }
       />
@@ -467,14 +498,31 @@ export default async function CourseLevelPage({
   }
 
   if (profession.slug === "logistics" && level.slug === "basic") {
+    const logisticsAccess = getCourseTokenAccess("logistics", token);
+
+    if (token && !logisticsAccess.ok) {
+      return (
+        <PackageAccessDenied
+          professionSlug="logistics"
+          token={undefined}
+          validation={logisticsAccess.validation}
+        />
+      );
+    }
+
     return (
       <CourseProgramOverviewPage
+        activePackageIndex={
+          logisticsAccess.ok
+            ? getEntitledBlockCount(logisticsAccess.payload) - 1
+            : undefined
+        }
         h1Title={seo.h1}
         packages={logisticsBasicPackages}
         professionHref="/profession/logistics"
         professionTitle="Специалист по международной логистике"
         structuredData={basicCourseStructuredData}
-        token={token}
+        token={undefined}
       />
     );
   }
@@ -532,6 +580,9 @@ export default async function CourseLevelPage({
                 программой и быть действительной по сроку доступа.
               </p>
             </div>
+            <CourseUnlockNotice
+              unlockAt={access.reason === "not_yet_available" ? access.unlockAt : undefined}
+            />
             <div className="mt-8 flex flex-col gap-4 sm:flex-row">
               <a
                 className="rounded-full bg-ink px-7 py-4 text-center text-sm font-semibold text-white transition hover:bg-evergreen"
@@ -591,10 +642,6 @@ export default async function CourseLevelPage({
               />
               <p className="text-sm font-semibold text-gold">Доступ подтвержден</p>
               <dl className="mt-5 grid gap-4 text-sm text-ink/70">
-                <div>
-                  <dt className="font-semibold text-ink">Email</dt>
-                  <dd className="break-words">{access.payload.email}</dd>
-                </div>
                 <div>
                   <dt className="font-semibold text-ink">Профессия</dt>
                   <dd>{profession.title}</dd>

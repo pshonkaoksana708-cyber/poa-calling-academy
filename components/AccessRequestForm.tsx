@@ -7,12 +7,15 @@ import { professions } from "@/data/professions";
 import { reachYandexGoal } from "@/components/YandexMetrika";
 
 const packageTitles: Record<string, string> = {
-  basic: "Базовый уровень",
-  pro: "Практический уровень",
-  full: "Профессиональный уровень",
+  basic: "Стартовый",
+  pro: "Практический",
+  full: "Профессиональный",
 };
 
-const paymentCreateEndpoint = "https://api.poacalling.com/api/payment/create";
+const paymentApiOrigin = (
+  process.env.NEXT_PUBLIC_PAYMENT_API_ORIGIN ?? "https://api.poacalling.com"
+).replace(/\/$/, "");
+const paymentCreateEndpoint = `${paymentApiOrigin}/api/payment/create`;
 
 function AccessVisual() {
   const [imageFailed, setImageFailed] = useState(false);
@@ -138,10 +141,17 @@ export function AccessRequestForm() {
       });
       const result = (await response.json()) as {
         paymentUrl?: string;
+        invId?: number;
+        paymentStatusToken?: string;
         error?: string;
       };
 
-      if (!response.ok || !result.paymentUrl) {
+      if (
+        !response.ok ||
+        !result.paymentUrl ||
+        !result.invId ||
+        !result.paymentStatusToken
+      ) {
         throw new Error(
           result.error ?? "Не удалось подготовить переход к оплате.",
         );
@@ -152,6 +162,10 @@ export function AccessRequestForm() {
         price: selectedPackageOption?.price,
         profession: selectedPackageOption?.profession,
       });
+      window.sessionStorage.setItem(
+        `poa_payment_status_${result.invId}`,
+        result.paymentStatusToken,
+      );
       window.location.href = result.paymentUrl;
     } catch (error) {
       setPaymentError(

@@ -4,6 +4,15 @@ import type { Profession, PurchasePackage } from "@/data/professions/types";
 
 export const ROBOKASSA_PAYMENT_URL =
   "https://auth.robokassa.ru/Merchant/Index.aspx";
+const ROBOKASSA_OPERATION_STATE_URL =
+  "https://auth.robokassa.ru/Merchant/WebService/Service.asmx/OpStateExt";
+export const CURRENT_PAYMENT_PRICE_VERSION = "catalog-2026-09-14";
+
+const legacyPaymentAmounts: Record<string, number> = {
+  "logistics:basic": 14900,
+  "logistics:pro": 24900,
+  "logistics:full": 34900,
+};
 
 export type PaymentSelection = {
   professionSlug: string;
@@ -35,6 +44,12 @@ export type RobokassaReceiptItem = {
 
 export type RobokassaReceipt = {
   items: RobokassaReceiptItem[];
+};
+
+export type RobokassaOperationState = {
+  confirmed: boolean;
+  outSum?: number;
+  stateDate?: string;
 };
 
 export function parsePaymentSelection(value: string): PaymentSelection | null {
@@ -87,11 +102,57 @@ export function resolvePaymentPackage(
   };
 }
 
+export function isAcceptedRobokassaAmount(input: {
+  currentAmount: number;
+  orderAmount?: number;
+  orderPriceVersion?: string;
+  packageSlug: string;
+  paidAmount: number;
+  priceVersion?: string;
+  professionSlug: string;
+}) {
+  if (!Number.isFinite(input.paidAmount) || input.paidAmount <= 0) {
+    return false;
+  }
+
+  if (input.orderAmount !== undefined) {
+    const versionMatches = input.orderPriceVersion
+      ? input.priceVersion === input.orderPriceVersion
+      : !input.priceVersion;
+
+    return versionMatches && input.paidAmount === input.orderAmount;
+  }
+
+  if (input.priceVersion) {
+    return (
+      input.priceVersion === CURRENT_PAYMENT_PRICE_VERSION &&
+      input.paidAmount === input.currentAmount
+    );
+  }
+
+  if (input.paidAmount === input.currentAmount) {
+    return true;
+  }
+
+  return (
+    legacyPaymentAmounts[`${input.professionSlug}:${input.packageSlug}`] ===
+    input.paidAmount
+  );
+}
+
 export function getRobokassaConfig(): RobokassaConfig {
   const readEnv = (key: string) => process.env[key]?.trim() ?? "";
-  const isTest = ["1", "true", "yes"].includes(
-    readEnv("ROBOKASSA_IS_TEST").toLowerCase(),
-  );
+  const mode = readEnv("ROBOKASSA_IS_TEST").toLowerCase();
+  const testModeValues = ["1", "true", "yes"];
+  const liveModeValues = ["0", "false", "no"];
+
+  if (![...testModeValues, ...liveModeValues].includes(mode)) {
+    throw new Error(
+      "ROBOKASSA_IS_TEST must be configured explicitly as true or false",
+    );
+  }
+
+  const isTest = testModeValues.includes(mode);
   const merchantLogin = readEnv("ROBOKASSA_MERCHANT_LOGIN");
   const password1 = isTest
     ? readEnv("ROBOKASSA_TEST_PASSWORD_1")
@@ -173,6 +234,80 @@ export function timingSafeSignatureEqual(left: string, right: string) {
   );
 }
 
+function readXmlElement(xml: string, elementName: string) {
+  const match = xml.match(
+    new RegExp(`<${elementName}(?:\\s[^>]*)?>([\\s\\S]*?)<\\/${elementName}>`, "i"),
+  );
+
+  return match?.[1]?.trim();
+}
+
+function operationStateEndpoint() {
+  if (process.env.NODE_ENV !== "production") {
+    const testEndpoint = process.env.ROBOKASSA_OP_STATE_URL?.trim();
+
+    if (testEndpoint) {
+      return testEndpoint;
+    }
+  }
+
+  return ROBOKASSA_OPERATION_STATE_URL;
+}
+
+export async function getRobokassaOperationState(
+  config: RobokassaConfig,
+  invId: number,
+): Promise<RobokassaOperationState> {
+  const hasDevelopmentEndpoint =
+    process.env.NODE_ENV !== "production" &&
+    Boolean(process.env.ROBOKASSA_OP_STATE_URL?.trim());
+
+  // Robokassa does not expose test operations through OpStateExt.
+  if (config.isTest && !hasDevelopmentEndpoint) {
+    return { confirmed: false };
+  }
+
+  const signature = md5Signature(
+    `${config.merchantLogin}:${invId}:${config.password2}`,
+  );
+  const searchParams = new URLSearchParams({
+    MerchantLogin: config.merchantLogin,
+    InvoiceID: String(invId),
+    Signature: signature,
+  });
+  const response = await fetch(
+    `${operationStateEndpoint()}?${searchParams.toString()}`,
+    {
+      cache: "no-store",
+      signal: AbortSignal.timeout(8_000),
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(`Robokassa status responded with HTTP ${response.status}`);
+  }
+
+  const xml = await response.text();
+  const resultXml = readXmlElement(xml, "Result");
+  const stateXml = readXmlElement(xml, "State");
+  const infoXml = readXmlElement(xml, "Info");
+  const resultCode = Number(resultXml ? readXmlElement(resultXml, "Code") : NaN);
+  const stateCode = Number(stateXml ? readXmlElement(stateXml, "Code") : NaN);
+  const outSumText = infoXml ? readXmlElement(infoXml, "OutSum") : undefined;
+  const outSum = outSumText === undefined ? undefined : Number(outSumText);
+  const stateDate = stateXml ? readXmlElement(stateXml, "StateDate") : undefined;
+
+  if (!Number.isFinite(resultCode) || resultCode !== 0) {
+    return { confirmed: false };
+  }
+
+  return {
+    confirmed: stateCode === 100,
+    outSum: Number.isFinite(outSum) ? outSum : undefined,
+    stateDate,
+  };
+}
+
 export function buildRobokassaPaymentUrl(params: {
   merchantLogin: string;
   outSum: string;
@@ -209,7 +344,13 @@ export function buildRobokassaPaymentUrl(params: {
     searchParams.set("Receipt", params.encodedReceipt);
   }
 
-  return `${ROBOKASSA_PAYMENT_URL}?${searchParams.toString()}`;
+  const paymentUrl =
+    process.env.NODE_ENV !== "production" &&
+    process.env.ROBOKASSA_PAYMENT_URL_OVERRIDE?.trim()
+      ? process.env.ROBOKASSA_PAYMENT_URL_OVERRIDE.trim()
+      : ROBOKASSA_PAYMENT_URL;
+
+  return `${paymentUrl}?${searchParams.toString()}`;
 }
 
 export function encodeRobokassaReceipt(receipt: RobokassaReceipt) {

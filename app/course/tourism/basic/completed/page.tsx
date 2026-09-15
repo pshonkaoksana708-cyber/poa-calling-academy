@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { CertificateAccess } from "@/components/CertificateAccess";
+import { getCompletedCourseAccess, PackageAccessDenied } from "@/app/course/course-access-control";
 import { noIndexRobots } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
@@ -17,22 +18,22 @@ type CompletedPageProps = {
 
 const completionContent = {
   basic: {
-    eyebrow: "Базовый пакет",
-    title: "Базовый пакет завершён",
+    eyebrow: "Стартовый",
+    title: "Пакет «Стартовый» завершён",
     text:
-      "Вы прошли 1 блок и 10 уроков базового пакета программы «Специалист по туризму».",
+      "Вы прошли 1 блок и 10 уроков пакета «Стартовый» программы «Специалист по туризму».",
   },
   practice: {
-    eyebrow: "Практический пакет",
-    title: "Практический пакет завершён",
+    eyebrow: "Практический",
+    title: "Пакет «Практический» завершён",
     text:
-      "Вы прошли 2 блока и 20 уроков практического пакета программы «Специалист по туризму».",
+      "Вы прошли 2 блока и 20 уроков пакета «Практический» программы «Специалист по туризму».",
   },
   professional: {
-    eyebrow: "Профессиональный уровень",
-    title: "Профессиональный уровень завершён",
+    eyebrow: "Профессиональный",
+    title: "Пакет «Профессиональный» завершён",
     text:
-      "Вы прошли 3 блока и 30 уроков профессионального уровня программы «Специалист по туризму».",
+      "Вы прошли 3 блока и 30 уроков пакета «Профессиональный» программы «Специалист по туризму».",
   },
 };
 
@@ -49,8 +50,14 @@ function getCompletionContent(packageSlug?: string) {
 }
 
 export default async function TourismCompletedPage({ searchParams }: CompletedPageProps) {
-  const { package: packageSlug } = await searchParams;
-  const content = getCompletionContent(packageSlug);
+  const { token } = await searchParams;
+  const access = getCompletedCourseAccess("tourism", token);
+
+  if (!access.ok) {
+    return <PackageAccessDenied professionSlug="tourism" token={token} validation={access.validation} />;
+  }
+
+  const content = getCompletionContent(access.packageSlug);
 
   return (
     <main className="min-h-screen bg-porcelain py-16 md:py-24">

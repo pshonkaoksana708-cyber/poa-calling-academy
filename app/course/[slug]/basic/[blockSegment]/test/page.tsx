@@ -5,9 +5,9 @@ import { AssessmentUnavailable } from "@/components/assessments/AssessmentUnavai
 import { getBlockTestAssessment } from "@/data/assessments";
 import { getProfession } from "@/data/professions";
 import {
-  getSupplyTokenAccess,
   PackageAccessDenied,
-} from "@/app/course/supply-access-control";
+  validateCourseBlockAccess,
+} from "@/app/course/course-access-control";
 import { noIndexRobots } from "@/lib/seo";
 
 export const metadata: Metadata = {
@@ -68,12 +68,20 @@ export default async function BlockTestPage({
     notFound();
   }
 
-  if (slug === "supply") {
-    const supplyAccess = getSupplyTokenAccess(token);
+  const access = validateCourseBlockAccess(
+    slug,
+    token,
+    blockNumber as 1 | 2 | 3,
+  );
 
-    if (!supplyAccess.ok || supplyAccess.blockCount < blockNumber) {
-      return <PackageAccessDenied token={token} />;
-    }
+  if (!access.ok) {
+    return (
+      <PackageAccessDenied
+        professionSlug={slug}
+        token={token}
+        validation={access}
+      />
+    );
   }
 
   const assessment = getBlockTestAssessment(slug, blockNumber);

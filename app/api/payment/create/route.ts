@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import { createPaymentOrder } from "@/lib/payment/orders";
+import { createPaymentStatusToken } from "@/lib/payment/status-token";
 import {
   buildRobokassaPaymentUrl,
+  CURRENT_PAYMENT_PRICE_VERSION,
   createPaymentSignature,
   encodeRobokassaReceipt,
   getRobokassaConfig,
@@ -136,13 +138,16 @@ export async function POST(request: Request) {
     packageTitle: resolvedPackage.purchasePackage.title,
     amount: resolvedPackage.amount,
     outSum: resolvedPackage.outSum,
+    priceVersion: CURRENT_PAYMENT_PRICE_VERSION,
     customerName: (payload.name ?? "").trim(),
     customerEmail,
     customerPhone: (payload.phone ?? "").trim(),
   });
   const shpParams = {
+    Shp_created_at: paymentOrder.createdAt,
     Shp_email: customerEmail.toLowerCase(),
     Shp_package: resolvedPackage.purchasePackage.slug,
+    Shp_price_version: CURRENT_PAYMENT_PRICE_VERSION,
     Shp_profession: resolvedPackage.profession.slug,
   };
   const receipt = {
@@ -184,5 +189,6 @@ export async function POST(request: Request) {
   return jsonPaymentResponse(request, {
     paymentUrl,
     invId: paymentOrder.invId,
+    paymentStatusToken: createPaymentStatusToken(paymentOrder),
   });
 }

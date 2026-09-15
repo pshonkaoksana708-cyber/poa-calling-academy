@@ -159,8 +159,8 @@ function createPlaceholderProfession(input: {
     packages: [
       {
         slug: "basic",
-        title: "Basic Package",
-        subtitle: "Базовый уровень профессии",
+        title: "Стартовый",
+        subtitle: "1 блок профессии",
         price: "14 900 ₽",
         includedLevelSlugs: ["basic"],
         includes: [
@@ -173,8 +173,8 @@ function createPlaceholderProfession(input: {
       },
       {
         slug: "pro",
-        title: "Pro Package",
-        subtitle: "Базовый + практический уровень",
+        title: "Практический",
+        subtitle: "2 блока профессии",
         price: "24 900 ₽",
         includedLevelSlugs: ["basic", "practice"],
         includes: [
@@ -188,8 +188,8 @@ function createPlaceholderProfession(input: {
       },
       {
         slug: "full",
-        title: "Full Package",
-        subtitle: "Все 3 уровня профессии",
+        title: "Профессиональный",
+        subtitle: "3 блока профессии",
         price: "34 900 ₽",
         includedLevelSlugs: ["basic", "practice", "pro"],
         includes: [
@@ -203,7 +203,7 @@ function createPlaceholderProfession(input: {
     ],
     accessRules: {
       tokenScope: "package",
-      tokenTtlDays: 14,
+      tokenTtlDays: 90,
       delivery: "email",
       requiresPayment: true,
     },
@@ -251,7 +251,7 @@ export const hrProfession: Profession = {
     if (item.slug === "basic") {
       return {
         ...item,
-        title: "Базовый пакет",
+        title: "Стартовый",
         bestFor:
           "Для тех, кто хочет познакомиться с профессией и освоить базовые задачи специалиста отдела кадров.",
         result:
@@ -262,7 +262,7 @@ export const hrProfession: Profession = {
     if (item.slug === "pro") {
       return {
         ...item,
-        title: "Практический пакет",
+        title: "Практический",
         bestFor:
           "Для тех, кто хочет перейти от знакомства с профессией к самостоятельной практической работе.",
         result:
@@ -272,7 +272,7 @@ export const hrProfession: Profession = {
 
     return {
       ...item,
-      title: "Полная программа",
+      title: "Профессиональный",
       bestFor:
         "Для тех, кто рассматривает работу с персоналом как новую профессию или серьезный карьерный переход.",
       result:
@@ -375,7 +375,7 @@ tourismProfession.packages = tourismProfession.packages.map((item) => {
   if (item.slug === "basic") {
     return {
       ...item,
-      title: "Базовый пакет",
+      title: "Стартовый",
       bestFor:
         "Для тех, кто хочет познакомиться с профессией, понять устройство туристической отрасли и освоить базовые задачи специалиста.",
       result:
@@ -386,7 +386,7 @@ tourismProfession.packages = tourismProfession.packages.map((item) => {
   if (item.slug === "pro") {
     return {
       ...item,
-      title: "Практический пакет",
+      title: "Практический",
       bestFor:
         "Для тех, кто хочет перейти от знакомства с профессией к практической работе с клиентскими запросами.",
       result:
@@ -396,7 +396,7 @@ tourismProfession.packages = tourismProfession.packages.map((item) => {
 
   return {
     ...item,
-    title: "Полная программа",
+    title: "Профессиональный",
     bestFor:
       "Для тех, кто рассматривает туризм как новую профессию, направление для карьерного перехода или собственного проекта.",
     result:
@@ -503,7 +503,7 @@ aiProfession.packages = aiProfession.packages.map((item) => {
   if (item.slug === "basic") {
     return {
       ...item,
-      title: "Базовый пакет",
+      title: "Стартовый",
       bestFor:
         "Для тех, кто хочет познакомиться с искусственным интеллектом и освоить базовые задачи.",
       result:
@@ -514,7 +514,7 @@ aiProfession.packages = aiProfession.packages.map((item) => {
   if (item.slug === "pro") {
     return {
       ...item,
-      title: "Практический пакет",
+      title: "Практический",
       bestFor:
         "Для тех, кто хочет перейти от знакомства с ИИ к регулярному применению в работе.",
       result:
@@ -525,7 +525,7 @@ aiProfession.packages = aiProfession.packages.map((item) => {
 
   return {
     ...item,
-    title: "Полная программа",
+    title: "Профессиональный",
     bestFor:
       "Для тех, кто рассматривает искусственный интеллект как новую профессиональную опору или инструмент для бизнеса.",
     result:

@@ -1,4 +1,4 @@
-import type { AccessTokenPayload } from "@/lib/course-access";
+import type { ValidAccessTokenPayload } from "@/lib/course-access";
 
 export type AiAccessPlan = "basic" | "practice" | "professional";
 
@@ -20,7 +20,7 @@ export const aiBlock2AccessKeys = [
 
 export const aiBlock3AccessKeys = ["ai/pro", "ai/package/full"];
 
-export function getAiAccessPlan(payload?: AccessTokenPayload): AiAccessPlan {
+export function getAiAccessPlan(payload?: ValidAccessTokenPayload): AiAccessPlan {
   switch (payload?.programSlug) {
     case "ai/basic":
     case "ai/package/basic":

@@ -7,8 +7,13 @@ import {
   logisticsBonusLessonsBySlug,
 } from "@/data/professions/logistics/bonus-lessons";
 import { validateAccessTokenForPrograms } from "@/lib/course-access";
+import { CourseUnlockNotice } from "@/components/CourseUnlockNotice";
 import { LessonExperience } from "@/app/course/supply/basic/LessonExperience";
-import { appendToken, logisticsBlock3AccessKeys } from "../../access";
+import {
+  appendToken,
+  getLogisticsAccessToken,
+  logisticsBlock3AccessKeys,
+} from "../../access";
 
 export const dynamic = "force-dynamic";
 
@@ -49,7 +54,7 @@ async function isLocalLessonPreview() {
   );
 }
 
-function AccessDenied({ token }: { token?: string }) {
+function AccessDenied({ token, unlockAt }: { token?: string; unlockAt?: number }) {
   return (
     <main className="min-h-screen bg-porcelain py-16 md:py-24">
       <section className="container-shell">
@@ -64,6 +69,7 @@ function AccessDenied({ token }: { token?: string }) {
             Бонусные материалы доступны после завершения профессионального
             уровня по защищенной ссылке.
           </p>
+          <CourseUnlockNotice unlockAt={unlockAt} />
           <div className="mt-8 flex flex-col gap-4 sm:flex-row">
             <a
               className="rounded-full bg-ink px-7 py-4 text-center text-sm font-semibold text-white transition hover:bg-evergreen"
@@ -89,9 +95,10 @@ export default async function LogisticsBonusLessonPage({
   searchParams,
 }: BonusLessonRouteProps) {
   const { bonusSlug } = await params;
-  const { token } = await searchParams;
+  const { token: queryToken } = await searchParams;
+  const token = await getLogisticsAccessToken(queryToken);
   const lesson = logisticsBonusLessonsBySlug[bonusSlug];
-  const access = validateAccessTokenForPrograms(token, logisticsBlock3AccessKeys);
+  const access = validateAccessTokenForPrograms(token, logisticsBlock3AccessKeys, { requiredBlock: 3 });
   const localPreview = await isLocalLessonPreview();
 
   if (!lesson) {
@@ -99,7 +106,7 @@ export default async function LogisticsBonusLessonPage({
   }
 
   if (!access.ok && (!localPreview || token)) {
-    return <AccessDenied token={token} />;
+    return <AccessDenied token={token} unlockAt={access.unlockAt} />;
   }
 
   const lessonNavigation = logisticsBonusLessons.map((item) => ({

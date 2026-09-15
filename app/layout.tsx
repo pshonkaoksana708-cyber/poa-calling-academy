@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 import { YandexMetrika } from "@/components/YandexMetrika";
+import { SensitiveUrlSanitizer } from "@/components/SensitiveUrlSanitizer";
 import {
   absoluteUrl,
   defaultOpenGraphAlt,
@@ -53,6 +54,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ru">
+      <head>
+        <SensitiveUrlSanitizer />
+      </head>
       <body>
         {children}
         <GoogleAnalytics />

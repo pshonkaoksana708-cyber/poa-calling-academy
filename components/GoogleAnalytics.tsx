@@ -2,7 +2,7 @@
 
 import Script from "next/script";
 import { Suspense, useEffect } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
@@ -15,20 +15,17 @@ declare global {
 
 function GoogleAnalyticsPageView() {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
 
   useEffect(() => {
     if (!gaMeasurementId || typeof window.gtag !== "function") {
       return;
     }
 
-    const queryString = searchParams.toString();
-    const pagePath = queryString ? `${pathname}?${queryString}` : pathname;
-
     window.gtag("config", gaMeasurementId, {
-      page_path: pagePath,
+      page_location: `${window.location.origin}${pathname}`,
+      page_path: pathname,
     });
-  }, [pathname, searchParams]);
+  }, [pathname]);
 
   return null;
 }

@@ -1,4 +1,4 @@
-import type { AccessTokenPayload } from "@/lib/course-access";
+import type { ValidAccessTokenPayload } from "@/lib/course-access";
 
 export type TourismAccessPlan = "basic" | "practice" | "professional";
 
@@ -20,7 +20,7 @@ export const tourismBlock2AccessKeys = [
 
 export const tourismBlock3AccessKeys = ["tourism/pro", "tourism/package/full"];
 
-export function getTourismAccessPlan(payload?: AccessTokenPayload): TourismAccessPlan {
+export function getTourismAccessPlan(payload?: ValidAccessTokenPayload): TourismAccessPlan {
   switch (payload?.programSlug) {
     case "tourism/basic":
     case "tourism/package/basic":

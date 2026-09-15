@@ -10,9 +10,11 @@ import {
 } from "@/data/assessments";
 import { getProfession } from "@/data/professions";
 import {
-  getSupplyTokenAccess,
+  getCourseTokenAccess,
   PackageAccessDenied,
-} from "@/app/course/supply-access-control";
+  validateCourseBlockAccess,
+} from "@/app/course/course-access-control";
+import { getLogisticsAccessToken } from "@/lib/course-access-session";
 
 type AssessmentUtilityRouteProps = {
   routeSlug: string;
@@ -58,21 +60,36 @@ export async function renderAssessmentUtilityRoute({
     return null;
   }
 
-  const { token } = await searchParams;
-  const supplyAccess = slug === "supply" ? getSupplyTokenAccess(token) : null;
+  const { token: queryToken } = await searchParams;
+  const token =
+    slug === "logistics"
+      ? await getLogisticsAccessToken(queryToken)
+      : queryToken;
+  const navigationToken = slug === "logistics" ? undefined : token;
+  const courseAccess = getCourseTokenAccess(slug, token);
 
-  if (supplyAccess && !supplyAccess.ok) {
-    return <PackageAccessDenied token={token} />;
+  if (!courseAccess.ok || courseAccess.blockCount === 0) {
+    return (
+      <PackageAccessDenied
+        professionSlug={slug}
+        token={navigationToken}
+        validation={
+          courseAccess.ok
+            ? validateCourseBlockAccess(slug, token, 1)
+            : courseAccess.validation
+        }
+      />
+    );
   }
 
   if (routeSlug === "assessment") {
     return (
       <AssessmentOverview
         assessments={getProfessionAssessments(slug)}
-        maxBlockNumber={supplyAccess?.blockCount}
+        maxBlockNumber={courseAccess.blockCount}
         professionTitle={profession.title}
         slug={slug}
-        token={token}
+        token={navigationToken}
       />
     );
   }
@@ -80,12 +97,27 @@ export async function renderAssessmentUtilityRoute({
   if (blockTestMatch) {
     const blockNumber = Number(blockTestMatch[1]);
 
-    if (supplyAccess && supplyAccess.blockCount < blockNumber) {
-      return <PackageAccessDenied token={token} />;
+    const blockAccess = validateCourseBlockAccess(
+      slug,
+      token,
+      blockNumber as 1 | 2 | 3,
+    );
+
+    if (!blockAccess.ok) {
+      return (
+        <PackageAccessDenied
+          professionSlug={slug}
+          token={navigationToken}
+          validation={blockAccess}
+        />
+      );
     }
 
     const assessment = getBlockTestAssessment(slug, blockNumber);
-    const backHref = appendToken(`/course/${slug}/basic/assessment`, token);
+    const backHref = appendToken(
+      `/course/${slug}/basic/assessment`,
+      navigationToken,
+    );
     const nextHref =
       blockNumber === 1
         ? `/course/${slug}/basic/block-2/lesson-1`
@@ -106,24 +138,38 @@ export async function renderAssessmentUtilityRoute({
       <AssessmentTest
         assessment={assessment}
         backHref={backHref}
-        nextHref={appendToken(nextHref, token)}
+        nextHref={appendToken(nextHref, navigationToken)}
         nextLabel={
           blockNumber === 3
             ? "Перейти к итоговому проекту"
             : `Перейти к Блоку ${blockNumber + 1}`
         }
-        reviewHref={appendToken(blockReviewHref(slug, blockNumber), token)}
+        reviewHref={appendToken(
+          blockReviewHref(slug, blockNumber),
+          navigationToken,
+        )}
       />
     );
   }
 
   if (routeSlug === "final-project") {
-    if (supplyAccess && supplyAccess.blockCount < 3) {
-      return <PackageAccessDenied token={token} />;
+    const finalProjectAccess = validateCourseBlockAccess(slug, token, 3);
+
+    if (!finalProjectAccess.ok) {
+      return (
+        <PackageAccessDenied
+          professionSlug={slug}
+          token={navigationToken}
+          validation={finalProjectAccess}
+        />
+      );
     }
 
     const assessment = getFinalProjectAssessment(slug);
-    const backHref = appendToken(`/course/${slug}/basic/assessment`, token);
+    const backHref = appendToken(
+      `/course/${slug}/basic/assessment`,
+      navigationToken,
+    );
 
     if (!assessment) {
       return (
@@ -135,16 +181,30 @@ export async function renderAssessmentUtilityRoute({
       <FinalProjectPage
         assessment={assessment}
         backHref={backHref}
-        nextHref={appendToken(`/course/${slug}/basic/final-exam`, token)}
+        nextHref={appendToken(
+          `/course/${slug}/basic/final-exam`,
+          navigationToken,
+        )}
       />
     );
   }
 
   const assessment = getFinalExamAssessment(slug);
-  const backHref = appendToken(`/course/${slug}/basic/assessment`, token);
+  const backHref = appendToken(
+    `/course/${slug}/basic/assessment`,
+    navigationToken,
+  );
 
-  if (supplyAccess && supplyAccess.blockCount < 3) {
-    return <PackageAccessDenied token={token} />;
+  const finalExamAccess = validateCourseBlockAccess(slug, token, 3);
+
+  if (!finalExamAccess.ok) {
+    return (
+      <PackageAccessDenied
+        professionSlug={slug}
+        token={navigationToken}
+        validation={finalExamAccess}
+      />
+    );
   }
 
   if (!assessment) {
@@ -159,7 +219,7 @@ export async function renderAssessmentUtilityRoute({
       backHref={backHref}
       nextHref={appendToken(
         `/course/${slug}/basic/completed?package=professional`,
-        token,
+        navigationToken,
       )}
       nextLabel="Завершить программу"
       reviewHref={backHref}

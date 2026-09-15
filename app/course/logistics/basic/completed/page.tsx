@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { CertificateAccess } from "@/components/CertificateAccess";
+import { getCompletedCourseAccess, PackageAccessDenied } from "@/app/course/course-access-control";
 import { logisticsBonusLessons } from "@/data/professions/logistics/bonus-lessons";
-import { appendToken } from "../access";
+import { appendToken, getLogisticsAccessToken } from "../access";
 import { noIndexRobots } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
@@ -19,22 +19,22 @@ type CompletedPageProps = {
 
 const completionContent = {
   basic: {
-    eyebrow: "Базовый пакет",
-    title: "Базовый пакет завершён",
+    eyebrow: "Стартовый",
+    title: "Пакет «Стартовый» завершён",
     text:
-      "Вы прошли 1 блок и 10 уроков базового пакета программы «Специалист по международной логистике».",
+      "Вы прошли 1 блок и 10 уроков пакета «Стартовый» программы «Специалист по международной логистике».",
   },
   practice: {
-    eyebrow: "Практический пакет",
-    title: "Практический пакет завершён",
+    eyebrow: "Практический",
+    title: "Пакет «Практический» завершён",
     text:
-      "Вы прошли 2 блока и 20 уроков практического пакета программы «Специалист по международной логистике».",
+      "Вы прошли 2 блока и 20 уроков пакета «Практический» программы «Специалист по международной логистике».",
   },
   professional: {
-    eyebrow: "Профессиональный уровень",
-    title: "Профессиональный уровень завершён",
+    eyebrow: "Профессиональный",
+    title: "Пакет «Профессиональный» завершён",
     text:
-      "Вы прошли 3 блока и 30 уроков профессионального уровня программы «Специалист по международной логистике».",
+      "Вы прошли 3 блока и 30 уроков пакета «Профессиональный» программы «Специалист по международной логистике».",
   },
 };
 
@@ -51,10 +51,17 @@ function getCompletionContent(packageSlug?: string) {
 }
 
 export default async function LogisticsCompletedPage({ searchParams }: CompletedPageProps) {
-  const { package: packageSlug, token } = await searchParams;
+  const { token: queryToken } = await searchParams;
+  const token = await getLogisticsAccessToken(queryToken);
+  const access = getCompletedCourseAccess("logistics", token);
+
+  if (!access.ok) {
+    return <PackageAccessDenied professionSlug="logistics" token={token} validation={access.validation} />;
+  }
+
+  const packageSlug = access.packageSlug;
   const content = getCompletionContent(packageSlug);
-  const showBonusMaterials =
-    !packageSlug || packageSlug === "professional";
+  const showBonusMaterials = packageSlug === "professional";
 
   return (
     <main className="min-h-screen bg-porcelain py-16 md:py-24">
@@ -72,7 +79,7 @@ export default async function LogisticsCompletedPage({ searchParams }: Completed
           <div className="mt-8">
             <a
               className="inline-flex rounded-full bg-ink px-7 py-4 text-center text-sm font-semibold text-white transition hover:bg-evergreen"
-              href="/course/logistics/basic"
+              href={appendToken("/course/logistics/basic", token)}
             >
               Вернуться к программе
             </a>
@@ -109,7 +116,27 @@ export default async function LogisticsCompletedPage({ searchParams }: Completed
             </div>
           </div>
         ) : null}
-        <CertificateAccess certificateId="DEMO-2026-000001" courseTitle="Специалист по международной логистике" />
+        {packageSlug === "professional" ? (
+          <section className="mt-8 rounded-3xl border border-gold/30 bg-gold/10 p-6 md:p-8">
+            <p className="text-xs font-bold uppercase tracking-[0.24em] text-gold">
+              Электронный сертификат
+            </p>
+            <h2 className="mt-4 font-serif text-3xl leading-tight text-ink md:text-4xl">
+              Сертификат не выдаётся автоматически
+            </h2>
+            <p className="mt-4 max-w-3xl text-base leading-8 text-ink/68">
+              Эта страница подтверждает только переход к завершению материалов
+              Профессионального пакета. Для выдачи электронного сертификата
+              необходимо успешно пройти финальный экзамен и получить
+              подтверждение проверки выпускного проекта.
+            </p>
+            <p className="mt-4 max-w-3xl text-sm leading-7 text-ink/62">
+              После подтверждения аттестации Академия сформирует персональный
+              сертификат. Демонстрационный сертификат другого курса здесь не
+              используется.
+            </p>
+          </section>
+        ) : null}
       </section>
     </main>
   );
