@@ -6,7 +6,6 @@ export const dynamic = "force-dynamic";
 const TOKEN_SHA256 =
   "b9511953f97719a776a229b661c38e2763b3fbbbe21f90fee3d35018aab97e4c";
 const EXPIRES_AT = Date.UTC(2026, 8, 18, 20, 59, 59);
-const USED_COOKIE = "poa_owner_smoke_used";
 
 type RouteContext = {
   params: Promise<{ token: string }>;
@@ -21,13 +20,6 @@ function isValidToken(token: string) {
     received.length === expected.length &&
     timingSafeEqual(received, expected)
   );
-}
-
-function wasUsed(request: Request) {
-  return request.headers
-    .get("cookie")
-    ?.split(";")
-    .some((item) => item.trim() === `${USED_COOKIE}=1`);
 }
 
 function htmlResponse(title: string, content: string, status = 200) {
@@ -51,15 +43,15 @@ function htmlResponse(title: string, content: string, status = 200) {
 function unavailableResponse() {
   return htmlResponse(
     "Ссылка недоступна",
-    "<p style=\"line-height:1.6\">Временная ссылка недействительна, уже использована в этом браузере или истекла.</p>",
+    "<p style=\"line-height:1.6\">Временная ссылка недействительна или истекла.</p>",
     410,
   );
 }
 
-export async function GET(request: Request, context: RouteContext) {
+export async function GET(_request: Request, context: RouteContext) {
   const { token } = await context.params;
 
-  if (!isValidToken(token) || wasUsed(request)) {
+  if (!isValidToken(token)) {
     return unavailableResponse();
   }
 
@@ -72,7 +64,7 @@ export async function GET(request: Request, context: RouteContext) {
 export async function POST(request: Request, context: RouteContext) {
   const { token } = await context.params;
 
-  if (!isValidToken(token) || wasUsed(request)) {
+  if (!isValidToken(token)) {
     return unavailableResponse();
   }
 
@@ -125,7 +117,6 @@ export async function POST(request: Request, context: RouteContext) {
       "Cache-Control": "no-store",
       Location: result.paymentUrl,
       "Referrer-Policy": "no-referrer",
-      "Set-Cookie": `${USED_COOKIE}=1; Path=/owner-payment-smoke; Max-Age=172800; HttpOnly; Secure; SameSite=Strict`,
       "X-Robots-Tag": "noindex, nofollow, noarchive",
     },
   });
