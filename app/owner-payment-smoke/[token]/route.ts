@@ -30,7 +30,7 @@ function htmlResponse(title: string, content: string, status = 200) {
       headers: {
         "Cache-Control": "no-store, max-age=0",
         "Content-Security-Policy":
-          "default-src 'none'; style-src 'unsafe-inline'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'",
+          "default-src 'none'; style-src 'unsafe-inline'; form-action 'self' https://auth.robokassa.ru; base-uri 'none'; frame-ancestors 'none'",
         "Content-Type": "text/html; charset=utf-8",
         "Referrer-Policy": "no-referrer",
         "X-Content-Type-Options": "nosniff",
