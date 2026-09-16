@@ -1,5 +1,9 @@
 import { sendAccessEmailWithRetry } from "@/lib/payment/access-email";
 import {
+  isOwnerSmokePayment,
+  OWNER_SMOKE_MARKER,
+} from "@/lib/payment/owner-smoke";
+import {
   createResultSignature,
   getRobokassaConfig,
   getRobokassaOperationState,
@@ -101,8 +105,18 @@ export async function POST(request: Request) {
   }
 
   const paidAmount = Number(outSum);
+  const ownerSmokePayment =
+    params.Shp_owner_smoke === OWNER_SMOKE_MARKER &&
+    isOwnerSmokePayment({
+      amount: paidAmount,
+      outSum,
+      packageSlug: resolvedPackage.purchasePackage.slug,
+      priceVersion: params.Shp_price_version,
+      professionSlug: resolvedPackage.profession.slug,
+    });
 
   if (
+    !ownerSmokePayment &&
     !isAcceptedRobokassaAmount({
       currentAmount: resolvedPackage.amount,
       packageSlug: resolvedPackage.purchasePackage.slug,

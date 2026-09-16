@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { sendAccessEmailWithRetry } from "@/lib/payment/access-email";
+import { isOwnerSmokePayment } from "@/lib/payment/owner-smoke";
 import {
   getRobokassaConfig,
   getRobokassaOperationState,
@@ -89,11 +90,19 @@ export async function POST(request: Request) {
     professionSlug: order.professionSlug,
     packageSlug: order.packageSlug,
   });
+  const ownerSmokePayment = isOwnerSmokePayment({
+    amount: order.amount,
+    outSum: order.outSum,
+    packageSlug: order.packageSlug,
+    priceVersion: order.priceVersion,
+    professionSlug: order.professionSlug,
+  });
 
   if (
     !resolvedPackage ||
-    resolvedPackage.amount !== order.amount ||
-    resolvedPackage.outSum !== order.outSum
+    (!ownerSmokePayment &&
+      (resolvedPackage.amount !== order.amount ||
+        resolvedPackage.outSum !== order.outSum))
   ) {
     return statusResponse(request, { confirmed: false }, 409);
   }
