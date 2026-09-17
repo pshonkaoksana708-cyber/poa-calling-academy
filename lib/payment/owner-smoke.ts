@@ -38,7 +38,7 @@ export function isOwnerSmokePayment(input: {
 }) {
   return (
     input.amount === OWNER_SMOKE_AMOUNT &&
-    input.outSum === OWNER_SMOKE_OUT_SUM &&
+    Number(input.outSum) === OWNER_SMOKE_AMOUNT &&
     input.priceVersion === OWNER_SMOKE_PRICE_VERSION &&
     input.professionSlug === OWNER_SMOKE_PROFESSION_SLUG &&
     input.packageSlug === OWNER_SMOKE_PACKAGE_SLUG

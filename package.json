@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "test": "node scripts/payment-e2e-runner.mjs",
     "typecheck": "tsc --noEmit",
     "lint": "eslint ."
   },

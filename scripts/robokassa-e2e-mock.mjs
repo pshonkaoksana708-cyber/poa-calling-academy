@@ -4,8 +4,14 @@ import { createServer } from "node:http";
 const port = Number(process.env.MOCK_PORT ?? 4010);
 const appOrigin = process.env.MOCK_APP_ORIGIN ?? "http://127.0.0.1:3000";
 const merchantLogin = process.env.ROBOKASSA_MERCHANT_LOGIN ?? "e2e-merchant";
-const password1 = process.env.ROBOKASSA_TEST_PASSWORD_1 ?? "e2e-password-one";
-const password2 = process.env.ROBOKASSA_TEST_PASSWORD_2 ?? "e2e-password-two";
+const password1 =
+  process.env.ROBOKASSA_PASSWORD_1 ??
+  process.env.ROBOKASSA_TEST_PASSWORD_1 ??
+  "e2e-password-one";
+const password2 =
+  process.env.ROBOKASSA_PASSWORD_2 ??
+  process.env.ROBOKASSA_TEST_PASSWORD_2 ??
+  "e2e-password-two";
 const paymentAgeDaysByPackage = {
   basic: Number(process.env.MOCK_BASIC_PAYMENT_AGE_DAYS ?? 0),
   pro: Number(process.env.MOCK_PRO_PAYMENT_AGE_DAYS ?? 7),
@@ -52,10 +58,51 @@ function paymentSignature(searchParams) {
   );
 }
 
-function resultSignature(operation) {
+function resultSignature(operation, outSum) {
   return md5(
-    `${operation.outSum}:${operation.invId}:${password2}${shpSuffix(operation.params)}`,
+    `${outSum}:${operation.invId}:${password2}${shpSuffix(operation.params)}`,
   );
+}
+
+function setOperationPaid(operation, outSum) {
+  operation.resultOutSum = outSum;
+
+  if (operation.stateCode === 100) {
+    return;
+  }
+
+  operation.stateCode = 100;
+  const packageAgeDays =
+    paymentAgeDaysByPackage[operation.params.get("Shp_package")] ?? 0;
+  operation.stateDate = new Date(
+    Date.now() - packageAgeDays * 24 * 60 * 60 * 1000,
+  ).toISOString();
+}
+
+async function sendResultCallback(operation, options = {}) {
+  const outSum = options.outSum ?? Number(operation.outSum).toFixed(6);
+
+  setOperationPaid(operation, outSum);
+
+  const callbackParams = new URLSearchParams({
+    OutSum: outSum,
+    InvId: operation.invId,
+    SignatureValue: options.invalidSignature
+      ? "00000000000000000000000000000000"
+      : resultSignature(operation, outSum),
+  });
+
+  for (const [key, value] of operation.params.entries()) {
+    if (key.startsWith("Shp_")) {
+      callbackParams.set(key, value);
+    }
+  }
+
+  return fetch(`${appOrigin}/api/payment/result`, {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: callbackParams,
+  });
 }
 
 const server = createServer(async (request, response) => {
@@ -72,6 +119,7 @@ const server = createServer(async (request, response) => {
       operations: [...operations.values()].map((operation) => ({
         invId: operation.invId,
         outSum: operation.outSum,
+        resultOutSum: operation.resultOutSum,
         packageSlug: operation.params.get("Shp_package"),
         stateCode: operation.stateCode,
         stateDate: operation.stateDate,
@@ -124,7 +172,7 @@ const server = createServer(async (request, response) => {
 
     response.writeHead(200, { "Content-Type": "application/xml" });
     return response.end(
-      `<OperationStateResponse><Result><Code>0</Code></Result><State><Code>${operation.stateCode}</Code><RequestDate>${operation.stateDate}</RequestDate><StateDate>${operation.stateDate}</StateDate></State><Info><OutSum>${operation.outSum}</OutSum></Info></OperationStateResponse>`,
+      `<OperationStateResponse><Result><Code>0</Code></Result><State><Code>${operation.stateCode}</Code><RequestDate>${operation.stateDate}</RequestDate><StateDate>${operation.stateDate}</StateDate></State><Info><OutSum>${operation.resultOutSum ?? operation.outSum}</OutSum></Info></OperationStateResponse>`,
     );
   }
 
@@ -163,31 +211,7 @@ const server = createServer(async (request, response) => {
       return response.end("unknown operation");
     }
 
-    if (operation.stateCode !== 100) {
-      operation.stateCode = 100;
-      const packageAgeDays =
-        paymentAgeDaysByPackage[operation.params.get("Shp_package")];
-      operation.stateDate = new Date(
-        Date.now() - packageAgeDays * 24 * 60 * 60 * 1000,
-      ).toISOString();
-    }
-    const callbackParams = new URLSearchParams({
-      OutSum: operation.outSum,
-      InvId: operation.invId,
-      SignatureValue: resultSignature(operation),
-    });
-
-    for (const [key, value] of operation.params.entries()) {
-      if (key.startsWith("Shp_")) {
-        callbackParams.set(key, value);
-      }
-    }
-
-    const callback = await fetch(`${appOrigin}/api/payment/result`, {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: callbackParams,
-    });
+    const callback = await sendResultCallback(operation);
     const callbackText = await callback.text();
 
     if (!callback.ok || callbackText !== `OK${invId}`) {
@@ -199,6 +223,26 @@ const server = createServer(async (request, response) => {
       Location: `${appOrigin}/payment/success?InvId=${invId}`,
     });
     return response.end();
+  }
+
+  if (url.pathname === "/test-result-callback" && request.method === "POST") {
+    const body = JSON.parse(await readBody(request));
+    const operation = operations.get(String(body.invId));
+
+    if (!operation) {
+      return json(response, 404, { message: "unknown operation" });
+    }
+
+    const callback = await sendResultCallback(operation, {
+      outSum: body.outSum,
+      invalidSignature: body.invalidSignature === true,
+    });
+    const callbackText = await callback.text();
+
+    return json(response, 200, {
+      status: callback.status,
+      text: callbackText,
+    });
   }
 
   response.writeHead(404);
