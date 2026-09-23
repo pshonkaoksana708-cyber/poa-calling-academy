@@ -15,7 +15,7 @@ function createPlaceholderProfession(input: {
       title: "Базовый уровень",
       label: "Старт профессии",
       duration: "Программа в разработке",
-      price: "14 900 ₽",
+      price: "Цена определяется для программы",
       level: "basic" as const,
       description:
         "Первый уровень будет содержать базовые понятия профессии, ключевые задачи и практические упражнения для входа в направление.",
@@ -62,7 +62,7 @@ function createPlaceholderProfession(input: {
       title: "Практический уровень",
       label: "Рабочие задачи",
       duration: "Программа в разработке",
-      price: "24 900 ₽",
+      price: "Цена определяется для программы",
       level: "practice" as const,
       description:
         "Практический уровень будет раскрывать рабочие процессы, инструменты и типовые ситуации профессии.",
@@ -89,7 +89,7 @@ function createPlaceholderProfession(input: {
       title: "Профессиональный уровень",
       label: "Уверенная роль",
       duration: "Программа в разработке",
-      price: "34 900 ₽",
+      price: "Цена определяется для программы",
       level: "pro" as const,
       description:
         "Профессиональный уровень будет посвящен более сложным задачам, аналитике, самостоятельным решениям и карьерному росту.",
@@ -161,7 +161,7 @@ function createPlaceholderProfession(input: {
         slug: "basic",
         title: "Стартовый",
         subtitle: "1 блок профессии",
-        price: "14 900 ₽",
+        price: "Цена определяется для программы",
         includedLevelSlugs: ["basic"],
         includes: [
           "Доступ к базовому уровню",
@@ -175,7 +175,7 @@ function createPlaceholderProfession(input: {
         slug: "pro",
         title: "Практический",
         subtitle: "2 блока профессии",
-        price: "24 900 ₽",
+        price: "Цена определяется для программы",
         includedLevelSlugs: ["basic", "practice"],
         includes: [
           "Доступ к двум уровням",
@@ -190,7 +190,7 @@ function createPlaceholderProfession(input: {
         slug: "full",
         title: "Профессиональный",
         subtitle: "3 блока профессии",
-        price: "34 900 ₽",
+        price: "Цена определяется для программы",
         includedLevelSlugs: ["basic", "practice", "pro"],
         includes: [
           "Полная траектория",
