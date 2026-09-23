@@ -123,17 +123,6 @@ export default async function CertificatePage({ params }: CertificatePageProps) 
                 ))}
               </ul>
             </div>
-            <button
-              className="rounded-full border border-ink/15 px-7 py-4 text-center text-sm font-semibold text-ink/45"
-              disabled
-              type="button"
-            >
-              Скачать сертификат PDF
-            </button>
-            <p className="text-xs leading-6 text-ink/55">
-              Скачивание PDF подготовлено в интерфейсе и будет подключено после
-              добавления генерации файла.
-            </p>
           </aside>
         </div>
       </section>
