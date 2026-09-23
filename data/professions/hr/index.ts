@@ -71,7 +71,7 @@ const hrBasicLevel = createLevel({
   title: "Базовый уровень",
   label: "Старт профессии",
   duration: "10 уроков",
-  price: "14 900 ₽",
+  price: "5 900 ₽",
   description:
     "Первый уровень профессии: роль специалиста по персоналу, путь сотрудника в компании, заявка на подбор, портрет кандидата, вакансия, поиск, резюме, телефонное интервью и собеседование.",
   result:
@@ -87,7 +87,7 @@ const hrPracticeLevel = createLevel({
   title: "Практический уровень",
   label: "Практика подбора",
   duration: "20 уроков",
-  price: "24 900 ₽",
+  price: "9 900 ₽",
   description:
     "Практический уровень добавляет работу с компетенциями, интервью, оценкой кандидатов, руководителями-заказчиками, сложными вакансиями, HR-аналитикой и профессиональной коммуникацией.",
   result:
@@ -103,7 +103,7 @@ const hrProLevel = createLevel({
   title: "Профессиональный уровень",
   label: "Системная HR-роль",
   duration: "30 уроков",
-  price: "34 900 ₽",
+  price: "14 900 ₽",
   description:
     "Профессиональный уровень раскрывает HR-цикл сотрудника, адаптацию, оценку, мотивацию, удержание, обучение, кадровый резерв, культуру, конфликты и HR-стратегию.",
   result:
@@ -168,7 +168,7 @@ export const hrProfession: Profession = {
       slug: "basic",
       title: "Стартовый",
       subtitle: "1 блок профессии",
-      price: "14 900 ₽",
+      price: "5 900 ₽",
       includedLevelSlugs: ["basic"],
       includes: [
         "Доступ к базовому уровню",
@@ -183,7 +183,7 @@ export const hrProfession: Profession = {
       slug: "pro",
       title: "Практический",
       subtitle: "2 блока профессии",
-      price: "24 900 ₽",
+      price: "9 900 ₽",
       includedLevelSlugs: ["basic", "practice"],
       includes: [
         "Доступ к первым двум блокам",
@@ -198,7 +198,7 @@ export const hrProfession: Profession = {
       slug: "full",
       title: "Профессиональный",
       subtitle: "3 блока профессии",
-      price: "34 900 ₽",
+      price: "14 900 ₽",
       includedLevelSlugs: ["basic", "practice", "pro"],
       includes: [
         "Доступ ко всем трем блокам",
