@@ -6,7 +6,11 @@ export const ROBOKASSA_PAYMENT_URL =
   "https://auth.robokassa.ru/Merchant/Index.aspx";
 const ROBOKASSA_OPERATION_STATE_URL =
   "https://auth.robokassa.ru/Merchant/WebService/Service.asmx/OpStateExt";
-export const CURRENT_PAYMENT_PRICE_VERSION = "catalog-2026-09-14";
+export const CURRENT_PAYMENT_PRICE_VERSION = "catalog-2026-09-23";
+const COMPATIBLE_CURRENT_PRICE_VERSIONS = new Set([
+  CURRENT_PAYMENT_PRICE_VERSION,
+  "catalog-2026-09-14",
+]);
 
 const legacyPaymentAmounts: Record<string, number> = {
   "logistics:basic": 14900,
@@ -125,7 +129,7 @@ export function isAcceptedRobokassaAmount(input: {
 
   if (input.priceVersion) {
     return (
-      input.priceVersion === CURRENT_PAYMENT_PRICE_VERSION &&
+      COMPATIBLE_CURRENT_PRICE_VERSIONS.has(input.priceVersion) &&
       input.paidAmount === input.currentAmount
     );
   }
