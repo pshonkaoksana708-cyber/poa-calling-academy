@@ -3,16 +3,16 @@ import { homeSeo } from "@/lib/seo";
 export function Hero() {
   return (
     <section className="overflow-hidden pb-16 pt-10 md:pb-[4.5rem] md:pt-12 lg:min-h-[calc(100svh-5rem)] lg:py-12 xl:py-14">
-      <div className="container-shell grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_320px] xl:grid-cols-[minmax(0,1fr)_340px] xl:gap-16">
-        <div className="min-w-0 max-w-[660px]">
+      <div className="container-shell grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_280px] xl:grid-cols-[minmax(0,1fr)_300px] xl:gap-10">
+        <div className="min-w-0 max-w-[760px]">
           <div className="hero-reveal">
             <p className="mb-5 text-sm font-semibold uppercase tracking-[0.18em] text-gold sm:tracking-[0.28em]">
               Современная образовательная платформа
             </p>
-            <h1 className="max-w-[640px] font-serif text-[clamp(2.35rem,4.6vw,3.35rem)] leading-[1.05] text-ink [overflow-wrap:anywhere]">
+            <h1 className="max-w-[760px] font-serif text-[clamp(2rem,3.5vw,2.8rem)] leading-[1.05] text-ink [overflow-wrap:anywhere]">
               {homeSeo.h1}
             </h1>
-            <p className="mt-7 max-w-[620px] text-base leading-7 text-ink/72">
+            <p className="mt-7 max-w-[720px] text-base leading-7 text-ink/72">
               <span className="block text-lg font-semibold leading-7 text-ink md:text-xl md:leading-8">
                 Практическое образование для новой карьеры
               </span>
@@ -39,7 +39,7 @@ export function Hero() {
             </a>
           </div>
         </div>
-        <div className="hero-reveal hero-reveal-delay-2 min-w-0 lg:justify-self-end lg:w-full lg:max-w-[340px]">
+        <div className="hero-reveal hero-reveal-delay-2 min-w-0 lg:justify-self-end lg:w-full lg:max-w-[300px]">
           <div className="relative aspect-[4/5] overflow-hidden rounded-[2.25rem] border border-gold/20 bg-ivory shadow-[0_28px_90px_rgba(38,49,45,0.12)]">
             <img
               src="/images/author/author-01.webp"
