@@ -3,7 +3,7 @@ import { homeSeo } from "@/lib/seo";
 export function Hero() {
   return (
     <section className="overflow-hidden pb-16 pt-10 md:pb-[4.5rem] md:pt-12 lg:min-h-[calc(100svh-5rem)] lg:py-12 xl:py-14">
-      <div className="container-shell grid items-center gap-10 lg:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)] xl:gap-14">
+      <div className="container-shell grid items-center gap-10 lg:grid-cols-[minmax(0,1.32fr)_minmax(280px,0.68fr)] xl:gap-16">
         <div className="min-w-0 max-w-[660px]">
           <div className="hero-reveal">
             <p className="mb-5 text-sm font-semibold uppercase tracking-[0.18em] text-gold sm:tracking-[0.28em]">
@@ -39,8 +39,8 @@ export function Hero() {
             </a>
           </div>
         </div>
-        <div className="hero-reveal hero-reveal-delay-2 min-w-0">
-          <div className="relative aspect-[4/5] overflow-hidden rounded-[2.25rem] border border-gold/20 bg-ivory shadow-[0_28px_90px_rgba(38,49,45,0.12)] md:min-h-[560px]">
+        <div className="hero-reveal hero-reveal-delay-2 min-w-0 lg:justify-self-end lg:w-full lg:max-w-[390px]">
+          <div className="relative aspect-[4/5] overflow-hidden rounded-[2.25rem] border border-gold/20 bg-ivory shadow-[0_28px_90px_rgba(38,49,45,0.12)]">
             <img
               src="/images/author/author-01.webp"
               alt="Автор"
