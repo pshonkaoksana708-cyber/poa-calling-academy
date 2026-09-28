@@ -8,7 +8,7 @@ export function Header() {
         <a className="shrink-0" href="/">
           <Image
             alt="Академия профессионального развития"
-            className="h-[46px] w-auto md:h-[54px] lg:h-[60px]"
+            className="h-[64px] w-auto md:h-[72px] lg:h-[76px]"
             height={1400}
             priority
             src="/images/logo/poa-calling-logo.svg"
