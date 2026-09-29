@@ -21,10 +21,10 @@ function createLevel(input: {
     duration: input.duration,
     price:
       input.slug === "basic"
-        ? "4 900 ₽"
+        ? "6 900 ₽"
         : input.slug === "practice"
-          ? "7 900 ₽"
-          : "11 900 ₽",
+          ? "12 900 ₽"
+          : "18 900 ₽",
     level: input.slug,
     description: input.description,
     result: input.result,
@@ -172,7 +172,7 @@ export const logisticsProfession: Profession = {
       slug: "basic",
       title: "Стартовый",
       subtitle: "1 блок · 10 уроков · тест",
-      price: "4 900 ₽",
+      price: "6 900 ₽",
       includedLevelSlugs: ["basic"],
       includes: [
         "1 блок и 10 уроков по основам международной логистики",
@@ -188,7 +188,7 @@ export const logisticsProfession: Profession = {
       slug: "pro",
       title: "Практический",
       subtitle: "2 блока · 20 уроков · практика",
-      price: "7 900 ₽",
+      price: "12 900 ₽",
       includedLevelSlugs: ["basic", "practice"],
       includes: [
         "2 блока и 20 уроков: основы и практическая работа логиста",
@@ -204,7 +204,7 @@ export const logisticsProfession: Profession = {
       slug: "full",
       title: "Профессиональный",
       subtitle: "Полная программа · аттестация · сертификат",
-      price: "11 900 ₽",
+      price: "18 900 ₽",
       includedLevelSlugs: ["basic", "practice", "pro"],
       includes: [
         "3 блока и 30 уроков полной программы",

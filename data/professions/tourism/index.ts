@@ -71,7 +71,7 @@ const tourismBasicLevel = createLevel({
   title: "Базовый уровень",
   label: "Старт профессии",
   duration: "10 уроков",
-  price: "14 900 ₽",
+  price: "3 900 ₽",
   description:
     "Первый уровень профессии: роль специалиста по туризму, устройство отрасли, туристические направления, продукты, размещение, питание, курорты, документы и логистика путешествия.",
   result:
@@ -87,7 +87,7 @@ const tourismPracticeLevel = createLevel({
   title: "Практический уровень",
   label: "Работа с клиентом",
   duration: "20 уроков",
-  price: "24 900 ₽",
+  price: "6 900 ₽",
   description:
     "Практический уровень добавляет первую консультацию, профиль клиента, подбор направления, работу с туроператорами, системами бронирования, цифровыми инструментами, предложениями, CRM и первыми клиентами.",
   result:
@@ -103,7 +103,7 @@ const tourismProLevel = createLevel({
   title: "Профессиональный уровень",
   label: "Экспертная роль",
   duration: "30 уроков",
-  price: "34 900 ₽",
+  price: "9 900 ₽",
   description:
     "Профессиональный уровень раскрывает индивидуальные маршруты, работу с возражениями, переговоры, сложные клиентские ситуации, премиальный сервис, личный бренд, продвижение и финансовую модель специалиста.",
   result:
@@ -168,7 +168,7 @@ export const tourismProfession: Profession = {
       slug: "basic",
       title: "Стартовый",
       subtitle: "1 блок профессии",
-      price: "14 900 ₽",
+      price: "3 900 ₽",
       includedLevelSlugs: ["basic"],
       includes: [
         "Доступ к базовому уровню",
@@ -183,7 +183,7 @@ export const tourismProfession: Profession = {
       slug: "pro",
       title: "Практический",
       subtitle: "2 блока профессии",
-      price: "24 900 ₽",
+      price: "6 900 ₽",
       includedLevelSlugs: ["basic", "practice"],
       includes: [
         "Доступ к первым двум блокам",
@@ -198,7 +198,7 @@ export const tourismProfession: Profession = {
       slug: "full",
       title: "Профессиональный",
       subtitle: "3 блока профессии",
-      price: "34 900 ₽",
+      price: "9 900 ₽",
       includedLevelSlugs: ["basic", "practice", "pro"],
       includes: [
         "Доступ ко всем трем блокам",

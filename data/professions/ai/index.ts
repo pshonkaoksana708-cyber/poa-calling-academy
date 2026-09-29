@@ -24,10 +24,10 @@ function createLevel(input: {
     duration: input.duration,
     price:
       input.slug === "basic"
-        ? "14 900 ₽"
+        ? "4 900 ₽"
         : input.slug === "practice"
-          ? "24 900 ₽"
-          : "34 900 ₽",
+          ? "8 900 ₽"
+          : "12 900 ₽",
     level: input.slug,
     description: input.description,
     result: input.result,
@@ -104,5 +104,14 @@ const aiProLevel = createLevel({
 
 export const aiProfession: Profession = {
   ...aiBaseProfession,
+  packages: aiBaseProfession.packages.map((item) => ({
+    ...item,
+    price:
+      item.slug === "basic"
+        ? "4 900 ₽"
+        : item.slug === "pro"
+          ? "8 900 ₽"
+          : "12 900 ₽",
+  })),
   levels: [aiBasicLevel, aiPracticeLevel, aiProLevel],
 };

@@ -58,7 +58,7 @@ export const supplyProfession: Profession = {
       slug: "basic",
       title: "Стартовый",
       subtitle: "1 блок профессии",
-      price: "14 900 ₽",
+      price: "5 900 ₽",
       includedLevelSlugs: ["basic"],
       includes: [
         "Доступ к базовому уровню",
@@ -74,7 +74,7 @@ export const supplyProfession: Profession = {
       slug: "pro",
       title: "Практический",
       subtitle: "2 блока профессии",
-      price: "24 900 ₽",
+      price: "10 900 ₽",
       includedLevelSlugs: ["basic", "practice"],
       includes: [
         "Доступ к базовому и практическому уровням",
@@ -90,7 +90,7 @@ export const supplyProfession: Profession = {
       slug: "full",
       title: "Профессиональный",
       subtitle: "3 блока профессии",
-      price: "34 900 ₽",
+      price: "15 900 ₽",
       includedLevelSlugs: ["basic", "practice", "pro"],
       includes: [
         "Доступ ко всем уровням профессии",

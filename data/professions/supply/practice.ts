@@ -5,7 +5,7 @@ export const supplyPracticeLevel: ProfessionLevel = {
   title: "Практический уровень",
   label: "Работа с поставщиками",
   duration: "2 блока / 20 уроков",
-  price: "24 900 ₽",
+  price: "10 900 ₽",
   level: "practice",
   description:
     "Второй уровень профессии: переговоры, коммерческие условия, фиксация договоренностей и подготовка к договорной работе.",
