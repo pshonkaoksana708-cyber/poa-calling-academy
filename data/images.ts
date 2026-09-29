@@ -20,6 +20,7 @@ export const siteImages = {
   tourismPracticeLevel: "/images/levels/tourism-level-02.jpg",
   tourismProLevel: "/images/levels/tourism-level-03.jpg",
   aiProfession: "/images/professions/professions-02.jpg",
+  adminProfession: "/images/professions/admin-client-service.jpeg",
   aiBasicLevel: "/images/levels/ai-level-basic.webp.jpg",
   aiPracticeLevel: "/images/levels/ai-level-practical.webp.jpg",
   aiProLevel: "/images/professions/professions-04.jpg",
@@ -55,6 +56,10 @@ export function getProfessionImage(slug: string) {
 
   if (slug === "ai") {
     return siteImages.aiProfession;
+  }
+
+  if (slug === "admin") {
+    return siteImages.adminProfession;
   }
 
   return fallbackImages.profession;
