@@ -14,6 +14,7 @@ const catalogImages: Record<string, string> = {
   hr: "/images/team/team-02.jpg",
   tourism: "/images/supply/supply-05.jpg",
   ai: "/images/professions/professions-02.jpg",
+  admin: "/images/professions/admin-client-service.jpeg",
 };
 
 function getProfessionIcon(slug: string) {
@@ -39,7 +40,7 @@ export function CourseCatalog() {
         <SectionHeading
           eyebrow="ПРОГРАММЫ"
           title="Каталог образовательных программ"
-          description="Пять практических направлений: снабжение, кадры и HR, искусственный интеллект, туризм и международная логистика. Выберите профессию и подходящий пакет обучения."
+          description="Шесть практических направлений: снабжение, кадры и HR, искусственный интеллект, туризм, международная логистика и клиентский сервис. Выберите профессию и подходящую программу обучения."
         />
         <div className="grid gap-4">
           {professions.map((profession) => (
