@@ -1,3 +1,4 @@
+import { adminProfession } from "@/data/professions/admin";
 import { aiProfession } from "@/data/professions/ai";
 import { hrProfession } from "@/data/professions/hr";
 import { logisticsProfession } from "@/data/professions/logistics";
@@ -10,6 +11,7 @@ export const professions = [
   hrProfession,
   tourismProfession,
   aiProfession,
+  adminProfession,
 ];
 
 export function getProfession(slug: string) {
