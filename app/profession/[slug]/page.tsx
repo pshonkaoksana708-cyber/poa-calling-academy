@@ -603,15 +603,18 @@ export default async function ProfessionPage({ params }: ProfessionPageProps) {
               {sectionLabels.packages}
             </p>
             <h2 className="font-serif text-4xl leading-tight md:text-5xl">
-              {profession.slug === "tourism" ||
-              profession.slug === "ai" ||
-              profession.slug === "logistics"
-                ? "Варианты обучения"
-                : "Пакеты профессии"}
+              {profession.slug === "admin"
+                ? "Полный курс"
+                : profession.slug === "tourism" ||
+                    profession.slug === "ai" ||
+                    profession.slug === "logistics"
+                  ? "Варианты обучения"
+                  : "Пакеты профессии"}
             </h2>
             <p className="mx-auto mt-6 max-w-2xl text-base leading-8 text-white/68">
-              Вы выбираете объем доступа: один уровень, два уровня или полную
-              траекторию подготовки по профессии.
+              {profession.slug === "admin"
+                ? "Одна законченная программа подготовки администратора клиентского сервиса."
+                : "Вы выбираете объем доступа: один уровень, два уровня или полную траекторию подготовки по профессии."}
             </p>
           </div>
 
@@ -620,7 +623,7 @@ export default async function ProfessionPage({ params }: ProfessionPageProps) {
               <div className="grid gap-4" key={item.slug}>
                 <ProgramCard
                   badge={item.badge}
-                  ctaLabel="Выбрать пакет"
+                  ctaLabel={profession.slug === "admin" ? "Выбрать курс" : "Выбрать пакет"}
                   description={item.bestFor}
                   featured={item.featured}
                   href={`/?profession=${profession.slug}&package=${item.slug}#access-form`}
@@ -708,6 +711,7 @@ export default async function ProfessionPage({ params }: ProfessionPageProps) {
         </div>
       </section>
 
+      {profession.slug !== "admin" && (
       <section className="bg-ivory/55 pb-14 pt-14 md:pb-16 md:pt-16">
         <div className="container-shell">
           <div className="mx-auto mb-7 max-w-3xl text-center md:mb-8">
@@ -763,6 +767,7 @@ export default async function ProfessionPage({ params }: ProfessionPageProps) {
           </div>
         </div>
       </section>
+      )}
 
       <CertificateSection />
 
