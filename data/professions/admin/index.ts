@@ -64,7 +64,7 @@ export const adminProfession: Profession = {
   packages: [{
     slug: "basic",
     title: "Администратор клиентского сервиса",
-    subtitle: "15 уроков",
+    subtitle: "",
     price: "3 900 ₽",
     includedLevelSlugs: ["basic"],
     includes: ["15 практических уроков", "Практические задания", "5 усиленных интерактивных кейсов", "Итоговая аттестация «Один рабочий день администратора»"],
@@ -77,7 +77,7 @@ export const adminProfession: Profession = {
     slug: "basic",
     title: "Администратор клиентского сервиса",
     label: "Полный курс",
-    duration: "15 уроков",
+    duration: "",
     price: "3 900 ₽",
     level: "practice",
     description: "15 практических уроков от первого впечатления и общения до CRM, продаж, жалоб, кассы и управления насыщенной сменой.",
