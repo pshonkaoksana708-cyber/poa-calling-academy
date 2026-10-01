@@ -4,11 +4,11 @@ import { navigation } from "@/data/site";
 export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b hairline bg-porcelain/88 backdrop-blur-xl">
-      <div className="container-shell flex h-20 min-w-0 items-center justify-between gap-4 md:gap-8">
+      <div className="container-shell flex min-h-24 min-w-0 items-center justify-between gap-4 py-2 md:min-h-28 md:gap-8 lg:min-h-32">
         <a className="shrink-0" href="/">
           <Image
             alt="Академия профессионального развития"
-            className="h-[46px] w-auto md:h-[54px] lg:h-[60px]"
+            className="h-[82px] w-auto md:h-[98px] lg:h-[112px]"
             height={1400}
             priority
             src="/images/logo/poa-calling-logo.svg"

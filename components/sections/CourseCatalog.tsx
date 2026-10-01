@@ -14,6 +14,7 @@ const catalogImages: Record<string, string> = {
   hr: "/images/team/team-02.jpg",
   tourism: "/images/supply/supply-05.jpg",
   ai: "/images/professions/professions-02.jpg",
+  admin: "/images/professions/admin-client-service.jpeg",
 };
 
 function getProfessionIcon(slug: string) {
@@ -39,7 +40,7 @@ export function CourseCatalog() {
         <SectionHeading
           eyebrow="ПРОГРАММЫ"
           title="Каталог образовательных программ"
-          description="Каталог рассчитан на масштабирование: снабжение, HR, искусственный интеллект, туризм, управление, продажи, предпринимательство, финансы и другие направления подготовки."
+          description="Шесть практических направлений: снабжение, кадры и HR, искусственный интеллект, туризм, международная логистика и клиентский сервис. Выберите профессию и подходящую программу обучения."
         />
         <div className="grid gap-4">
           {professions.map((profession) => (
@@ -85,7 +86,9 @@ export function CourseCatalog() {
                         {level.label}
                       </span>
                       <span className="mt-4 block max-w-full font-serif text-[1.375rem] leading-[1.12] [hyphens:auto] [overflow-wrap:anywhere] [word-break:normal] md:text-[1.5rem] xl:text-[1.75rem] xl:leading-[1.1]">
-                        {homepageLevelTitles[level.slug] ?? level.title}
+                        {profession.slug === "admin"
+                          ? "Администратор клиентского сервиса"
+                          : homepageLevelTitles[level.slug] ?? level.title}
                       </span>
                       <span className="mt-5 grid gap-2 text-sm text-white/68">
                         <span>{level.duration}</span>

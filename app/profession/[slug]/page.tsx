@@ -49,7 +49,7 @@ const professionFaqItems = [
   {
     question: "Будет ли электронный сертификат?",
     answer:
-      "После завершения образовательной программы предусмотрен электронный сертификат. Его можно использовать как подтверждение прохождения программы и освоенных тем.",
+      "Электронный сертификат выдаётся после прохождения всех трёх блоков Профессионального пакета.",
   },
 ];
 
@@ -94,7 +94,7 @@ const supplyPageCopy = {
       title: "Подтверждение",
       value: "Электронный сертификат",
       description:
-        "После завершения образовательной программы пользователь получает электронный сертификат.",
+        "Электронный сертификат выдаётся после прохождения всех трёх блоков Профессионального пакета.",
     },
   ],
   faqItems: professionFaqItems,
@@ -141,7 +141,7 @@ const hrPageCopy = {
       title: "Подтверждение",
       value: "Сертификат",
       description:
-        "После завершения образовательной программы пользователь получает электронный сертификат.",
+        "Электронный сертификат выдаётся после прохождения всех трёх блоков Профессионального пакета.",
     },
   ],
   faqItems: [
@@ -168,7 +168,7 @@ const hrPageCopy = {
     {
       question: "Будет ли электронный сертификат?",
       answer:
-        "После завершения образовательной программы предусмотрен электронный сертификат. Его можно использовать как подтверждение прохождения программы и освоенных тем.",
+        "Электронный сертификат выдаётся после прохождения всех трёх блоков Профессионального пакета.",
     },
   ],
 };
@@ -214,7 +214,7 @@ const tourismPageCopy = {
       title: "Подтверждение",
       value: "Сертификат",
       description:
-        "После завершения образовательной программы пользователь получает электронный сертификат о прохождении обучения.",
+        "Электронный сертификат выдаётся после прохождения всех трёх блоков Профессионального пакета.",
     },
   ],
   faqItems: [
@@ -241,7 +241,7 @@ const tourismPageCopy = {
     {
       question: "Будет ли электронный сертификат?",
       answer:
-        "После завершения образовательной программы предусмотрен электронный сертификат. Его можно использовать как подтверждение прохождения программы и освоенных тем.",
+        "Электронный сертификат выдаётся после прохождения всех трёх блоков Профессионального пакета.",
     },
   ],
 };
@@ -287,7 +287,7 @@ const logisticsPageCopy = {
       title: "Подтверждение",
       value: "Сертификат",
       description:
-        "После завершения образовательной программы пользователь получает электронный сертификат о прохождении обучения.",
+        "Электронный сертификат выдаётся после прохождения всех трёх блоков Профессионального пакета.",
     },
   ],
   faqItems: [
@@ -360,7 +360,7 @@ const aiPageCopy = {
       title: "Подтверждение",
       value: "Сертификат",
       description:
-        "После завершения образовательной программы пользователь получает электронный сертификат о прохождении обучения.",
+        "Электронный сертификат выдаётся после прохождения всех трёх блоков Профессионального пакета.",
     },
   ],
   faqItems: [
@@ -387,7 +387,7 @@ const aiPageCopy = {
     {
       question: "Будет ли электронный сертификат?",
       answer:
-        "После завершения образовательной программы предусмотрен электронный сертификат. Его можно использовать как подтверждение прохождения программы и освоенных тем.",
+        "Электронный сертификат выдаётся после прохождения всех трёх блоков Профессионального пакета.",
     },
   ],
 };
@@ -441,7 +441,44 @@ export default async function ProfessionPage({ params }: ProfessionPageProps) {
     title: level.title,
     description: level.result,
   }));
-  const pageCopy =
+  const adminPageCopy = {
+  professionCardDescription:
+    "Практический курс для тех, кто хочет уверенно работать с клиентами: встречать, записывать, вести CRM, решать сложные ситуации и держать под контролем насыщенную смену.",
+  heroDescription:
+    "Практический курс для администраторов ресепшена и клиентских зон: общение, запись, CRM, продажи без давления, жалобы, касса и работа в насыщенной смене.",
+  heroOutcome:
+    "После курса студент понимает реальную работу администратора и умеет вести клиента от первого контакта до завершения и продолжения обслуживания.",
+  audienceIntro:
+    "Курс подойдёт тем, кто хочет освоить работу администратора с нуля или систематизировать опыт в клиентском сервисе.",
+  careerDescription:
+    "Практический путь от первого контакта с клиентом до уверенной самостоятельной работы в клиентской зоне.",
+  labels: {
+    audience: "Кому подойдёт",
+    packages: "Курс",
+    careerPath: "Карьерная траектория",
+    result: "Результат",
+    skills: "Навыки",
+    levels: "Программа",
+  },
+  headings: {
+    audience: "Кому подойдёт курс администратора клиентского сервиса",
+    result: "Что вы сможете делать после обучения",
+    skills: "Навыки администратора клиентского сервиса",
+  },
+  statCards: [
+    { title: "Практика", value: "Реальные рабочие ситуации", description: "Запись, CRM, переписка, жалобы, касса и насыщенная смена." },
+    { title: "Клиентский путь", value: "От первого контакта до завершения", description: "Учитесь сопровождать клиента последовательно и профессионально." },
+    { title: "Рабочий старт", value: "Готовность к самостоятельной смене", description: "Финальная аттестация объединяет ключевые ситуации рабочего дня администратора." },
+  ],
+  faqItems: [
+    { question: "Можно ли пройти курс без опыта?", answer: "Да. Курс последовательно знакомит с реальной работой администратора и подходит для старта с нуля." },
+    { question: "Чему я научусь?", answer: "Работать с клиентами, записью и расписанием, CRM, перепиской, возражениями, жалобами, кассой и задачами насыщенной смены." },
+    { question: "Как проходит обучение?", answer: "Обучение проходит онлайн. После подтверждённой оплаты на email приходит защищённая ссылка на материалы курса." },
+    { question: "Это один курс или несколько уровней?", answer: "Это один законченный курс без отдельных уровней и пакетов." },
+  ],
+};
+
+const pageCopy =
     profession.slug === "supply"
       ? supplyPageCopy
       : profession.slug === "hr"
@@ -452,7 +489,9 @@ export default async function ProfessionPage({ params }: ProfessionPageProps) {
           ? logisticsPageCopy
           : profession.slug === "ai"
             ? aiPageCopy
-            : null;
+            : profession.slug === "admin"
+              ? adminPageCopy
+              : null;
   const sectionLabels = pageCopy?.labels ?? {
     audience: "Кому подойдёт",
     packages: "Пакеты",
@@ -517,7 +556,7 @@ export default async function ProfessionPage({ params }: ProfessionPageProps) {
                   className="rounded-full bg-ink px-7 py-4 text-center text-sm font-bold text-white transition hover:bg-evergreen"
                   href="#packages"
                 >
-                  Выбрать пакет
+                  {profession.slug === "admin" ? "Выбрать курс" : "Выбрать пакет"}
                 </a>
                 <a
                   className="rounded-full border border-ink/15 px-7 py-4 text-center text-sm font-bold text-ink transition hover:border-gold hover:text-evergreen"
@@ -529,7 +568,7 @@ export default async function ProfessionPage({ params }: ProfessionPageProps) {
             </div>
 
             <ProfessionCard
-              ctaLabel="Перейти к пакетам"
+              ctaLabel={profession.slug === "admin" ? "Перейти к курсу" : "Перейти к пакетам"}
               description={
                 pageCopy?.professionCardDescription ??
                 "Практическая траектория для тех, кто хочет освоить снабжение как понятную, прикладную и востребованную профессиональную функцию."
@@ -603,15 +642,18 @@ export default async function ProfessionPage({ params }: ProfessionPageProps) {
               {sectionLabels.packages}
             </p>
             <h2 className="font-serif text-4xl leading-tight md:text-5xl">
-              {profession.slug === "tourism" ||
-              profession.slug === "ai" ||
-              profession.slug === "logistics"
-                ? "Варианты обучения"
-                : "Пакеты профессии"}
+              {profession.slug === "admin"
+                ? "Полный курс"
+                : profession.slug === "tourism" ||
+                    profession.slug === "ai" ||
+                    profession.slug === "logistics"
+                  ? "Варианты обучения"
+                  : "Пакеты профессии"}
             </h2>
             <p className="mx-auto mt-6 max-w-2xl text-base leading-8 text-white/68">
-              Вы выбираете объем доступа: один уровень, два уровня или полную
-              траекторию подготовки по профессии.
+              {profession.slug === "admin"
+                ? "Одна законченная программа подготовки администратора клиентского сервиса."
+                : "Вы выбираете объем доступа: один уровень, два уровня или полную траекторию подготовки по профессии."}
             </p>
           </div>
 
@@ -620,7 +662,7 @@ export default async function ProfessionPage({ params }: ProfessionPageProps) {
               <div className="grid gap-4" key={item.slug}>
                 <ProgramCard
                   badge={item.badge}
-                  ctaLabel="Выбрать пакет"
+                  ctaLabel={profession.slug === "admin" ? "Выбрать курс" : "Выбрать пакет"}
                   description={item.bestFor}
                   featured={item.featured}
                   href={`/?profession=${profession.slug}&package=${item.slug}#access-form`}
@@ -708,6 +750,7 @@ export default async function ProfessionPage({ params }: ProfessionPageProps) {
         </div>
       </section>
 
+      {profession.slug !== "admin" && (
       <section className="bg-ivory/55 pb-14 pt-14 md:pb-16 md:pt-16">
         <div className="container-shell">
           <div className="mx-auto mb-7 max-w-3xl text-center md:mb-8">
@@ -763,6 +806,7 @@ export default async function ProfessionPage({ params }: ProfessionPageProps) {
           </div>
         </div>
       </section>
+      )}
 
       <CertificateSection />
 

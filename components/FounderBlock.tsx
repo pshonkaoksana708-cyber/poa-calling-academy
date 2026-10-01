@@ -10,9 +10,9 @@ export function FounderBlock() {
 
   return (
     <section className="section-space" id="author">
-      <div className="container-shell grid items-center gap-14 lg:grid-cols-[0.92fr_1fr]">
-        <div className="grid gap-5">
-          <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] border border-mist bg-ivory shadow-soft md:min-h-[520px]">
+      <div className="container-shell grid items-center gap-14 lg:grid-cols-[320px_minmax(0,1fr)]">
+        <div className="grid gap-5 lg:max-w-[320px]">
+          <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] border border-mist bg-ivory shadow-soft">
             <img
               src="/images/author/author-02.webp"
               alt="Автор"
