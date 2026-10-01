@@ -441,7 +441,12 @@ export default async function ProfessionPage({ params }: ProfessionPageProps) {
     title: level.title,
     description: level.result,
   }));
-  const pageCopy =
+  const adminPageCopy = {
+  professionCardDescription:
+    "Практический курс для тех, кто хочет уверенно работать с клиентами: встречать, записывать, вести CRM, решать сложные ситуации и держать под контролем насыщенную смену.",
+};
+
+const pageCopy =
     profession.slug === "supply"
       ? supplyPageCopy
       : profession.slug === "hr"
@@ -517,7 +522,7 @@ export default async function ProfessionPage({ params }: ProfessionPageProps) {
                   className="rounded-full bg-ink px-7 py-4 text-center text-sm font-bold text-white transition hover:bg-evergreen"
                   href="#packages"
                 >
-                  Выбрать пакет
+                  {profession.slug === "admin" ? "Выбрать курс" : "Выбрать пакет"}
                 </a>
                 <a
                   className="rounded-full border border-ink/15 px-7 py-4 text-center text-sm font-bold text-ink transition hover:border-gold hover:text-evergreen"
@@ -529,7 +534,7 @@ export default async function ProfessionPage({ params }: ProfessionPageProps) {
             </div>
 
             <ProfessionCard
-              ctaLabel="Перейти к пакетам"
+              ctaLabel={profession.slug === "admin" ? "Перейти к курсу" : "Перейти к пакетам"}
               description={
                 pageCopy?.professionCardDescription ??
                 "Практическая траектория для тех, кто хочет освоить снабжение как понятную, прикладную и востребованную профессиональную функцию."
