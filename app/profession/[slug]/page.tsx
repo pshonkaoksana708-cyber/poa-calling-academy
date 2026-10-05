@@ -14,7 +14,7 @@ import { CertificateSection } from "@/components/CertificateSection";
 import { JsonLd } from "@/components/JsonLd";
 import { YandexMetrikaGoal } from "@/components/YandexMetrika";
 import { accessDeliverySteps } from "@/data/config/email";
-import { getProfessionImage, getProfessionLevelImage } from "@/data/images";
+import { getProfessionImage } from "@/data/images";
 import { getProfession, professions } from "@/data/professions";
 import {
   breadcrumbListJsonLd,
@@ -34,22 +34,22 @@ const professionFaqItems = [
   {
     question: "Можно ли начать обучение снабжению с нуля?",
     answer:
-      "Да. Базовый уровень рассчитан на спокойный вход в профессию: вы разберете роль снабжения, закупочный цикл, заявки, поставщиков, документы и первые практические задачи.",
+      "Да. Начало программы рассчитано на спокойный вход в профессию: вы разберете роль снабжения, закупочный цикл, заявки, поставщиков, документы и первые практические задачи.",
   },
   {
-    question: "Чем отличаются пакеты профессии?",
+    question: "Что входит в полный курс?",
     answer:
-      "Пакет «Стартовый» включает первый блок, «Практический» добавляет работу с поставщиками и закупочными процессами, а «Профессиональный» дает траекторию до самостоятельной профессиональной роли.",
+      "В полный курс входит вся программа профессии: теория, рабочие примеры, практические задания и материалы для перехода к самостоятельным профессиональным задачам.",
   },
   {
     question: "Как я получу материалы после оплаты?",
     answer:
-      "После оплаты на указанный email придет письмо с защищенной ссылкой. По этой ссылке открываются материалы выбранного уровня или пакета профессии.",
+      "После оплаты на указанный email придет письмо с защищенной ссылкой. По этой ссылке открываются материалы полного курса.",
   },
   {
     question: "Будет ли электронный сертификат?",
     answer:
-      "Электронный сертификат выдаётся после прохождения всех трёх блоков Профессионального пакета.",
+      "Электронный сертификат выдаётся после прохождения полного курса.",
   },
 ];
 
@@ -66,11 +66,11 @@ const supplyPageCopy = {
     "Последовательный путь от первых задач в снабжении и закупках до самостоятельной работы с поставщиками, документами и контролем поставок.",
   labels: {
     audience: "Кому подойдёт",
-    packages: "Пакеты",
+    packages: "Полный курс",
     careerPath: "Карьерная траектория",
     result: "Результат",
     skills: "Навыки",
-    levels: "Уровни программы",
+    levels: "Программа",
   },
   headings: {
     audience: "Кому подойдут курсы по снабжению",
@@ -94,7 +94,7 @@ const supplyPageCopy = {
       title: "Подтверждение",
       value: "Электронный сертификат",
       description:
-        "Электронный сертификат выдаётся после прохождения всех трёх блоков Профессионального пакета.",
+        "Электронный сертификат выдаётся после прохождения полного курса.",
     },
   ],
   faqItems: professionFaqItems,
@@ -113,11 +113,11 @@ const hrPageCopy = {
     "Последовательный путь от базовой кадровой работы и подбора персонала до самостоятельных задач специалиста по кадрам и HR.",
   labels: {
     audience: "Для кого",
-    packages: "Пакеты",
+    packages: "Полный курс",
     careerPath: "Карьерный путь",
     result: "Результат",
     skills: "Навыки",
-    levels: "Уровни",
+    levels: "Программа",
   },
   headings: {
     audience: "Кому подойдёт обучение кадрам и подбору персонала",
@@ -141,14 +141,14 @@ const hrPageCopy = {
       title: "Подтверждение",
       value: "Сертификат",
       description:
-        "Электронный сертификат выдаётся после прохождения всех трёх блоков Профессионального пакета.",
+        "Электронный сертификат выдаётся после прохождения полного курса.",
     },
   ],
   faqItems: [
     {
       question: "Можно ли начать без опыта в сфере кадров и персонала?",
       answer:
-        "Да. Базовый уровень помогает спокойно войти в профессию: разобраться в подборе сотрудников, вакансиях, резюме, собеседованиях и первых задачах специалиста отдела кадров.",
+        "Да. Начало программы помогает спокойно войти в профессию: разобраться в подборе сотрудников, вакансиях, резюме, собеседованиях и первых задачах специалиста отдела кадров.",
     },
     {
       question: "Подходит ли программа тем, кто ищет курсы по подбору персонала?",
@@ -156,19 +156,19 @@ const hrPageCopy = {
         "Да. В программе есть работа с вакансиями, резюме, кандидатами, собеседованиями, оценкой кандидатов и адаптацией новых сотрудников.",
     },
     {
-      question: "Чем отличаются пакеты профессии?",
+      question: "Что входит в полный курс?",
       answer:
-        "Пакет «Стартовый» включает первый блок, «Практический» добавляет работу с подбором сотрудников, оценкой кандидатов и адаптацией новых сотрудников, а «Профессиональный» дает траекторию до самостоятельной роли в сфере кадров и персонала.",
+        "В полный курс входит вся программа профессии: теория, рабочие примеры, практические задания и материалы для перехода к самостоятельным профессиональным задачам.",
     },
     {
       question: "Как я получу материалы после оплаты?",
       answer:
-        "После оплаты на указанный email придет письмо с защищенной ссылкой. По этой ссылке открываются материалы выбранного уровня или пакета профессии.",
+        "После оплаты на указанный email придет письмо с защищенной ссылкой. По этой ссылке открываются материалы полного курса.",
     },
     {
       question: "Будет ли электронный сертификат?",
       answer:
-        "Электронный сертификат выдаётся после прохождения всех трёх блоков Профессионального пакета.",
+        "Электронный сертификат выдаётся после прохождения полного курса.",
     },
   ],
 };
@@ -186,11 +186,11 @@ const tourismPageCopy = {
     "Последовательный путь от первых задач в туризме до самостоятельной работы турагента с клиентами, поездками и туристическими продуктами.",
   labels: {
     audience: "ДЛЯ КОГО",
-    packages: "ОБУЧЕНИЕ",
+    packages: "ПОЛНЫЙ КУРС",
     careerPath: "КАРЬЕРНЫЙ ПУТЬ",
     result: "РЕЗУЛЬТАТ",
     skills: "НАВЫКИ",
-    levels: "УРОВНИ ПРОГРАММЫ",
+    levels: "ПРОГРАММА",
   },
   headings: {
     audience: "Кому подойдёт курс турагента",
@@ -214,14 +214,14 @@ const tourismPageCopy = {
       title: "Подтверждение",
       value: "Сертификат",
       description:
-        "Электронный сертификат выдаётся после прохождения всех трёх блоков Профессионального пакета.",
+        "Электронный сертификат выдаётся после прохождения полного курса.",
     },
   ],
   faqItems: [
     {
       question: "Можно ли пройти курс турагента с нуля?",
       answer:
-        "Да. Базовый уровень помогает разобраться в туристической отрасли, видах туристических продуктов, запросах клиентов и первых задачах турагента.",
+        "Да. Начало программы помогает разобраться в туристической отрасли, видах туристических продуктов, запросах клиентов и первых задачах турагента.",
     },
     {
       question: "Что я буду уметь после обучения на турагента?",
@@ -229,19 +229,19 @@ const tourismPageCopy = {
         "Вы разберёте подбор туров, работу с клиентскими запросами, маршруты, размещение, документы, бронирование и сопровождение клиента.",
     },
     {
-      question: "Чем отличаются пакеты профессии?",
+      question: "Что входит в полный курс?",
       answer:
-        "Пакет «Стартовый» включает первый блок, «Практический» добавляет работу с клиентскими запросами, подбором туров и маршрутами, а «Профессиональный» дает траекторию до самостоятельной работы с клиентами и туристическими продуктами.",
+        "В полный курс входит вся программа профессии: теория, рабочие примеры, практические задания и материалы для перехода к самостоятельным профессиональным задачам.",
     },
     {
       question: "Как я получу материалы после оплаты?",
       answer:
-        "После оплаты на указанный email придет письмо с защищенной ссылкой. По этой ссылке открываются материалы выбранного уровня или пакета профессии.",
+        "После оплаты на указанный email придет письмо с защищенной ссылкой. По этой ссылке открываются материалы полного курса.",
     },
     {
       question: "Будет ли электронный сертификат?",
       answer:
-        "Электронный сертификат выдаётся после прохождения всех трёх блоков Профессионального пакета.",
+        "Электронный сертификат выдаётся после прохождения полного курса.",
     },
   ],
 };
@@ -259,11 +259,11 @@ const logisticsPageCopy = {
     "Последовательный путь от первых задач с заявками, маршрутами и документами до самостоятельного контроля транспортной и международной логистики.",
   labels: {
     audience: "ДЛЯ КОГО",
-    packages: "ОБУЧЕНИЕ",
+    packages: "ПОЛНЫЙ КУРС",
     careerPath: "КАРЬЕРНЫЙ ПУТЬ",
     result: "РЕЗУЛЬТАТ",
     skills: "НАВЫКИ",
-    levels: "УРОВНИ ПРОГРАММЫ",
+    levels: "ПРОГРАММА",
   },
   headings: {
     audience: "Кому подойдут курсы по логистике",
@@ -287,14 +287,14 @@ const logisticsPageCopy = {
       title: "Подтверждение",
       value: "Сертификат",
       description:
-        "Электронный сертификат выдаётся после прохождения всех трёх блоков Профессионального пакета.",
+        "Электронный сертификат выдаётся после прохождения полного курса.",
     },
   ],
   faqItems: [
     {
       question: "Можно ли начать обучение логистике с нуля?",
       answer:
-        "Да. Базовый уровень рассчитан на спокойный вход: вы разберёте участников перевозки, документы, маршруты, грузы, сроки и первые задачи логиста.",
+        "Да. Начало программы рассчитано на спокойный вход: вы разберёте участников перевозки, документы, маршруты, грузы, сроки и первые задачи логиста.",
     },
     {
       question: "Чем международная логистика отличается от общего обучения логиста?",
@@ -304,12 +304,12 @@ const logisticsPageCopy = {
     {
       question: "Чем отличаются варианты обучения?",
       answer:
-        "Пакет «Стартовый» включает первый блок, «Практический» добавляет работу с перевозками и документами, а «Профессиональный» даёт траекторию до самостоятельной роли.",
+        "В полный курс входит вся программа профессии: теория, рабочие примеры, практические задания и материалы для перехода к самостоятельным профессиональным задачам.",
     },
     {
       question: "Как проходит онлайн-обучение логистике?",
       answer:
-        "После оплаты пользователь получает защищённую ссылку на материалы выбранного пакета и изучает уроки в самостоятельном темпе.",
+        "После оплаты пользователь получает защищённую ссылку на материалы полного курса и изучает их в самостоятельном темпе.",
     },
     {
       question: "Как будет выдаваться доступ?",
@@ -332,11 +332,11 @@ const aiPageCopy = {
     "Последовательный путь от первых задач с ИИ до самостоятельного применения искусственного интеллекта в работе и проектах.",
   labels: {
     audience: "ДЛЯ КОГО",
-    packages: "ОБУЧЕНИЕ",
+    packages: "ПОЛНЫЙ КУРС",
     careerPath: "КАРЬЕРНЫЙ ПУТЬ",
     result: "РЕЗУЛЬТАТ",
     skills: "НАВЫКИ",
-    levels: "УРОВНИ ПРОГРАММЫ",
+    levels: "ПРОГРАММА",
   },
   headings: {
     audience: "Кому подойдут курсы по нейросетям",
@@ -360,7 +360,7 @@ const aiPageCopy = {
       title: "Подтверждение",
       value: "Сертификат",
       description:
-        "Электронный сертификат выдаётся после прохождения всех трёх блоков Профессионального пакета.",
+        "Электронный сертификат выдаётся после прохождения полного курса.",
     },
   ],
   faqItems: [
@@ -377,7 +377,7 @@ const aiPageCopy = {
     {
       question: "Чем отличаются варианты обучения?",
       answer:
-        "Пакет «Стартовый» помогает познакомиться с ИИ, «Практический» добавляет регулярное применение в рабочих задачах, а «Профессиональный» дает траекторию до самостоятельной работы с ИИ-процессами.",
+        "В полный курс входит вся программа профессии: теория, рабочие примеры, практические задания и материалы для перехода к самостоятельным профессиональным задачам.",
     },
     {
       question: "Где можно применять эти навыки?",
@@ -387,7 +387,7 @@ const aiPageCopy = {
     {
       question: "Будет ли электронный сертификат?",
       answer:
-        "Электронный сертификат выдаётся после прохождения всех трёх блоков Профессионального пакета.",
+        "Электронный сертификат выдаётся после прохождения полного курса.",
     },
   ],
 };
@@ -437,10 +437,6 @@ export default async function ProfessionPage({ params }: ProfessionPageProps) {
   }
 
   const seo = getProfessionSeo(profession);
-  const levelSummary = profession.levels.map((level) => ({
-    title: level.title,
-    description: level.result,
-  }));
   const adminPageCopy = {
   professionCardDescription:
     "Практический курс для тех, кто хочет уверенно работать с клиентами: встречать, записывать, вести CRM, решать сложные ситуации и держать под контролем насыщенную смену.",
@@ -494,11 +490,11 @@ const pageCopy =
               : null;
   const sectionLabels = pageCopy?.labels ?? {
     audience: "Кому подойдёт",
-    packages: "Пакеты",
+    packages: "Полный курс",
     careerPath: "Карьерная траектория",
     result: "Результат",
     skills: "Навыки",
-    levels: "Уровни программы",
+    levels: "Программа",
   };
   const faqItems = pageCopy?.faqItems ?? professionFaqItems;
   const relatedProfessions = professions.filter(
@@ -554,9 +550,9 @@ const pageCopy =
               <div className="mt-7 flex flex-col gap-4 sm:flex-row">
                 <a
                   className="rounded-full bg-ink px-7 py-4 text-center text-sm font-bold text-white transition hover:bg-evergreen"
-                  href="#packages"
+                  href={`/?profession=${profession.slug}&package=${profession.packages[0]?.slug}#access-form`}
                 >
-                  {profession.slug === "admin" ? "Выбрать курс" : "Выбрать пакет"}
+                  {`Купить полный курс — ${profession.packages[0]?.price}`}
                 </a>
                 <a
                   className="rounded-full border border-ink/15 px-7 py-4 text-center text-sm font-bold text-ink transition hover:border-gold hover:text-evergreen"
@@ -568,13 +564,13 @@ const pageCopy =
             </div>
 
             <ProfessionCard
-              ctaLabel={profession.slug === "admin" ? "Перейти к курсу" : "Перейти к пакетам"}
+              ctaLabel={`Купить курс — ${profession.packages[0]?.price}`}
               description={
                 pageCopy?.professionCardDescription ??
                 "Практическая траектория для тех, кто хочет освоить снабжение как понятную, прикладную и востребованную профессиональную функцию."
               }
               direction={profession.direction}
-              href="#packages"
+              href={`/?profession=${profession.slug}&package=${profession.packages[0]?.slug}#access-form`}
               icon={getProfessionIcon(profession.slug)}
               imageSrc={getProfessionImage(profession.slug)}
               priority
@@ -642,27 +638,19 @@ const pageCopy =
               {sectionLabels.packages}
             </p>
             <h2 className="font-serif text-4xl leading-tight md:text-5xl">
-              {profession.slug === "admin"
-                ? "Полный курс"
-                : profession.slug === "tourism" ||
-                    profession.slug === "ai" ||
-                    profession.slug === "logistics"
-                  ? "Варианты обучения"
-                  : "Пакеты профессии"}
+              Полный курс
             </h2>
             <p className="mx-auto mt-6 max-w-2xl text-base leading-8 text-white/68">
-              {profession.slug === "admin"
-                ? "Одна законченная программа подготовки администратора клиентского сервиса."
-                : "Вы выбираете объем доступа: один уровень, два уровня или полную траекторию подготовки по профессии."}
+              Одна законченная программа: теория, рабочие примеры и практика для освоения профессии.
             </p>
           </div>
 
-          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          <div className="mx-auto grid max-w-4xl gap-5 md:grid-cols-2">
             {profession.packages.map((item) => (
               <div className="grid gap-4" key={item.slug}>
                 <ProgramCard
                   badge={item.badge}
-                  ctaLabel={profession.slug === "admin" ? "Выбрать курс" : "Выбрать пакет"}
+                  ctaLabel="Выбрать полный курс"
                   description={item.bestFor}
                   featured={item.featured}
                   href={`/?profession=${profession.slug}&package=${item.slug}#access-form`}
@@ -729,7 +717,10 @@ const pageCopy =
               items={profession.learningResult.workplaces}
               title="Где применять"
             />
-            <ResultCard items={levelSummary.map((item) => item.description)} title="Итог уровней" />
+            <ResultCard
+              items={profession.packages[0]?.includes ?? profession.learningResult.skills}
+              title="Что входит в обучение"
+            />
           </div>
         </div>
       </section>
@@ -750,65 +741,7 @@ const pageCopy =
         </div>
       </section>
 
-      {profession.slug !== "admin" && (
-      <section className="bg-ivory/55 pb-14 pt-14 md:pb-16 md:pt-16">
-        <div className="container-shell">
-          <div className="mx-auto mb-7 max-w-3xl text-center md:mb-8">
-            <p className="mb-3 text-xs font-bold uppercase tracking-[0.26em] text-gold">
-              {sectionLabels.levels}
-            </p>
-            <h2 className="mx-auto max-w-lg text-left font-serif text-[1.875rem] leading-[1.08] text-ink [hyphens:auto] [overflow-wrap:anywhere] [word-break:normal] md:text-[2.15rem]">
-              {profession.slug === "tourism" ||
-              profession.slug === "ai" ||
-              profession.slug === "logistics" ? (
-                "Уровни образовательной программы"
-              ) : (
-                <>
-                  <span className="block">Уровни</span>
-                  <span className="block">образова</span>
-                  <span className="block">тельной</span>
-                  <span className="block">программы</span>
-                </>
-              )}
-            </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-base leading-8 text-ink/68">
-              Каждый уровень можно изучать отдельно или как часть выбранного
-              пакета профессии.
-            </p>
-          </div>
-
-          <div className="grid gap-4 lg:grid-cols-3">
-            {profession.levels.map((level) => (
-              <ProgramCard
-                compact
-                ctaLabel="Выбрать пакет"
-                description={level.description}
-                duration={level.duration}
-                href="#packages"
-                imageAlt={`${profession.title}: ${level.title}`}
-                imageSrc={
-                  getProfessionLevelImage(profession.slug, level.slug)
-                }
-                imageObjectPosition={
-                  profession.slug === "ai" && level.slug === "basic"
-                    ? "center 42%"
-                    : profession.slug === "ai" && level.slug === "practice"
-                      ? "center 25%"
-                      : undefined
-                }
-                key={level.slug}
-                label={level.label}
-                price={level.price}
-                result={level.result}
-                title={level.title}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
-      )}
-
-      <CertificateSection />
+      {profession.slug !== "admin" && <CertificateSection />}
 
       <section className="py-16 md:py-20">
         <div className="container-shell">

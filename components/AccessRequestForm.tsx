@@ -6,12 +6,6 @@ import { siteImages } from "@/data/images";
 import { professions } from "@/data/professions";
 import { reachYandexGoal } from "@/components/YandexMetrika";
 
-const packageTitles: Record<string, string> = {
-  basic: "Стартовый",
-  pro: "Практический",
-  full: "Профессиональный",
-};
-
 const paymentApiOrigin = (
   process.env.NEXT_PUBLIC_PAYMENT_API_ORIGIN ?? "https://api.poacalling.com"
 ).replace(/\/$/, "");
@@ -69,7 +63,7 @@ export function AccessRequestForm() {
       professions.flatMap((profession) =>
         profession.packages.map((item) => ({
           value: `${profession.slug}:${item.slug}`,
-          label: `${profession.title} — ${packageTitles[item.slug] ?? item.title}`,
+          label: `${profession.title} — Полный курс — ${item.price}`,
           package: item.slug,
           price: item.price,
           profession: profession.slug,
@@ -192,7 +186,7 @@ export function AccessRequestForm() {
           <p className="mt-6 text-base leading-8 text-ink/68">
             На первом этапе личный кабинет не создается. После оплаты доступ к
             материалам приходит на указанный email в виде защищенной ссылки.
-            Электронный сертификат предусмотрен после прохождения всех трёх блоков Профессионального пакета.
+            Выберите профессию, укажите контактные данные и перейдите к оплате. После оплаты материалы полного курса придут на указанный email.
           </p>
           <AccessVisual />
         </div>
@@ -215,7 +209,7 @@ export function AccessRequestForm() {
 
           <div className="grid gap-5">
             <label className="grid gap-2 text-sm font-semibold text-ink" htmlFor="package">
-              Пакет профессии
+              Профессия и полный курс
               <select
                 className="h-14 w-full min-w-0 rounded-2xl border border-ink/15 bg-white px-4 text-base font-normal text-ink outline-none transition hover:border-ink/30 focus:border-gold focus:ring-4 focus:ring-gold/15"
                 id="package"

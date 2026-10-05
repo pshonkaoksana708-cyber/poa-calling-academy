@@ -11,10 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/offer",
     "/terms",
     "/verify",
-    ...professions.flatMap((profession) => [
-      `/profession/${profession.slug}`,
-      `/course/${profession.slug}/basic`,
-    ]),
+    ...professions.map((profession) => `/profession/${profession.slug}`),
   ];
 
   return publicRoutes.map((route) => ({
