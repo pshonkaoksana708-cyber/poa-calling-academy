@@ -69,7 +69,9 @@ export function AccessRequestForm() {
       professions.flatMap((profession) =>
         profession.packages.map((item) => ({
           value: `${profession.slug}:${item.slug}`,
-          label: `${profession.title} — ${packageTitles[item.slug] ?? item.title}`,
+          label: profession.slug === "admin"
+            ? `${profession.title} — Полный курс`
+            : `${profession.title} — ${packageTitles[item.slug] ?? item.title}`,
           package: item.slug,
           price: item.price,
           profession: profession.slug,
@@ -192,7 +194,7 @@ export function AccessRequestForm() {
           <p className="mt-6 text-base leading-8 text-ink/68">
             На первом этапе личный кабинет не создается. После оплаты доступ к
             материалам приходит на указанный email в виде защищенной ссылки.
-            Электронный сертификат предусмотрен после прохождения всех трёх блоков Профессионального пакета.
+            Для программ с Профессиональным пакетом электронный сертификат предусмотрен после прохождения всех трёх блоков. Условия для отдельных полных курсов указаны на странице конкретной программы.
           </p>
           <AccessVisual />
         </div>
