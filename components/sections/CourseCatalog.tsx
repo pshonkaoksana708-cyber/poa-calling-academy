@@ -87,7 +87,7 @@ export function CourseCatalog() {
                       </span>
                       <span className="mt-4 block max-w-full font-serif text-[1.375rem] leading-[1.12] [hyphens:auto] [overflow-wrap:anywhere] [word-break:normal] md:text-[1.5rem] xl:text-[1.75rem] xl:leading-[1.1]">
                         {profession.slug === "admin"
-                          ? "Администратор клиентского сервиса"
+                          ? "Полный курс"
                           : homepageLevelTitles[level.slug] ?? level.title}
                       </span>
                       <span className="mt-5 grid gap-2 text-sm text-white/68">
