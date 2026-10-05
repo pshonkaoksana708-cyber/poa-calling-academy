@@ -7,7 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: [
         "/",
         "/profession/",
-        "/course/*/basic$",
         "/privacy",
         "/personal-data-consent",
         "/offer",
@@ -15,6 +14,7 @@ export default function robots(): MetadataRoute.Robots {
         "/verify",
       ],
       disallow: [
+        "/course/",
         "/course/*/basic/lesson-*",
         "/course/*/basic/block-*/lesson-*",
         "/course/*/basic/*-test",
