@@ -6,12 +6,6 @@ import { siteImages } from "@/data/images";
 import { professions } from "@/data/professions";
 import { reachYandexGoal } from "@/components/YandexMetrika";
 
-const packageTitles: Record<string, string> = {
-  basic: "Стартовый",
-  pro: "Практический",
-  full: "Профессиональный",
-};
-
 const paymentApiOrigin = (
   process.env.NEXT_PUBLIC_PAYMENT_API_ORIGIN ?? "https://api.poacalling.com"
 ).replace(/\/$/, "");
