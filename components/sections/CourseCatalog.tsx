@@ -9,7 +9,7 @@ const catalogImages: Record<string, string> = {
   tourism: "/images/supply/supply-05.jpg",
   ai: "/images/professions/professions-02.jpg",
   admin: "/images/professions/admin-client-service.jpeg",
-  marketplaces: "/images/education/education-01.jpg",
+  marketplaces: "/images/professions/marketplaces-ozon-wb.png",
 };
 
 function getProfessionIcon(slug: string) {
