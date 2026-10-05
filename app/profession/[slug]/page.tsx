@@ -554,9 +554,9 @@ const pageCopy =
               <div className="mt-7 flex flex-col gap-4 sm:flex-row">
                 <a
                   className="rounded-full bg-ink px-7 py-4 text-center text-sm font-bold text-white transition hover:bg-evergreen"
-                  href="#packages"
+                  href={profession.slug === "admin" ? "/?profession=admin&package=basic#access-form" : "#packages"}
                 >
-                  {profession.slug === "admin" ? "Выбрать курс" : "Выбрать пакет"}
+                  {profession.slug === "admin" ? "Купить курс за 3 900 ₽" : "Выбрать пакет"}
                 </a>
                 <a
                   className="rounded-full border border-ink/15 px-7 py-4 text-center text-sm font-bold text-ink transition hover:border-gold hover:text-evergreen"
@@ -568,13 +568,13 @@ const pageCopy =
             </div>
 
             <ProfessionCard
-              ctaLabel={profession.slug === "admin" ? "Перейти к курсу" : "Перейти к пакетам"}
+              ctaLabel={profession.slug === "admin" ? "Купить курс — 3 900 ₽" : "Перейти к пакетам"}
               description={
                 pageCopy?.professionCardDescription ??
                 "Практическая траектория для тех, кто хочет освоить снабжение как понятную, прикладную и востребованную профессиональную функцию."
               }
               direction={profession.direction}
-              href="#packages"
+              href={profession.slug === "admin" ? "/?profession=admin&package=basic#access-form" : "#packages"}
               icon={getProfessionIcon(profession.slug)}
               imageSrc={getProfessionImage(profession.slug)}
               priority
@@ -808,7 +808,7 @@ const pageCopy =
       </section>
       )}
 
-      <CertificateSection />
+      {profession.slug !== "admin" && <CertificateSection />}
 
       <section className="py-16 md:py-20">
         <div className="container-shell">
