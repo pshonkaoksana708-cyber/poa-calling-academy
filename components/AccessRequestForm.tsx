@@ -69,9 +69,7 @@ export function AccessRequestForm() {
       professions.flatMap((profession) =>
         profession.packages.map((item) => ({
           value: `${profession.slug}:${item.slug}`,
-          label: profession.slug === "admin"
-            ? `${profession.title} — Полный курс`
-            : `${profession.title} — ${packageTitles[item.slug] ?? item.title}`,
+          label: `${profession.title} — Полный курс — ${item.price}`,
           package: item.slug,
           price: item.price,
           profession: profession.slug,
@@ -194,7 +192,7 @@ export function AccessRequestForm() {
           <p className="mt-6 text-base leading-8 text-ink/68">
             На первом этапе личный кабинет не создается. После оплаты доступ к
             материалам приходит на указанный email в виде защищенной ссылки.
-            Для программ с Профессиональным пакетом электронный сертификат предусмотрен после прохождения всех трёх блоков. Условия для отдельных полных курсов указаны на странице конкретной программы.
+            Выберите профессию, укажите контактные данные и перейдите к оплате. После оплаты материалы полного курса придут на указанный email.
           </p>
           <AccessVisual />
         </div>
@@ -217,7 +215,7 @@ export function AccessRequestForm() {
 
           <div className="grid gap-5">
             <label className="grid gap-2 text-sm font-semibold text-ink" htmlFor="package">
-              Пакет профессии
+              Профессия и полный курс
               <select
                 className="h-14 w-full min-w-0 rounded-2xl border border-ink/15 bg-white px-4 text-base font-normal text-ink outline-none transition hover:border-ink/30 focus:border-gold focus:ring-4 focus:ring-gold/15"
                 id="package"
