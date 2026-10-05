@@ -14,7 +14,7 @@ import { CertificateSection } from "@/components/CertificateSection";
 import { JsonLd } from "@/components/JsonLd";
 import { YandexMetrikaGoal } from "@/components/YandexMetrika";
 import { accessDeliverySteps } from "@/data/config/email";
-import { getProfessionImage, getProfessionLevelImage } from "@/data/images";
+import { getProfessionImage } from "@/data/images";
 import { getProfession, professions } from "@/data/professions";
 import {
   breadcrumbListJsonLd,
@@ -66,11 +66,11 @@ const supplyPageCopy = {
     "Последовательный путь от первых задач в снабжении и закупках до самостоятельной работы с поставщиками, документами и контролем поставок.",
   labels: {
     audience: "Кому подойдёт",
-    packages: "Пакеты",
+    packages: "Полный курс",
     careerPath: "Карьерная траектория",
     result: "Результат",
     skills: "Навыки",
-    levels: "Уровни программы",
+    levels: "Программа",
   },
   headings: {
     audience: "Кому подойдут курсы по снабжению",
@@ -113,11 +113,11 @@ const hrPageCopy = {
     "Последовательный путь от базовой кадровой работы и подбора персонала до самостоятельных задач специалиста по кадрам и HR.",
   labels: {
     audience: "Для кого",
-    packages: "Пакеты",
+    packages: "Полный курс",
     careerPath: "Карьерный путь",
     result: "Результат",
     skills: "Навыки",
-    levels: "Уровни",
+    levels: "Программа",
   },
   headings: {
     audience: "Кому подойдёт обучение кадрам и подбору персонала",
@@ -186,11 +186,11 @@ const tourismPageCopy = {
     "Последовательный путь от первых задач в туризме до самостоятельной работы турагента с клиентами, поездками и туристическими продуктами.",
   labels: {
     audience: "ДЛЯ КОГО",
-    packages: "ОБУЧЕНИЕ",
+    packages: "ПОЛНЫЙ КУРС",
     careerPath: "КАРЬЕРНЫЙ ПУТЬ",
     result: "РЕЗУЛЬТАТ",
     skills: "НАВЫКИ",
-    levels: "УРОВНИ ПРОГРАММЫ",
+    levels: "ПРОГРАММА",
   },
   headings: {
     audience: "Кому подойдёт курс турагента",
@@ -259,11 +259,11 @@ const logisticsPageCopy = {
     "Последовательный путь от первых задач с заявками, маршрутами и документами до самостоятельного контроля транспортной и международной логистики.",
   labels: {
     audience: "ДЛЯ КОГО",
-    packages: "ОБУЧЕНИЕ",
+    packages: "ПОЛНЫЙ КУРС",
     careerPath: "КАРЬЕРНЫЙ ПУТЬ",
     result: "РЕЗУЛЬТАТ",
     skills: "НАВЫКИ",
-    levels: "УРОВНИ ПРОГРАММЫ",
+    levels: "ПРОГРАММА",
   },
   headings: {
     audience: "Кому подойдут курсы по логистике",
@@ -332,11 +332,11 @@ const aiPageCopy = {
     "Последовательный путь от первых задач с ИИ до самостоятельного применения искусственного интеллекта в работе и проектах.",
   labels: {
     audience: "ДЛЯ КОГО",
-    packages: "ОБУЧЕНИЕ",
+    packages: "ПОЛНЫЙ КУРС",
     careerPath: "КАРЬЕРНЫЙ ПУТЬ",
     result: "РЕЗУЛЬТАТ",
     skills: "НАВЫКИ",
-    levels: "УРОВНИ ПРОГРАММЫ",
+    levels: "ПРОГРАММА",
   },
   headings: {
     audience: "Кому подойдут курсы по нейросетям",
@@ -437,10 +437,6 @@ export default async function ProfessionPage({ params }: ProfessionPageProps) {
   }
 
   const seo = getProfessionSeo(profession);
-  const levelSummary = profession.levels.map((level) => ({
-    title: level.title,
-    description: level.result,
-  }));
   const adminPageCopy = {
   professionCardDescription:
     "Практический курс для тех, кто хочет уверенно работать с клиентами: встречать, записывать, вести CRM, решать сложные ситуации и держать под контролем насыщенную смену.",
@@ -494,11 +490,11 @@ const pageCopy =
               : null;
   const sectionLabels = pageCopy?.labels ?? {
     audience: "Кому подойдёт",
-    packages: "Пакеты",
+    packages: "Полный курс",
     careerPath: "Карьерная траектория",
     result: "Результат",
     skills: "Навыки",
-    levels: "Уровни программы",
+    levels: "Программа",
   };
   const faqItems = pageCopy?.faqItems ?? professionFaqItems;
   const relatedProfessions = professions.filter(
@@ -554,9 +550,9 @@ const pageCopy =
               <div className="mt-7 flex flex-col gap-4 sm:flex-row">
                 <a
                   className="rounded-full bg-ink px-7 py-4 text-center text-sm font-bold text-white transition hover:bg-evergreen"
-                  href={profession.slug === "admin" ? "/?profession=admin&package=basic#access-form" : "#packages"}
+                  href={`/?profession=${profession.slug}&package=${profession.packages[0]?.slug}#access-form`}
                 >
-                  {profession.slug === "admin" ? "Купить курс за 3 900 ₽" : "Выбрать пакет"}
+                  {`Купить полный курс — ${profession.packages[0]?.price}`}
                 </a>
                 <a
                   className="rounded-full border border-ink/15 px-7 py-4 text-center text-sm font-bold text-ink transition hover:border-gold hover:text-evergreen"
@@ -568,13 +564,13 @@ const pageCopy =
             </div>
 
             <ProfessionCard
-              ctaLabel={profession.slug === "admin" ? "Купить курс — 3 900 ₽" : "Перейти к пакетам"}
+              ctaLabel={`Купить курс — ${profession.packages[0]?.price}`}
               description={
                 pageCopy?.professionCardDescription ??
                 "Практическая траектория для тех, кто хочет освоить снабжение как понятную, прикладную и востребованную профессиональную функцию."
               }
               direction={profession.direction}
-              href={profession.slug === "admin" ? "/?profession=admin&package=basic#access-form" : "#packages"}
+              href={`/?profession=${profession.slug}&package=${profession.packages[0]?.slug}#access-form`}
               icon={getProfessionIcon(profession.slug)}
               imageSrc={getProfessionImage(profession.slug)}
               priority
@@ -642,27 +638,19 @@ const pageCopy =
               {sectionLabels.packages}
             </p>
             <h2 className="font-serif text-4xl leading-tight md:text-5xl">
-              {profession.slug === "admin"
-                ? "Полный курс"
-                : profession.slug === "tourism" ||
-                    profession.slug === "ai" ||
-                    profession.slug === "logistics"
-                  ? "Варианты обучения"
-                  : "Пакеты профессии"}
+              Полный курс
             </h2>
             <p className="mx-auto mt-6 max-w-2xl text-base leading-8 text-white/68">
-              {profession.slug === "admin"
-                ? "Одна законченная программа подготовки администратора клиентского сервиса."
-                : "Вы выбираете объем доступа: один уровень, два уровня или полную траекторию подготовки по профессии."}
+              Одна законченная программа: теория, рабочие примеры и практика для освоения профессии.
             </p>
           </div>
 
-          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          <div className="mx-auto grid max-w-4xl gap-5 md:grid-cols-2">
             {profession.packages.map((item) => (
               <div className="grid gap-4" key={item.slug}>
                 <ProgramCard
                   badge={item.badge}
-                  ctaLabel={profession.slug === "admin" ? "Выбрать курс" : "Выбрать пакет"}
+                  ctaLabel="Выбрать полный курс"
                   description={item.bestFor}
                   featured={item.featured}
                   href={`/?profession=${profession.slug}&package=${item.slug}#access-form`}
@@ -729,7 +717,10 @@ const pageCopy =
               items={profession.learningResult.workplaces}
               title="Где применять"
             />
-            <ResultCard items={levelSummary.map((item) => item.description)} title="Итог уровней" />
+            <ResultCard
+              items={profession.packages[0]?.includes ?? profession.learningResult.skills}
+              title="Что входит в обучение"
+            />
           </div>
         </div>
       </section>
@@ -749,64 +740,6 @@ const pageCopy =
           <SkillsGrid skills={profession.learningResult.skills} />
         </div>
       </section>
-
-      {profession.slug !== "admin" && (
-      <section className="bg-ivory/55 pb-14 pt-14 md:pb-16 md:pt-16">
-        <div className="container-shell">
-          <div className="mx-auto mb-7 max-w-3xl text-center md:mb-8">
-            <p className="mb-3 text-xs font-bold uppercase tracking-[0.26em] text-gold">
-              {sectionLabels.levels}
-            </p>
-            <h2 className="mx-auto max-w-lg text-left font-serif text-[1.875rem] leading-[1.08] text-ink [hyphens:auto] [overflow-wrap:anywhere] [word-break:normal] md:text-[2.15rem]">
-              {profession.slug === "tourism" ||
-              profession.slug === "ai" ||
-              profession.slug === "logistics" ? (
-                "Уровни образовательной программы"
-              ) : (
-                <>
-                  <span className="block">Уровни</span>
-                  <span className="block">образова</span>
-                  <span className="block">тельной</span>
-                  <span className="block">программы</span>
-                </>
-              )}
-            </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-base leading-8 text-ink/68">
-              Каждый уровень можно изучать отдельно или как часть выбранного
-              пакета профессии.
-            </p>
-          </div>
-
-          <div className="grid gap-4 lg:grid-cols-3">
-            {profession.levels.map((level) => (
-              <ProgramCard
-                compact
-                ctaLabel="Выбрать пакет"
-                description={level.description}
-                duration={level.duration}
-                href="#packages"
-                imageAlt={`${profession.title}: ${level.title}`}
-                imageSrc={
-                  getProfessionLevelImage(profession.slug, level.slug)
-                }
-                imageObjectPosition={
-                  profession.slug === "ai" && level.slug === "basic"
-                    ? "center 42%"
-                    : profession.slug === "ai" && level.slug === "practice"
-                      ? "center 25%"
-                      : undefined
-                }
-                key={level.slug}
-                label={level.label}
-                price={level.price}
-                result={level.result}
-                title={level.title}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
-      )}
 
       {profession.slug !== "admin" && <CertificateSection />}
 
