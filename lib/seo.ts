@@ -168,6 +168,11 @@ export const homeSeo: SeoCopy = {
 };
 
 const professionSeoBySlug: Record<string, SeoCopy> = {
+  marketplaces: {
+    description: "Онлайн-курс менеджера маркетплейсов Ozon и Wildberries с нуля: карточки и SEO, юнит-экономика, FBO/FBS, поставки, реклама, аналитика и Excel.",
+    h1: "Менеджер маркетплейсов Ozon и Wildberries: обучение с нуля",
+    title: "Курс менеджера маркетплейсов Ozon и Wildberries онлайн",
+  },
   admin: {
     description:
       "Онлайн-курс администратора клиентского сервиса с нуля: работа с клиентами, записью, CRM, перепиской, жалобами, кассой и сложными ситуациями.",
@@ -207,6 +212,7 @@ const professionSeoBySlug: Record<string, SeoCopy> = {
 };
 
 const professionSearchNameBySlug: Record<string, string> = {
+  marketplaces: "работе с Ozon и Wildberries",
   admin: "клиентскому сервису и работе администратора",
   ai: "искусственному интеллекту",
   hr: "HR и управлению персоналом",
