@@ -30,7 +30,7 @@ export function CourseCatalog() {
         />
 
         <div className="grid gap-5 lg:grid-cols-2">
-          {professions.map((profession) => {
+          {professions.map((profession: any) => {
             const course = profession.packages[0];
             const skills = course?.includes.slice(0, 5) ?? profession.learningResult.skills.slice(0, 5);
 
@@ -61,7 +61,7 @@ export function CourseCatalog() {
                 <div className="mt-5 rounded-2xl border border-white/10 bg-white/[0.035] p-4">
                   <p className="text-sm font-bold text-white">Вы научитесь:</p>
                   <ul className="mt-3 grid gap-2 text-sm leading-6 text-white/72">
-                    {skills.map((skill) => (
+                    {skills.map((skill: any) => (
                       <li className="flex gap-2" key={skill}>
                         <span className="text-gold">✓</span>
                         <span>{skill}</span>
