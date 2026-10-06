@@ -1,3 +1,5 @@
+import type { Profession } from "@/data/professions/types";
+
 const lessons = [
   {
     id: "marketplaces-lesson-1",
@@ -352,7 +354,7 @@ const finalQuestions = [
   }))
 }));
 
-export const marketplacesProfession = {
+export const marketplacesProfession: Profession = {
   slug: "marketplaces",
   title: "Менеджер маркетплейсов Ozon и Wildberries",
   direction: "E-commerce и маркетплейсы",
