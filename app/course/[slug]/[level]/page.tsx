@@ -793,6 +793,22 @@ export default async function CourseLevelPage({
                         </div>
                       )}
 
+                      {lesson.visual ? (
+                        <figure className="mt-6 overflow-hidden rounded-3xl border border-ink/10 bg-ivory shadow-soft">
+                          <img
+                            alt={lesson.visual.alt}
+                            className="h-auto w-full"
+                            loading="lazy"
+                            src={lesson.visual.src}
+                          />
+                          {lesson.visual.caption ? (
+                            <figcaption className="border-t border-ink/10 px-5 py-4 text-sm leading-6 text-ink/65">
+                              {lesson.visual.caption}
+                            </figcaption>
+                          ) : null}
+                        </figure>
+                      ) : null}
+
                       {lesson.practiceAssignments?.map((assignment) => (
                         <div className="mt-5" key={assignment.id}>
                           <PracticeBlock title={assignment.title}>
