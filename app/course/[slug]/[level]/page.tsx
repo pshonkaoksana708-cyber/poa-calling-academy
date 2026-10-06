@@ -397,8 +397,8 @@ export default async function CourseLevelPage({
   const access = validateAccessTokenForPrograms(token, allowedAccessKeys, {
     requiredBlock,
   });
-  const lessonCount = level.modules.reduce(
-    (total: number, module: (typeof level.modules)[number]) => total + module.lessons.length,
+  const lessonCount = (level as any).modules.reduce(
+    (total: number, module: (typeof (level as any).modules)[number]) => total + module.lessons.length,
     0,
   );
   const levelChecklist = Array.isArray((level as any).checklist)
@@ -674,7 +674,7 @@ export default async function CourseLevelPage({
           </article>
           <article className="rounded-3xl border border-white/12 bg-white/[0.04] p-7">
             <p className="text-sm text-white/60">Модули</p>
-            <p className="mt-2 text-2xl font-semibold">{level.modules.length}</p>
+            <p className="mt-2 text-2xl font-semibold">{(level as any).modules.length}</p>
           </article>
           <article className="rounded-3xl border border-white/12 bg-white/[0.04] p-7">
             <p className="text-sm text-white/60">Уроки</p>
@@ -725,7 +725,7 @@ export default async function CourseLevelPage({
           <aside className="h-fit rounded-3xl border border-ink/10 bg-ivory p-6 shadow-soft lg:sticky lg:top-28">
             <p className="text-sm font-semibold text-gold">Структура материалов</p>
             <ol className="mt-5 grid gap-3 text-sm text-ink/70">
-              {level.modules.map((module: (typeof level.modules)[number], moduleIndex: number) => (
+              {(level as any).modules.map((module: (typeof (level as any).modules)[number], moduleIndex: number) => (
                 <li key={module.id}>
                   <p className="font-semibold text-ink">
                     {moduleIndex + 1}. {module.title}
@@ -742,7 +742,7 @@ export default async function CourseLevelPage({
           </aside>
 
           <div className="grid gap-8">
-            {level.modules.map((module: (typeof level.modules)[number], moduleIndex: number) => (
+            {(level as any).modules.map((module: (typeof (level as any).modules)[number], moduleIndex: number) => (
               <article className="grid gap-5" key={module.id}>
                 <ModuleCard
                   description={module.description}
@@ -911,7 +911,7 @@ export default async function CourseLevelPage({
         </div>
       </section>
 
-      {level.additionalMaterials?.length ? (
+      {(level as any).additionalMaterials?.length ? (
         <section className="section-space">
           <div className="container-shell">
             <div className="mx-auto mb-12 max-w-3xl text-center">
@@ -928,7 +928,7 @@ export default async function CourseLevelPage({
             </div>
 
             <div className="grid gap-5 md:grid-cols-2">
-              {level.additionalMaterials.map((material: any) => (
+              {(level as any).additionalMaterials.map((material: any) => (
                 <article
                   className="rounded-3xl border border-ink/10 bg-ivory p-7 shadow-soft"
                   key={material.id}
