@@ -760,7 +760,7 @@ export default async function CourseLevelPage({
                       {lesson.structuredContent ? (
                         <div className="grid gap-6">
                           <div className="grid gap-3">
-                            {lesson.structuredContent.intro.map((paragraph) => (
+                            {lesson.structuredContent.intro.map((paragraph: string) => (
                               <p key={paragraph}>{paragraph}</p>
                             ))}
                           </div>
