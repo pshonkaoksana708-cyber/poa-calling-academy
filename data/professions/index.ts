@@ -17,12 +17,12 @@ export const professions = [
 ];
 
 export function getProfession(slug: string) {
-  return professions.find((profession) => profession.slug === slug);
+  return professions.find((profession: any) => profession.slug === slug);
 }
 
 export function getProfessionLevel(professionSlug: string, levelSlug: string) {
   const profession = getProfession(professionSlug);
-  const level = profession?.levels.find((item) => item.slug === levelSlug);
+  const level = profession?.levels.find((item: any) => item.slug === levelSlug);
 
   if (!profession || !level) {
     return null;
@@ -52,7 +52,7 @@ export function getAllowedAccessKeysForLevel(
   const directLevelAccess = getProgramAccessKey(professionSlug, levelSlug);
   const packageAccess = profession.packages
     .filter((item) => item.includedLevelSlugs.includes(levelSlug))
-    .map((item) => getPackageAccessKey(professionSlug, item.slug));
+    .map((item: any) => getPackageAccessKey(professionSlug, item.slug));
 
   return [directLevelAccess, ...packageAccess];
 }
