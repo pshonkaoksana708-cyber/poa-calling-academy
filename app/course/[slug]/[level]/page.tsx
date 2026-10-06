@@ -398,7 +398,7 @@ export default async function CourseLevelPage({
     requiredBlock,
   });
   const lessonCount = level.modules.reduce(
-    (total, module) => total + module.lessons.length,
+    (total: number, module) => total + module.lessons.length,
     0,
   );
   const levelChecklist = level.checklist?.map((item) => item.text) ?? [
