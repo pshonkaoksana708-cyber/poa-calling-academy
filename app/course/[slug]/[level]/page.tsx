@@ -759,10 +759,10 @@ export default async function CourseLevelPage({
                       key={lesson.id}
                       title={lesson.title}
                     >
-                      {lesson.structuredContent ? (
+                      {(lesson as any).structuredContent ? (
                         <div className="grid gap-6">
                           <div className="grid gap-3">
-                            {lesson.structuredContent.intro.map((paragraph: string) => (
+                            {(lesson as any).structuredContent.intro.map((paragraph: string) => (
                               <p key={paragraph}>{paragraph}</p>
                             ))}
                           </div>
@@ -771,20 +771,20 @@ export default async function CourseLevelPage({
                             <p className="mb-3 text-sm font-bold uppercase tracking-[0.18em] text-gold">
                               После изучения темы вы сможете
                             </p>
-                            <Checklist items={lesson.structuredContent.outcomes} />
+                            <Checklist items={(lesson as any).structuredContent.outcomes} />
                           </div>
 
                           <div className="rounded-2xl border border-ink/10 bg-ivory p-5">
                             <p className="mb-3 text-sm font-bold uppercase tracking-[0.18em] text-gold">
                               Что изучим
                             </p>
-                            <Checklist items={lesson.structuredContent.studyPlan} />
+                            <Checklist items={(lesson as any).structuredContent.studyPlan} />
                           </div>
 
                           <Quote
                             author="Автор образовательных программ"
                             role="Совет автора"
-                            text={lesson.structuredContent.authorAdvice}
+                            text={(lesson as any).structuredContent.authorAdvice}
                           />
                         </div>
                       ) : (
@@ -811,14 +811,14 @@ export default async function CourseLevelPage({
                         </figure>
                       ) : null}
 
-                      {lesson.practiceAssignments?.map((assignment: any) => (
+                      {(lesson as any).practiceAssignments?.map((assignment: any) => (
                         <div className="mt-5" key={assignment.id}>
                           <PracticeBlock title={assignment.title}>
                             {assignment.description}
                           </PracticeBlock>
                         </div>
                       ))}
-                      {!lesson.practiceAssignments?.length && lesson.practice ? (
+                      {!(lesson as any).practiceAssignments?.length && lesson.practice ? (
                         <div className="mt-5">
                           <PracticeBlock>{lesson.practice}</PracticeBlock>
                         </div>
@@ -831,13 +831,13 @@ export default async function CourseLevelPage({
                           <Checklist items={lesson.checklist.map((item: any) => item.text)} />
                         </div>
                       ) : null}
-                      {lesson.additionalMaterials?.length ? (
+                      {(lesson as any).additionalMaterials?.length ? (
                         <div className="mt-5 rounded-2xl border border-ink/10 bg-ivory p-5">
                           <p className="text-sm font-bold uppercase tracking-[0.18em] text-gold">
                             Дополнительные материалы
                           </p>
                           <ul className="mt-4 grid gap-3 text-sm leading-6 text-ink/70">
-                            {lesson.additionalMaterials.map((material: any) => (
+                            {(lesson as any).additionalMaterials.map((material: any) => (
                               <li className="border-t border-ink/10 pt-3" key={material.id}>
                                 <span className="font-semibold text-ink">
                                   {material.title}
@@ -850,10 +850,10 @@ export default async function CourseLevelPage({
                           </ul>
                         </div>
                       ) : null}
-                      {lesson.structuredContent ? (
+                      {(lesson as any).structuredContent ? (
                         <div className="mt-5">
                           <ResultCard
-                            items={lesson.structuredContent.summary}
+                            items={(lesson as any).structuredContent.summary}
                             title="Итоги темы"
                           />
                         </div>
