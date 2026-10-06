@@ -404,8 +404,8 @@ export default async function CourseLevelPage({
   const levelChecklist = Array.isArray((level as any).checklist)
     ? (level as any).checklist.map((item: any) => item.text)
     : [
-        ...level.learningResult.skills,
-        ...level.learningResult.tasks,
+        ...(level as any).learningResult.skills,
+        ...(level as any).learningResult.tasks,
       ];
   const levelQuote = (level as any).quote ?? {
     author: "POA CALLING — Академия профессионального развития",
@@ -625,10 +625,10 @@ export default async function CourseLevelPage({
                 {seo.h1}
               </h1>
               <p className="mt-6 max-w-3xl text-base leading-8 text-ink/70 md:text-lg">
-                {level.description}
+                {(level as any).description}
               </p>
               <p className="mt-6 max-w-3xl text-xl leading-9 text-ink">
-                {level.result}
+                {(level as any).result}
               </p>
             </div>
 
@@ -713,9 +713,9 @@ export default async function CourseLevelPage({
             ) : null}
           </div>
           <div className="grid gap-5 lg:grid-cols-3">
-            <ResultCard items={level.learningResult.skills} title="Навыки" />
-            <ResultCard items={level.learningResult.tasks} title="Практические задачи" />
-            <ResultCard items={level.learningResult.workplaces} title="Где применять" />
+            <ResultCard items={(level as any).learningResult.skills} title="Навыки" />
+            <ResultCard items={(level as any).learningResult.tasks} title="Практические задачи" />
+            <ResultCard items={(level as any).learningResult.workplaces} title="Где применять" />
           </div>
         </div>
       </section>
