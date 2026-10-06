@@ -826,7 +826,7 @@ export default async function CourseLevelPage({
                           <p className="mb-3 text-sm font-bold uppercase tracking-[0.18em] text-gold">
                             Чек-лист урока
                           </p>
-                          <Checklist items={lesson.checklist.map((item) => item.text)} />
+                          <Checklist items={lesson.checklist.map((item: any) => item.text)} />
                         </div>
                       ) : null}
                       {lesson.additionalMaterials?.length ? (
@@ -835,7 +835,7 @@ export default async function CourseLevelPage({
                             Дополнительные материалы
                           </p>
                           <ul className="mt-4 grid gap-3 text-sm leading-6 text-ink/70">
-                            {lesson.additionalMaterials.map((material) => (
+                            {lesson.additionalMaterials.map((material: any) => (
                               <li className="border-t border-ink/10 pt-3" key={material.id}>
                                 <span className="font-semibold text-ink">
                                   {material.title}
@@ -926,7 +926,7 @@ export default async function CourseLevelPage({
             </div>
 
             <div className="grid gap-5 md:grid-cols-2">
-              {level.additionalMaterials.map((material) => (
+              {level.additionalMaterials.map((material: any) => (
                 <article
                   className="rounded-3xl border border-ink/10 bg-ivory p-7 shadow-soft"
                   key={material.id}
