@@ -401,7 +401,7 @@ export default async function CourseLevelPage({
     (total: number, module: (typeof level.modules)[number]) => total + module.lessons.length,
     0,
   );
-  const levelChecklist = level.checklist?.map((item) => item.text) ?? [
+  const levelChecklist = level.checklist?.map((item: (typeof level.checklist)[number]) => item.text) ?? [
     ...level.learningResult.skills,
     ...level.learningResult.tasks,
   ];
