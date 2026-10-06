@@ -750,7 +750,7 @@ export default async function CourseLevelPage({
                 />
 
                 <div className="grid gap-4">
-                  {module.lessons.map((lesson, lessonIndex) => (
+                  {module.lessons.map((lesson: (typeof module.lessons)[number], lessonIndex: number) => (
                     <LessonCard
                       duration={lesson.duration}
                       index={lessonIndex + 1}
