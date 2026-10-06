@@ -54,6 +54,11 @@ export type Lesson = {
   practiceAssignments?: PracticeAssignment[];
   checklist?: ChecklistItem[];
   additionalMaterials?: AdditionalMaterial[];
+  visual?: {
+    src: string;
+    alt: string;
+    caption?: string;
+  };
 };
 
 export type ProgramModule = {
