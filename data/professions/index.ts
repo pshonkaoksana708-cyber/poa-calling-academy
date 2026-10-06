@@ -51,7 +51,7 @@ export function getAllowedAccessKeysForLevel(
 
   const directLevelAccess = getProgramAccessKey(professionSlug, levelSlug);
   const packageAccess = profession.packages
-    .filter((item) => item.includedLevelSlugs.includes(levelSlug))
+    .filter((item: any) => item.includedLevelSlugs.includes(levelSlug))
     .map((item: any) => getPackageAccessKey(professionSlug, item.slug));
 
   return [directLevelAccess, ...packageAccess];
