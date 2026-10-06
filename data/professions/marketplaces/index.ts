@@ -352,7 +352,7 @@ const finalQuestions = [
   }))
 }));
 
-export const marketplacesProfession: Profession = {
+export const marketplacesProfession = {
   slug: "marketplaces",
   title: "Менеджер маркетплейсов Ozon и Wildberries",
   direction: "E-commerce и маркетплейсы",
