@@ -281,7 +281,7 @@ function CourseProgramOverviewPage({
               activePackageIndex === undefined ? "lg:grid-cols-3" : "lg:grid-cols-1"
             }`}
           >
-            {visiblePackages.map((item, index) => (
+            {visiblePackages.map((item: any, index: number) => (
               <article
                 className="flex min-w-0 flex-col rounded-[2rem] border border-ink/10 bg-ivory p-6 shadow-soft md:p-8"
                 key={item.title}
