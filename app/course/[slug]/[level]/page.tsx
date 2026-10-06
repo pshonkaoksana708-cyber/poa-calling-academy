@@ -728,7 +728,7 @@ export default async function CourseLevelPage({
           <aside className="h-fit rounded-3xl border border-ink/10 bg-ivory p-6 shadow-soft lg:sticky lg:top-28">
             <p className="text-sm font-semibold text-gold">Структура материалов</p>
             <ol className="mt-5 grid gap-3 text-sm text-ink/70">
-              {(level as any).modules.map((module: (typeof (level as any).modules)[number], moduleIndex: number) => (
+              {(level as any).modules.map((module: any, moduleIndex: number) => (
                 <li key={module.id}>
                   <p className="font-semibold text-ink">
                     {moduleIndex + 1}. {module.title}
@@ -745,7 +745,7 @@ export default async function CourseLevelPage({
           </aside>
 
           <div className="grid gap-8">
-            {(level as any).modules.map((module: (typeof (level as any).modules)[number], moduleIndex: number) => (
+            {(level as any).modules.map((module: any, moduleIndex: number) => (
               <article className="grid gap-5" key={module.id}>
                 <ModuleCard
                   description={module.description}
