@@ -397,10 +397,13 @@ export default async function CourseLevelPage({
   const access = validateAccessTokenForPrograms(token, allowedAccessKeys, {
     requiredBlock,
   });
-  const lessonCount = (level as any).modules.reduce(
-    (total: number, module: (typeof (level as any).modules)[number]) => total + module.lessons.length,
-    0,
-  );
+  const lessonCount = Array.isArray((level as any).modules)
+    ? (level as any).modules.reduce(
+        (total: number, module: any) =>
+          total + (Array.isArray(module?.lessons) ? module.lessons.length : 0),
+        0,
+      )
+    : 0;
   const levelChecklist = Array.isArray((level as any).checklist)
     ? (level as any).checklist.map((item: any) => item.text)
     : [
