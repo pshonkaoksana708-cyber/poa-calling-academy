@@ -60,8 +60,8 @@ function AccessVisual() {
 export function AccessRequestForm() {
   const packageOptions = useMemo(
     () =>
-      professions.flatMap((profession) =>
-        profession.packages.map((item) => ({
+      professions.flatMap((profession: any) =>
+        profession.packages.map((item: any) => ({
           value: `${profession.slug}:${item.slug}`,
           label: `${profession.title} — Полный курс — ${item.price}`,
           package: item.slug,
@@ -230,7 +230,7 @@ export function AccessRequestForm() {
                 }}
                 value={selectedPackage}
               >
-                {packageOptions.map((item) => (
+                {packageOptions.map((item: any) => (
                   <option key={item.value} value={item.value}>
                     {item.label}
                   </option>
