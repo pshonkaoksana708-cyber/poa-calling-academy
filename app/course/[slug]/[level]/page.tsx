@@ -809,7 +809,7 @@ export default async function CourseLevelPage({
                         </figure>
                       ) : null}
 
-                      {lesson.practiceAssignments?.map((assignment) => (
+                      {lesson.practiceAssignments?.map((assignment: any) => (
                         <div className="mt-5" key={assignment.id}>
                           <PracticeBlock title={assignment.title}>
                             {assignment.description}
