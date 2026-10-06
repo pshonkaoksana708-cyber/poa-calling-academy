@@ -401,10 +401,12 @@ export default async function CourseLevelPage({
     (total: number, module: (typeof level.modules)[number]) => total + module.lessons.length,
     0,
   );
-  const levelChecklist = level.checklist?.map((item: (typeof level.checklist)[number]) => item.text) ?? [
-    ...level.learningResult.skills,
-    ...level.learningResult.tasks,
-  ];
+  const levelChecklist = Array.isArray((level as any).checklist)
+    ? (level as any).checklist.map((item: any) => item.text)
+    : [
+        ...level.learningResult.skills,
+        ...level.learningResult.tasks,
+      ];
   const levelQuote = level.quote ?? {
     author: "POA CALLING — Академия профессионального развития",
     role: "Подход к материалам",
