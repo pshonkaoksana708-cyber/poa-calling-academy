@@ -740,7 +740,7 @@ export default async function CourseLevelPage({
           </aside>
 
           <div className="grid gap-8">
-            {level.modules.map((module, moduleIndex) => (
+            {level.modules.map((module: (typeof level.modules)[number], moduleIndex: number) => (
               <article className="grid gap-5" key={module.id}>
                 <ModuleCard
                   description={module.description}
