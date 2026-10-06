@@ -407,7 +407,7 @@ export default async function CourseLevelPage({
         ...level.learningResult.skills,
         ...level.learningResult.tasks,
       ];
-  const levelQuote = level.quote ?? {
+  const levelQuote = (level as any).quote ?? {
     author: "POA CALLING — Академия профессионального развития",
     role: "Подход к материалам",
     text:
