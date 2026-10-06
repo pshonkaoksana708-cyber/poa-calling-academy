@@ -602,7 +602,7 @@ const pageCopy =
               description:
                 "После завершения образовательной программы вы получаете электронный сертификат.",
             },
-          ]).map((card) => (
+          ]).map((card: any) => (
             <SalaryCard
               description={card.description}
               key={card.title}
@@ -646,7 +646,7 @@ const pageCopy =
           </div>
 
           <div className="mx-auto grid max-w-4xl gap-5 md:grid-cols-2">
-            {profession.packages.map((item) => (
+            {profession.packages.map((item: any) => (
               <div className="grid gap-4" key={item.slug}>
                 <ProgramCard
                   badge={item.badge}
@@ -664,7 +664,7 @@ const pageCopy =
                     Что входит
                   </p>
                   <ul className="mt-4 grid gap-3 text-sm leading-6 text-white/76">
-                    {item.includes.map((include) => (
+                    {item.includes.map((include: any) => (
                       <li className="border-t border-white/10 pt-3" key={include}>
                         {include}
                       </li>
@@ -759,7 +759,7 @@ const pageCopy =
           </div>
 
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            {relatedProfessions.map((item) => (
+            {relatedProfessions.map((item: any) => (
               <a
                 className="rounded-3xl border border-ink/10 bg-ivory p-6 text-ink shadow-soft transition hover:border-gold/50 hover:text-evergreen"
                 href={`/profession/${item.slug}`}
