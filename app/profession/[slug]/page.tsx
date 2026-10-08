@@ -437,6 +437,12 @@ export default async function ProfessionPage({ params }: ProfessionPageProps) {
   }
 
   const seo = getProfessionSeo(profession);
+  const isMarketplaces = profession.slug === "marketplaces";
+  const marketplacesCareerSteps = [
+    { label: "Старт", title: "Ассистент менеджера маркетплейсов", description: "Карточки товаров, остатки, отзывы и операционные задачи магазина Ozon или Wildberries." },
+    { label: "Практика", title: "Менеджер маркетплейсов", description: "Самостоятельная работа с карточками, поставками, рекламой, ценами и аналитикой продаж." },
+    { label: "Рост", title: "Ведущий менеджер / руководитель направления", description: "Управление ассортиментом, экономикой, стратегией продвижения и командой." },
+  ];
   const adminPageCopy = {
   professionCardDescription:
     "Практический курс для тех, кто хочет уверенно работать с клиентами: встречать, записывать, вести CRM, решать сложные ситуации и держать под контролем насыщенную смену.",
@@ -694,7 +700,7 @@ const pageCopy =
             </p>
           </div>
 
-          <CareerPath steps={profession.careerPath} />
+          <CareerPath steps={isMarketplaces ? marketplacesCareerSteps : profession.careerPath} />
         </div>
       </section>
 
@@ -742,6 +748,23 @@ const pageCopy =
           <SkillsGrid skills={profession.learningResult.skills} />
         </div>
       </section>
+
+      {isMarketplaces && (
+        <section className="py-16 md:py-20" id="lessons">
+          <div className="container-shell">
+            <h2 className="font-serif text-4xl leading-tight text-ink md:text-5xl">Программа: 15 уроков</h2>
+            <p className="mt-4 max-w-3xl text-ink/70">Все уроки, практические задания и итоговая аттестация входят в один полный курс.</p>
+            <div className="mt-8 grid gap-3">
+              {profession.levels.flatMap((level: any) => level.modules.flatMap((module: any) => module.lessons)).map((lesson: any, index: number) => (
+                <details key={lesson.id ?? index} className="rounded-2xl border border-ink/10 bg-white/80 px-5 py-4">
+                  <summary className="cursor-pointer font-semibold text-ink">Урок {index + 1}. {lesson.title}</summary>
+                  <p className="mt-3 text-sm leading-7 text-ink/70">{lesson.structuredContent?.intro?.[0] ?? lesson.content?.[0] ?? "Теория и практическое задание."}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {profession.slug !== "admin" && <CertificateSection />}
 
