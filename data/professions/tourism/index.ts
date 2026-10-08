@@ -185,7 +185,7 @@ export const tourismProfession: Profession = {
   ],
   accessRules: {
     tokenScope: "package",
-    tokenTtlDays: 90,
+    tokenTtlDays: 365,
     delivery: "email",
     requiresPayment: true,
   },
