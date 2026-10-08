@@ -185,7 +185,7 @@ export const hrProfession: Profession = {
   ],
   accessRules: {
     tokenScope: "package",
-    tokenTtlDays: 90,
+    tokenTtlDays: 365,
     delivery: "email",
     requiresPayment: true,
   },
