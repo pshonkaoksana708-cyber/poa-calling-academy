@@ -44,7 +44,7 @@ export type AccessValidationResult =
       unlockAt?: number;
     };
 
-const DEFAULT_TOKEN_TTL_SECONDS = 60 * 60 * 24 * 90;
+const DEFAULT_TOKEN_TTL_SECONDS = 60 * 60 * 24 * 365;
 const BLOCK_UNLOCK_DAYS = [0, 14, 28] as const;
 
 function getAccessSecret() {
