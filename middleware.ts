@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { LOGISTICS_ACCESS_COOKIE } from "@/lib/course-access-cookie";
 
-const ACCESS_COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 90;
+const ACCESS_COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 365;
 
 export function middleware(request: NextRequest) {
   const token = request.nextUrl.searchParams.get("token");

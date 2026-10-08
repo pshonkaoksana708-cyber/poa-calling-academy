@@ -21,6 +21,7 @@ export const siteImages = {
   tourismProLevel: "/images/levels/tourism-level-03.jpg",
   aiProfession: "/images/professions/professions-02.jpg",
   adminProfession: "/images/professions/admin-client-service.jpeg",
+  marketplacesProfession: "/images/professions/marketplaces-ozon-wb.png",
   aiBasicLevel: "/images/levels/ai-level-basic.webp.jpg",
   aiPracticeLevel: "/images/levels/ai-level-practical.webp.jpg",
   aiProLevel: "/images/professions/professions-04.jpg",
@@ -60,6 +61,10 @@ export function getProfessionImage(slug: string) {
 
   if (slug === "admin") {
     return siteImages.adminProfession;
+  }
+
+  if (slug === "marketplaces") {
+    return siteImages.marketplacesProfession;
   }
 
   return fallbackImages.profession;

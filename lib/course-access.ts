@@ -44,7 +44,7 @@ export type AccessValidationResult =
       unlockAt?: number;
     };
 
-const DEFAULT_TOKEN_TTL_SECONDS = 60 * 60 * 24 * 90;
+const DEFAULT_TOKEN_TTL_SECONDS = 60 * 60 * 24 * 365;
 const BLOCK_UNLOCK_DAYS = [0, 14, 28] as const;
 
 function getAccessSecret() {
@@ -199,6 +199,11 @@ export function getBlockUnlockAt(
   payload: ValidAccessTokenPayload,
   blockNumber: 1 | 2 | 3,
 ) {
+  // A purchased full course unlocks every included level immediately.
+  if (payload.programSlug.endsWith("/package/full")) {
+    return getPaymentTimestamp(payload);
+  }
+
   return getPaymentTimestamp(payload) + BLOCK_UNLOCK_DAYS[blockNumber - 1] * 86400;
 }
 

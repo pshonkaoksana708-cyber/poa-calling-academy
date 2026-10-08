@@ -437,6 +437,12 @@ export default async function ProfessionPage({ params }: ProfessionPageProps) {
   }
 
   const seo = getProfessionSeo(profession);
+  const isMarketplaces = profession.slug === "marketplaces";
+  const marketplacesCareerSteps = [
+    { label: "Старт", title: "Ассистент менеджера маркетплейсов", description: "Карточки товаров, остатки, отзывы и операционные задачи магазина Ozon или Wildberries." },
+    { label: "Практика", title: "Менеджер маркетплейсов", description: "Самостоятельная работа с карточками, поставками, рекламой, ценами и аналитикой продаж." },
+    { label: "Рост", title: "Ведущий менеджер / руководитель направления", description: "Управление ассортиментом, экономикой, стратегией продвижения и командой." },
+  ];
   const adminPageCopy = {
   professionCardDescription:
     "Практический курс для тех, кто хочет уверенно работать с клиентами: встречать, записывать, вести CRM, решать сложные ситуации и держать под контролем насыщенную смену.",
@@ -567,7 +573,9 @@ const pageCopy =
               ctaLabel={`Купить курс — ${profession.packages[0]?.price}`}
               description={
                 pageCopy?.professionCardDescription ??
-                "Практическая траектория для тех, кто хочет освоить снабжение как понятную, прикладную и востребованную профессиональную функцию."
+                (profession.slug === "marketplaces"
+                  ? "Практический курс для тех, кто хочет с нуля освоить управление магазинами на Ozon и Wildberries: карточки товаров, цены, поставки, реклама и аналитика."
+                  : "Практическая траектория для тех, кто хочет освоить снабжение как понятную, прикладную и востребованную профессиональную функцию.")
               }
               direction={profession.direction}
               href={`/?profession=${profession.slug}&package=${profession.packages[0]?.slug}#access-form`}
@@ -602,7 +610,7 @@ const pageCopy =
               description:
                 "После завершения образовательной программы вы получаете электронный сертификат.",
             },
-          ]).map((card) => (
+          ]).map((card: any) => (
             <SalaryCard
               description={card.description}
               key={card.title}
@@ -646,7 +654,7 @@ const pageCopy =
           </div>
 
           <div className="mx-auto grid max-w-4xl gap-5 md:grid-cols-2">
-            {profession.packages.map((item) => (
+            {profession.packages.map((item: any) => (
               <div className="grid gap-4" key={item.slug}>
                 <ProgramCard
                   badge={item.badge}
@@ -664,7 +672,7 @@ const pageCopy =
                     Что входит
                   </p>
                   <ul className="mt-4 grid gap-3 text-sm leading-6 text-white/76">
-                    {item.includes.map((include) => (
+                    {item.includes.map((include: any) => (
                       <li className="border-t border-white/10 pt-3" key={include}>
                         {include}
                       </li>
@@ -692,7 +700,7 @@ const pageCopy =
             </p>
           </div>
 
-          <CareerPath steps={profession.careerPath} />
+          <CareerPath steps={isMarketplaces ? marketplacesCareerSteps : profession.careerPath} />
         </div>
       </section>
 
@@ -741,6 +749,23 @@ const pageCopy =
         </div>
       </section>
 
+      {isMarketplaces && (
+        <section className="py-16 md:py-20" id="lessons">
+          <div className="container-shell">
+            <h2 className="font-serif text-4xl leading-tight text-ink md:text-5xl">Программа: 15 уроков</h2>
+            <p className="mt-4 max-w-3xl text-ink/70">Все уроки, практические задания и итоговая аттестация входят в один полный курс.</p>
+            <div className="mt-8 grid gap-3">
+              {profession.levels.flatMap((level: any) => level.modules.flatMap((module: any) => module.lessons)).map((lesson: any, index: number) => (
+                <details key={lesson.id ?? index} className="rounded-2xl border border-ink/10 bg-white/80 px-5 py-4">
+                  <summary className="cursor-pointer font-semibold text-ink">Урок {index + 1}. {lesson.title}</summary>
+                  <p className="mt-3 text-sm leading-7 text-ink/70">{lesson.structuredContent?.intro?.[0] ?? lesson.content?.[0] ?? "Теория и практическое задание."}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {profession.slug !== "admin" && <CertificateSection />}
 
       <section className="py-16 md:py-20">
@@ -759,7 +784,7 @@ const pageCopy =
           </div>
 
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            {relatedProfessions.map((item) => (
+            {relatedProfessions.map((item: any) => (
               <a
                 className="rounded-3xl border border-ink/10 bg-ivory p-6 text-ink shadow-soft transition hover:border-gold/50 hover:text-evergreen"
                 href={`/profession/${item.slug}`}

@@ -203,6 +203,8 @@ function CourseProgramOverviewPage({
   token,
   activePackageIndex,
   visiblePackageCount,
+  totalLessonCount,
+  fullCourse = false,
 }: {
   h1Title: string;
   packages: CourseOverviewPackage[];
@@ -212,6 +214,8 @@ function CourseProgramOverviewPage({
   token?: string;
   activePackageIndex?: number;
   visiblePackageCount?: number;
+  totalLessonCount?: number;
+  fullCourse?: boolean;
 }) {
   const visiblePackages =
     activePackageIndex === undefined
@@ -223,7 +227,7 @@ function CourseProgramOverviewPage({
     activePackageIndex === undefined
       ? (visiblePackageCount ?? 3)
       : activePackageIndex + 1;
-  const visibleLessonCount = visibleBlockCount * 10;
+  const visibleLessonCount = totalLessonCount ?? visibleBlockCount * 10;
 
   return (
     <main className="min-h-screen bg-porcelain">
@@ -246,10 +250,9 @@ function CourseProgramOverviewPage({
                 {h1Title}
               </h1>
               <p className="mt-6 max-w-3xl text-base leading-8 text-ink/70 md:text-lg">
-                Пакеты устроены накопительно: «Стартовый» включает первый
-                блок, «Практический» — первые два блока, а «Профессиональный» —
-                всю траекторию из трёх блоков. Блоки открываются поэтапно после
-                подтверждённой оплаты.
+                {fullCourse
+                  ? "Вся программа приобретается целиком. Все уроки доступны сразу после подтверждения оплаты в течение 365 дней."
+                  : "Материалы программы доступны по защищённой ссылке после оплаты."}
               </p>
             </div>
 
@@ -259,7 +262,7 @@ function CourseProgramOverviewPage({
                 <div className="rounded-2xl border border-ink/10 bg-porcelain p-4">
                   <dt className="text-sm text-ink/60">Всего в программе</dt>
                   <dd className="mt-1 font-serif text-3xl leading-tight text-ink">
-                    {visibleBlockCount} {visibleBlockCount === 1 ? "блок" : "блока"}
+                    {fullCourse ? "Полный курс" : `${visibleBlockCount} ${visibleBlockCount === 1 ? "блок" : "блока"}`}
                   </dd>
                 </div>
                 <div className="rounded-2xl border border-ink/10 bg-porcelain p-4">
@@ -281,7 +284,7 @@ function CourseProgramOverviewPage({
               activePackageIndex === undefined ? "lg:grid-cols-3" : "lg:grid-cols-1"
             }`}
           >
-            {visiblePackages.map((item, index) => (
+            {visiblePackages.map((item: any, index: number) => (
               <article
                 className="flex min-w-0 flex-col rounded-[2rem] border border-ink/10 bg-ivory p-6 shadow-soft md:p-8"
                 key={item.title}
@@ -397,15 +400,20 @@ export default async function CourseLevelPage({
   const access = validateAccessTokenForPrograms(token, allowedAccessKeys, {
     requiredBlock,
   });
-  const lessonCount = level.modules.reduce(
-    (total, module) => total + module.lessons.length,
-    0,
-  );
-  const levelChecklist = level.checklist?.map((item) => item.text) ?? [
-    ...level.learningResult.skills,
-    ...level.learningResult.tasks,
-  ];
-  const levelQuote = level.quote ?? {
+  const lessonCount = Array.isArray((level as any).modules)
+    ? (level as any).modules.reduce(
+        (total: number, module: any) =>
+          total + (Array.isArray(module?.lessons) ? module.lessons.length : 0),
+        0,
+      )
+    : 0;
+  const levelChecklist = Array.isArray((level as any).checklist)
+    ? (level as any).checklist.map((item: any) => item.text)
+    : [
+        ...(level as any).learningResult.skills,
+        ...(level as any).learningResult.tasks,
+      ];
+  const levelQuote = (level as any).quote ?? {
     author: "POA CALLING — Академия профессионального развития",
     role: "Подход к материалам",
     text:
@@ -413,129 +421,35 @@ export default async function CourseLevelPage({
   };
   const levelImage = getSupplyLevelImage(level.slug);
 
-  if (profession.slug === "supply" && level.slug === "basic") {
-    const supplyAccess = validateAccessTokenForPrograms(
-      token,
-      supplyBlock1AccessKeys,
-    );
-
-    if (token && !supplyAccess.ok) {
-      return (
-        <main className="min-h-screen bg-porcelain py-16 md:py-24">
-          <section className="container-shell">
-            <div className="rounded-3xl border border-ink/10 bg-ivory p-6 shadow-soft md:p-12">
-              <p className="mb-4 text-xs font-bold uppercase tracking-[0.26em] text-gold">
-                Защищенный доступ
-              </p>
-              <h1 className="font-serif text-4xl leading-tight text-ink md:text-6xl">
-                Нет доступа
-              </h1>
-              <p className="mt-6 max-w-3xl text-base leading-8 text-ink/70 md:text-lg">
-                Защищенная ссылка не подходит для этой образовательной
-                программы или срок ее действия истек.
-              </p>
-              <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-                <a
-                  className="rounded-full bg-ink px-7 py-4 text-center text-sm font-semibold text-white transition hover:bg-evergreen"
-                  href="/profession/supply"
-                >
-                  Вернуться к профессии
-                </a>
-                <a
-                  className="rounded-full border border-ink/15 px-7 py-4 text-center text-sm font-semibold text-ink transition hover:border-gold hover:text-evergreen"
-                  href={`mailto:${supportEmail}`}
-                >
-                  Связаться с нами
-                </a>
-              </div>
-            </div>
-          </section>
-        </main>
-      );
+  // All currently sold multi-level professions use one full-course package.
+  if (level.slug === "basic" && profession.packages.length === 1 && profession.packages[0].slug === "full" && profession.levels.length > 1) {
+    const fullPackage = profession.packages[0];
+    const fullAccess = getCourseTokenAccess(profession.slug, token);
+    if (token && !fullAccess.ok) {
+      return <PackageAccessDenied professionSlug={profession.slug} validation={fullAccess.validation} />;
     }
-
-    return (
-      <CourseProgramOverviewPage
-        h1Title={seo.h1}
-        packages={supplyBasicPackages}
-        professionHref="/profession/supply"
-        professionTitle="Специалист по снабжению"
-        structuredData={basicCourseStructuredData}
-        token={token}
-        visiblePackageCount={
-          supplyAccess.ok
-            ? getEntitledBlockCount(supplyAccess.payload)
-            : undefined
-        }
-      />
+    const totalLessons = profession.levels.reduce(
+      (sum: number, item: any) => sum + item.modules.reduce(
+        (levelSum: number, module: any) => levelSum + module.lessons.length, 0,
+      ), 0,
     );
-  }
-
-  if (profession.slug === "hr" && level.slug === "basic") {
     return (
       <CourseProgramOverviewPage
-        h1Title={seo.h1}
-        packages={hrBasicPackages}
-        professionHref="/profession/hr"
-        professionTitle="Специалист по кадрам и управлению персоналом"
+        h1Title={profession.title}
+        packages={[{
+          title: "Полный курс",
+          stats: `${totalLessons} уроков`,
+          description: fullPackage.result,
+          href: `/course/${profession.slug}/basic/lesson-1`,
+          ctaLabel: "Начать обучение",
+        }]}
+        professionHref={`/profession/${profession.slug}`}
+        professionTitle={profession.title}
         structuredData={basicCourseStructuredData}
-        token={token}
-      />
-    );
-  }
-
-  if (profession.slug === "tourism" && level.slug === "basic") {
-    return (
-      <CourseProgramOverviewPage
-        h1Title={seo.h1}
-        packages={tourismBasicPackages}
-        professionHref="/profession/tourism"
-        professionTitle="Специалист по туризму"
-        structuredData={basicCourseStructuredData}
-        token={token}
-      />
-    );
-  }
-
-  if (profession.slug === "logistics" && level.slug === "basic") {
-    const logisticsAccess = getCourseTokenAccess("logistics", token);
-
-    if (token && !logisticsAccess.ok) {
-      return (
-        <PackageAccessDenied
-          professionSlug="logistics"
-          token={undefined}
-          validation={logisticsAccess.validation}
-        />
-      );
-    }
-
-    return (
-      <CourseProgramOverviewPage
-        activePackageIndex={
-          logisticsAccess.ok
-            ? getEntitledBlockCount(logisticsAccess.payload) - 1
-            : undefined
-        }
-        h1Title={seo.h1}
-        packages={logisticsBasicPackages}
-        professionHref="/profession/logistics"
-        professionTitle="Специалист по международной логистике"
-        structuredData={basicCourseStructuredData}
-        token={undefined}
-      />
-    );
-  }
-
-  if (profession.slug === "ai" && level.slug === "basic") {
-    return (
-      <CourseProgramOverviewPage
-        h1Title={seo.h1}
-        packages={aiBasicPackages}
-        professionHref="/profession/ai"
-        professionTitle="Специалист по искусственному интеллекту"
-        structuredData={basicCourseStructuredData}
-        token={token}
+        token={profession.slug === "logistics" ? undefined : token}
+        visiblePackageCount={1}
+        totalLessonCount={totalLessons}
+        fullCourse
       />
     );
   }
@@ -623,10 +537,10 @@ export default async function CourseLevelPage({
                 {seo.h1}
               </h1>
               <p className="mt-6 max-w-3xl text-base leading-8 text-ink/70 md:text-lg">
-                {level.description}
+                {(level as any).description}
               </p>
               <p className="mt-6 max-w-3xl text-xl leading-9 text-ink">
-                {level.result}
+                {(level as any).result}
               </p>
             </div>
 
@@ -672,7 +586,7 @@ export default async function CourseLevelPage({
           </article>
           <article className="rounded-3xl border border-white/12 bg-white/[0.04] p-7">
             <p className="text-sm text-white/60">Модули</p>
-            <p className="mt-2 text-2xl font-semibold">{level.modules.length}</p>
+            <p className="mt-2 text-2xl font-semibold">{(level as any).modules.length}</p>
           </article>
           <article className="rounded-3xl border border-white/12 bg-white/[0.04] p-7">
             <p className="text-sm text-white/60">Уроки</p>
@@ -711,9 +625,9 @@ export default async function CourseLevelPage({
             ) : null}
           </div>
           <div className="grid gap-5 lg:grid-cols-3">
-            <ResultCard items={level.learningResult.skills} title="Навыки" />
-            <ResultCard items={level.learningResult.tasks} title="Практические задачи" />
-            <ResultCard items={level.learningResult.workplaces} title="Где применять" />
+            <ResultCard items={(level as any).learningResult.skills} title="Навыки" />
+            <ResultCard items={(level as any).learningResult.tasks} title="Практические задачи" />
+            <ResultCard items={(level as any).learningResult.workplaces} title="Где применять" />
           </div>
         </div>
       </section>
@@ -723,7 +637,7 @@ export default async function CourseLevelPage({
           <aside className="h-fit rounded-3xl border border-ink/10 bg-ivory p-6 shadow-soft lg:sticky lg:top-28">
             <p className="text-sm font-semibold text-gold">Структура материалов</p>
             <ol className="mt-5 grid gap-3 text-sm text-ink/70">
-              {level.modules.map((module, moduleIndex) => (
+              {(level as any).modules.map((module: any, moduleIndex: number) => (
                 <li key={module.id}>
                   <p className="font-semibold text-ink">
                     {moduleIndex + 1}. {module.title}
@@ -740,7 +654,7 @@ export default async function CourseLevelPage({
           </aside>
 
           <div className="grid gap-8">
-            {level.modules.map((module, moduleIndex) => (
+            {(level as any).modules.map((module: any, moduleIndex: number) => (
               <article className="grid gap-5" key={module.id}>
                 <ModuleCard
                   description={module.description}
@@ -750,17 +664,17 @@ export default async function CourseLevelPage({
                 />
 
                 <div className="grid gap-4">
-                  {module.lessons.map((lesson, lessonIndex) => (
+                  {module.lessons.map((lesson: (typeof module.lessons)[number], lessonIndex: number) => (
                     <LessonCard
                       duration={lesson.duration}
                       index={lessonIndex + 1}
                       key={lesson.id}
                       title={lesson.title}
                     >
-                      {lesson.structuredContent ? (
+                      {(lesson as any).structuredContent ? (
                         <div className="grid gap-6">
                           <div className="grid gap-3">
-                            {lesson.structuredContent.intro.map((paragraph) => (
+                            {(lesson as any).structuredContent.intro.map((paragraph: string) => (
                               <p key={paragraph}>{paragraph}</p>
                             ))}
                           </div>
@@ -769,38 +683,54 @@ export default async function CourseLevelPage({
                             <p className="mb-3 text-sm font-bold uppercase tracking-[0.18em] text-gold">
                               После изучения темы вы сможете
                             </p>
-                            <Checklist items={lesson.structuredContent.outcomes} />
+                            <Checklist items={(lesson as any).structuredContent.outcomes} />
                           </div>
 
                           <div className="rounded-2xl border border-ink/10 bg-ivory p-5">
                             <p className="mb-3 text-sm font-bold uppercase tracking-[0.18em] text-gold">
                               Что изучим
                             </p>
-                            <Checklist items={lesson.structuredContent.studyPlan} />
+                            <Checklist items={(lesson as any).structuredContent.studyPlan} />
                           </div>
 
                           <Quote
                             author="Автор образовательных программ"
                             role="Совет автора"
-                            text={lesson.structuredContent.authorAdvice}
+                            text={(lesson as any).structuredContent.authorAdvice}
                           />
                         </div>
                       ) : (
                         <div className="grid gap-3">
-                          {lesson.content.map((paragraph) => (
+                          {lesson.content.map((paragraph: string) => (
                             <p key={paragraph}>{paragraph}</p>
                           ))}
                         </div>
                       )}
 
-                      {lesson.practiceAssignments?.map((assignment) => (
+                      {lesson.visual ? (
+                        <figure className="mt-6 overflow-hidden rounded-3xl border border-ink/10 bg-ivory shadow-soft">
+                          <img
+                            alt={lesson.visual.alt}
+                            className="h-auto w-full"
+                            loading="lazy"
+                            src={lesson.visual.src}
+                          />
+                          {lesson.visual.caption ? (
+                            <figcaption className="border-t border-ink/10 px-5 py-4 text-sm leading-6 text-ink/65">
+                              {lesson.visual.caption}
+                            </figcaption>
+                          ) : null}
+                        </figure>
+                      ) : null}
+
+                      {(lesson as any).practiceAssignments?.map((assignment: any) => (
                         <div className="mt-5" key={assignment.id}>
                           <PracticeBlock title={assignment.title}>
                             {assignment.description}
                           </PracticeBlock>
                         </div>
                       ))}
-                      {!lesson.practiceAssignments?.length && lesson.practice ? (
+                      {!(lesson as any).practiceAssignments?.length && lesson.practice ? (
                         <div className="mt-5">
                           <PracticeBlock>{lesson.practice}</PracticeBlock>
                         </div>
@@ -810,16 +740,16 @@ export default async function CourseLevelPage({
                           <p className="mb-3 text-sm font-bold uppercase tracking-[0.18em] text-gold">
                             Чек-лист урока
                           </p>
-                          <Checklist items={lesson.checklist.map((item) => item.text)} />
+                          <Checklist items={lesson.checklist.map((item: any) => item.text)} />
                         </div>
                       ) : null}
-                      {lesson.additionalMaterials?.length ? (
+                      {(lesson as any).additionalMaterials?.length ? (
                         <div className="mt-5 rounded-2xl border border-ink/10 bg-ivory p-5">
                           <p className="text-sm font-bold uppercase tracking-[0.18em] text-gold">
                             Дополнительные материалы
                           </p>
                           <ul className="mt-4 grid gap-3 text-sm leading-6 text-ink/70">
-                            {lesson.additionalMaterials.map((material) => (
+                            {(lesson as any).additionalMaterials.map((material: any) => (
                               <li className="border-t border-ink/10 pt-3" key={material.id}>
                                 <span className="font-semibold text-ink">
                                   {material.title}
@@ -832,10 +762,10 @@ export default async function CourseLevelPage({
                           </ul>
                         </div>
                       ) : null}
-                      {lesson.structuredContent ? (
+                      {(lesson as any).structuredContent ? (
                         <div className="mt-5">
                           <ResultCard
-                            items={lesson.structuredContent.summary}
+                            items={(lesson as any).structuredContent.summary}
                             title="Итоги темы"
                           />
                         </div>
@@ -893,7 +823,7 @@ export default async function CourseLevelPage({
         </div>
       </section>
 
-      {level.additionalMaterials?.length ? (
+      {(level as any).additionalMaterials?.length ? (
         <section className="section-space">
           <div className="container-shell">
             <div className="mx-auto mb-12 max-w-3xl text-center">
@@ -910,7 +840,7 @@ export default async function CourseLevelPage({
             </div>
 
             <div className="grid gap-5 md:grid-cols-2">
-              {level.additionalMaterials.map((material) => (
+              {(level as any).additionalMaterials.map((material: any) => (
                 <article
                   className="rounded-3xl border border-ink/10 bg-ivory p-7 shadow-soft"
                   key={material.id}
