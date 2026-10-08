@@ -203,6 +203,8 @@ function CourseProgramOverviewPage({
   token,
   activePackageIndex,
   visiblePackageCount,
+  totalLessonCount,
+  fullCourse = false,
 }: {
   h1Title: string;
   packages: CourseOverviewPackage[];
@@ -212,6 +214,8 @@ function CourseProgramOverviewPage({
   token?: string;
   activePackageIndex?: number;
   visiblePackageCount?: number;
+  totalLessonCount?: number;
+  fullCourse?: boolean;
 }) {
   const visiblePackages =
     activePackageIndex === undefined
@@ -223,7 +227,7 @@ function CourseProgramOverviewPage({
     activePackageIndex === undefined
       ? (visiblePackageCount ?? 3)
       : activePackageIndex + 1;
-  const visibleLessonCount = visibleBlockCount * 10;
+  const visibleLessonCount = totalLessonCount ?? visibleBlockCount * 10;
 
   return (
     <main className="min-h-screen bg-porcelain">
@@ -246,10 +250,9 @@ function CourseProgramOverviewPage({
                 {h1Title}
               </h1>
               <p className="mt-6 max-w-3xl text-base leading-8 text-ink/70 md:text-lg">
-                Пакеты устроены накопительно: «Стартовый» включает первый
-                блок, «Практический» — первые два блока, а «Профессиональный» —
-                всю траекторию из трёх блоков. Блоки открываются поэтапно после
-                подтверждённой оплаты.
+                {fullCourse
+                  ? "Вся программа приобретается целиком. Все уроки доступны сразу после подтверждения оплаты в течение 365 дней."
+                  : "Материалы программы доступны по защищённой ссылке после оплаты."}
               </p>
             </div>
 
@@ -259,7 +262,7 @@ function CourseProgramOverviewPage({
                 <div className="rounded-2xl border border-ink/10 bg-porcelain p-4">
                   <dt className="text-sm text-ink/60">Всего в программе</dt>
                   <dd className="mt-1 font-serif text-3xl leading-tight text-ink">
-                    {visibleBlockCount} {visibleBlockCount === 1 ? "блок" : "блока"}
+                    {fullCourse ? "Полный курс" : `${visibleBlockCount} ${visibleBlockCount === 1 ? "блок" : "блока"}`}
                   </dd>
                 </div>
                 <div className="rounded-2xl border border-ink/10 bg-porcelain p-4">
@@ -418,129 +421,35 @@ export default async function CourseLevelPage({
   };
   const levelImage = getSupplyLevelImage(level.slug);
 
-  if (profession.slug === "supply" && level.slug === "basic") {
-    const supplyAccess = validateAccessTokenForPrograms(
-      token,
-      supplyBlock1AccessKeys,
-    );
-
-    if (token && !supplyAccess.ok) {
-      return (
-        <main className="min-h-screen bg-porcelain py-16 md:py-24">
-          <section className="container-shell">
-            <div className="rounded-3xl border border-ink/10 bg-ivory p-6 shadow-soft md:p-12">
-              <p className="mb-4 text-xs font-bold uppercase tracking-[0.26em] text-gold">
-                Защищенный доступ
-              </p>
-              <h1 className="font-serif text-4xl leading-tight text-ink md:text-6xl">
-                Нет доступа
-              </h1>
-              <p className="mt-6 max-w-3xl text-base leading-8 text-ink/70 md:text-lg">
-                Защищенная ссылка не подходит для этой образовательной
-                программы или срок ее действия истек.
-              </p>
-              <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-                <a
-                  className="rounded-full bg-ink px-7 py-4 text-center text-sm font-semibold text-white transition hover:bg-evergreen"
-                  href="/profession/supply"
-                >
-                  Вернуться к профессии
-                </a>
-                <a
-                  className="rounded-full border border-ink/15 px-7 py-4 text-center text-sm font-semibold text-ink transition hover:border-gold hover:text-evergreen"
-                  href={`mailto:${supportEmail}`}
-                >
-                  Связаться с нами
-                </a>
-              </div>
-            </div>
-          </section>
-        </main>
-      );
+  // All currently sold multi-level professions use one full-course package.
+  if (level.slug === "basic" && profession.packages.length === 1 && profession.packages[0].slug === "full" && profession.levels.length > 1) {
+    const fullPackage = profession.packages[0];
+    const fullAccess = getCourseTokenAccess(profession.slug, token);
+    if (token && !fullAccess.ok) {
+      return <PackageAccessDenied professionSlug={profession.slug} validation={fullAccess.validation} />;
     }
-
-    return (
-      <CourseProgramOverviewPage
-        h1Title={seo.h1}
-        packages={supplyBasicPackages}
-        professionHref="/profession/supply"
-        professionTitle="Специалист по снабжению"
-        structuredData={basicCourseStructuredData}
-        token={token}
-        visiblePackageCount={
-          supplyAccess.ok
-            ? getEntitledBlockCount(supplyAccess.payload)
-            : undefined
-        }
-      />
+    const totalLessons = profession.levels.reduce(
+      (sum: number, item: any) => sum + item.modules.reduce(
+        (levelSum: number, module: any) => levelSum + module.lessons.length, 0,
+      ), 0,
     );
-  }
-
-  if (profession.slug === "hr" && level.slug === "basic") {
     return (
       <CourseProgramOverviewPage
-        h1Title={seo.h1}
-        packages={hrBasicPackages}
-        professionHref="/profession/hr"
-        professionTitle="Специалист по кадрам и управлению персоналом"
+        h1Title={profession.title}
+        packages={[{
+          title: "Полный курс",
+          stats: `${totalLessons} уроков`,
+          description: fullPackage.result,
+          href: `/course/${profession.slug}/basic/lesson-1`,
+          ctaLabel: "Начать обучение",
+        }]}
+        professionHref={`/profession/${profession.slug}`}
+        professionTitle={profession.title}
         structuredData={basicCourseStructuredData}
-        token={token}
-      />
-    );
-  }
-
-  if (profession.slug === "tourism" && level.slug === "basic") {
-    return (
-      <CourseProgramOverviewPage
-        h1Title={seo.h1}
-        packages={tourismBasicPackages}
-        professionHref="/profession/tourism"
-        professionTitle="Специалист по туризму"
-        structuredData={basicCourseStructuredData}
-        token={token}
-      />
-    );
-  }
-
-  if (profession.slug === "logistics" && level.slug === "basic") {
-    const logisticsAccess = getCourseTokenAccess("logistics", token);
-
-    if (token && !logisticsAccess.ok) {
-      return (
-        <PackageAccessDenied
-          professionSlug="logistics"
-          token={undefined}
-          validation={logisticsAccess.validation}
-        />
-      );
-    }
-
-    return (
-      <CourseProgramOverviewPage
-        activePackageIndex={
-          logisticsAccess.ok
-            ? getEntitledBlockCount(logisticsAccess.payload) - 1
-            : undefined
-        }
-        h1Title={seo.h1}
-        packages={logisticsBasicPackages}
-        professionHref="/profession/logistics"
-        professionTitle="Специалист по международной логистике"
-        structuredData={basicCourseStructuredData}
-        token={undefined}
-      />
-    );
-  }
-
-  if (profession.slug === "ai" && level.slug === "basic") {
-    return (
-      <CourseProgramOverviewPage
-        h1Title={seo.h1}
-        packages={aiBasicPackages}
-        professionHref="/profession/ai"
-        professionTitle="Специалист по искусственному интеллекту"
-        structuredData={basicCourseStructuredData}
-        token={token}
+        token={profession.slug === "logistics" ? undefined : token}
+        visiblePackageCount={1}
+        totalLessonCount={totalLessons}
+        fullCourse
       />
     );
   }
