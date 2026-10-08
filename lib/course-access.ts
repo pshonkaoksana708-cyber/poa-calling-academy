@@ -199,6 +199,11 @@ export function getBlockUnlockAt(
   payload: ValidAccessTokenPayload,
   blockNumber: 1 | 2 | 3,
 ) {
+  // A purchased full course unlocks every included level immediately.
+  if (payload.programSlug.endsWith("/package/full")) {
+    return getPaymentTimestamp(payload);
+  }
+
   return getPaymentTimestamp(payload) + BLOCK_UNLOCK_DAYS[blockNumber - 1] * 86400;
 }
 
