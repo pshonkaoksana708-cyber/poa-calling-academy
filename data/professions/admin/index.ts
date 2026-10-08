@@ -411,5 +411,5 @@ export const adminProfession: Profession = {
     }],
     finalSummary: "Курс завершён итоговой рабочей сменой, которая проверяет способность принимать решения, а не только запоминать формулировки."
   }],
-  accessRules: { tokenScope: "package", tokenTtlDays: 90, delivery: "email", requiresPayment: true }
+  accessRules: { tokenScope: "package", tokenTtlDays: 365, delivery: "email", requiresPayment: true }
 };
