@@ -567,7 +567,9 @@ const pageCopy =
               ctaLabel={`Купить курс — ${profession.packages[0]?.price}`}
               description={
                 pageCopy?.professionCardDescription ??
-                "Практическая траектория для тех, кто хочет освоить снабжение как понятную, прикладную и востребованную профессиональную функцию."
+                (profession.slug === "marketplaces"
+                  ? "Практический курс для тех, кто хочет с нуля освоить управление магазинами на Ozon и Wildberries: карточки товаров, цены, поставки, реклама и аналитика."
+                  : "Практическая траектория для тех, кто хочет освоить снабжение как понятную, прикладную и востребованную профессиональную функцию.")
               }
               direction={profession.direction}
               href={`/?profession=${profession.slug}&package=${profession.packages[0]?.slug}#access-form`}
