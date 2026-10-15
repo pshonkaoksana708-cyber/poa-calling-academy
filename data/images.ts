@@ -22,6 +22,7 @@ export const siteImages = {
   aiProfession: "/images/professions/professions-02.jpg",
   adminProfession: "/images/professions/admin-client-service.jpeg",
   marketplacesProfession: "/images/professions/marketplaces-ozon-wb.png",
+  accountingProfession: "/images/professions/pomochnik baxgaltera.png",
   aiBasicLevel: "/images/levels/ai-level-basic.webp.jpg",
   aiPracticeLevel: "/images/levels/ai-level-practical.webp.jpg",
   aiProLevel: "/images/professions/professions-04.jpg",
@@ -67,6 +68,9 @@ export function getProfessionImage(slug: string) {
     return siteImages.marketplacesProfession;
   }
 
+  if (slug === "accounting") {
+    return siteImages.accountingProfession;
+  }
   return fallbackImages.profession;
 }
 
