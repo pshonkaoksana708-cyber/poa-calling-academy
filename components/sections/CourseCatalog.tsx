@@ -10,6 +10,7 @@ const catalogImages: Record<string, string> = {
   ai: "/images/professions/professions-02.jpg",
   admin: "/images/professions/admin-client-service.jpeg",
   marketplaces: "/images/professions/marketplaces-ozon-wb.png",
+  accounting: "/images/education/education-01.jpg",
 };
 
 function getProfessionIcon(slug: string) {
